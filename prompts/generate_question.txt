@@ -1,0 +1,10 @@
+Generate one concise clarifying question that would identify which candidate interpretation the user intends.
+The question should be answerable from the user's perspective.
+Do not ask multiple questions.
+Return only valid JSON:
+{"question": string}
+
+Scene:
+{scene_json}
+Instruction: {instruction}
+Candidates: {candidate_json}

@@ -1,0 +1,62 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Kuhn et~al.(2022)Kuhn, Gal, and Farquhar]{kuhn2022clam}
+Lorenz Kuhn, Yarin Gal, and Sebastian Farquhar.
+\newblock {CLAM}: Selective clarification for ambiguous questions with
+  generative language models.
+\newblock \emph{arXiv preprint arXiv:2212.07769}, 2022.
+\newblock \doi{10.48550/arXiv.2212.07769}.
+\newblock URL \url{https://arxiv.org/abs/2212.07769}.
+
+\bibitem[Madge et~al.(2025)Madge, Purver, and Poesio]{madge2025referential}
+Chris Madge, Matthew Purver, and Massimo Poesio.
+\newblock Referential ambiguity and clarification requests: Comparing human and
+  {LLM} behaviour.
+\newblock In \emph{Proceedings of the Eighth Workshop on Computational Models
+  of Reference, Anaphora and Coreference}, pp.\  1--11, 2025.
+\newblock \doi{10.18653/v1/2025.crac-1.1}.
+\newblock URL \url{https://aclanthology.org/2025.crac-1.1/}.
+
+\bibitem[Min et~al.(2024)Min, Puig, Chaplot, Yang, Rai, Parashar,
+  Salakhutdinov, Bisk, and Mottaghi]{min2024situated}
+So~Yeon Min, Xavi Puig, Devendra~Singh Chaplot, Tsung-Yen Yang, Akshara Rai,
+  Priyam Parashar, Ruslan Salakhutdinov, Yonatan Bisk, and Roozbeh Mottaghi.
+\newblock Situated instruction following.
+\newblock \emph{arXiv preprint arXiv:2407.12061}, 2024.
+\newblock \doi{10.48550/arXiv.2407.12061}.
+\newblock URL \url{https://arxiv.org/abs/2407.12061}.
+
+\bibitem[Qian et~al.(2024)Qian, He, Zhuang, Deng, Qin, Cong, Zhang, Zhou, Lin,
+  Liu, and Sun]{qian2024tell}
+Cheng Qian, Bingxiang He, Zhong Zhuang, Jia Deng, Yujia Qin, Xin Cong, Zhong
+  Zhang, Jie Zhou, Yankai Lin, Zhiyuan Liu, and Maosong Sun.
+\newblock Tell me more! towards implicit user intention understanding of
+  language model driven agents.
+\newblock \emph{arXiv preprint arXiv:2402.09205}, 2024.
+\newblock \doi{10.48550/arXiv.2402.09205}.
+\newblock URL \url{https://arxiv.org/abs/2402.09205}.
+
+\bibitem[Rao \& Daum{\'e}(2018)Rao and Daum{\'e}]{rao2018learning}
+Sudha Rao and Hal Daum{\'e}, III.
+\newblock Learning to ask good questions: Ranking clarification questions using
+  neural expected value of perfect information.
+\newblock \emph{arXiv preprint arXiv:1805.04655}, 2018.
+\newblock URL \url{https://arxiv.org/abs/1805.04655}.
+
+\bibitem[Zhang et~al.(2024)Zhang, Qin, Deng, Huang, Lei, Liu, Jin, Liang, and
+  Chua]{zhang2024clamber}
+Tong Zhang, Peixin Qin, Yang Deng, Chen Huang, Wenqiang Lei, Junhong Liu,
+  Dingnan Jin, Hongru Liang, and Tat-Seng Chua.
+\newblock {CLAMBER}: A benchmark of identifying and clarifying ambiguous
+  information needs in large language models.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association
+  for Computational Linguistics}, pp.\  10746--10766, 2024.
+\newblock \doi{10.18653/v1/2024.acl-long.578}.
+\newblock URL \url{https://aclanthology.org/2024.acl-long.578/}.
+
+\end{thebibliography}

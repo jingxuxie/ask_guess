@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="540" viewBox="0 0 920 540">
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#111827}
+.title{font-size:22px;font-weight:700}
+.subtitle{font-size:13px;fill:#4b5563}
+.axis{stroke:#374151;stroke-width:1}
+.grid{stroke:#e5e7eb;stroke-width:1}
+.tick{font-size:12px;fill:#4b5563}
+.label{font-size:13px;fill:#374151}
+.legend{font-size:13px;fill:#111827}
+</style>
+<text class="title" x="40" y="34">Ask Cost Sensitivity</text>
+<text class="subtitle" x="40" y="56">Wrong-action cost fixed at 1.0</text>
+<line class="axis" x1="80" y1="454.0" x2="878" y2="454.0"/>
+<line class="axis" x1="80" y1="78" x2="80" y2="454"/>
+<line class="grid" x1="80" y1="454.0" x2="878" y2="454.0"/>
+<text class="tick" x="70" y="458.0" text-anchor="end">0.0</text>
+<line class="grid" x1="80" y1="360.0" x2="878" y2="360.0"/>
+<text class="tick" x="70" y="364.0" text-anchor="end">0.25</text>
+<line class="grid" x1="80" y1="266.0" x2="878" y2="266.0"/>
+<text class="tick" x="70" y="270.0" text-anchor="end">0.5</text>
+<line class="grid" x1="80" y1="172.0" x2="878" y2="172.0"/>
+<text class="tick" x="70" y="176.0" text-anchor="end">0.75</text>
+<line class="grid" x1="80" y1="78.0" x2="878" y2="78.0"/>
+<text class="tick" x="70" y="82.0" text-anchor="end">1.0</text>
+<line class="grid" x1="80.0" y1="78" x2="80.0" y2="454"/>
+<text class="tick" x="80.0" y="486" text-anchor="middle">0.01</text>
+<line class="grid" x1="173.9" y1="78" x2="173.9" y2="454"/>
+<text class="tick" x="173.9" y="486" text-anchor="middle">0.05</text>
+<line class="grid" x1="291.2" y1="78" x2="291.2" y2="454"/>
+<text class="tick" x="291.2" y="486" text-anchor="middle">0.1</text>
+<line class="grid" x1="525.9" y1="78" x2="525.9" y2="454"/>
+<text class="tick" x="525.9" y="486" text-anchor="middle">0.2</text>
+<line class="grid" x1="878.0" y1="78" x2="878.0" y2="454"/>
+<text class="tick" x="878.0" y="486" text-anchor="middle">0.35</text>
+<polyline points="80.0,234.0 173.9,234.0 291.2,234.0 525.9,234.0 878.0,234.0" fill="none" stroke="#6b7280" stroke-width="3"/>
+<circle cx="80.0" cy="234.0" r="4" fill="#6b7280"/>
+<circle cx="173.9" cy="234.0" r="4" fill="#6b7280"/>
+<circle cx="291.2" cy="234.0" r="4" fill="#6b7280"/>
+<circle cx="525.9" cy="234.0" r="4" fill="#6b7280"/>
+<circle cx="878.0" cy="234.0" r="4" fill="#6b7280"/>
+<text class="legend" x="886.0" y="238.0">DirectAct</text>
+<polyline points="80.0,90.0 173.9,100.6 291.2,113.7 525.9,140.0 878.0,179.5" fill="none" stroke="#d97706" stroke-width="3"/>
+<circle cx="80.0" cy="90.0" r="4" fill="#d97706"/>
+<circle cx="173.9" cy="100.6" r="4" fill="#d97706"/>
+<circle cx="291.2" cy="113.7" r="4" fill="#d97706"/>
+<circle cx="525.9" cy="140.0" r="4" fill="#d97706"/>
+<circle cx="878.0" cy="179.5" r="4" fill="#d97706"/>
+<text class="legend" x="886.0" y="183.5">Prompted</text>
+<polyline points="80.0,81.0 173.9,93.0 291.2,106.2 525.9,125.0 878.0,156.6" fill="none" stroke="#0f766e" stroke-width="3"/>
+<circle cx="80.0" cy="81.0" r="4" fill="#0f766e"/>
+<circle cx="173.9" cy="93.0" r="4" fill="#0f766e"/>
+<circle cx="291.2" cy="106.2" r="4" fill="#0f766e"/>
+<circle cx="525.9" cy="125.0" r="4" fill="#0f766e"/>
+<circle cx="878.0" cy="156.6" r="4" fill="#0f766e"/>
+<text class="legend" x="886.0" y="160.6">ECU</text>
+<text class="label" x="479.0" y="522" text-anchor="middle">Ask cost</text>
+<text class="label" transform="translate(22 266.0) rotate(-90)" text-anchor="middle">Net utility</text>
+</svg>

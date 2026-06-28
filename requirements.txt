@@ -1,0 +1,7 @@
+# The offline scaffold is stdlib-only.
+# Optional packages for later API/model/plot work:
+# openai
+# numpy
+# pandas
+# scikit-learn
+# matplotlib

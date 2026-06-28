@@ -1,0 +1,23 @@
+List the plausible candidate interpretations of the user's instruction in this scene.
+Return only valid JSON.
+Each candidate should include target_id, action, probability, and a short reason.
+Probabilities must sum to 1.
+If the scene has a current_user field, interpret "my" as referring to current_user.
+Assign high probability to candidates resolved by current_user, reachability, salience, or explicit context.
+Set candidates_equivalent_for_success to true when all listed choices satisfy the instruction equally, such as interchangeable spare objects.
+
+Schema:
+{
+  "candidates": [
+    {"target_id": string, "action": string, "probability": number, "reason": string}
+  ],
+  "context_resolves_instruction": boolean,
+  "candidates_equivalent_for_success": boolean,
+  "risk_level": "low" | "medium" | "high"
+}
+
+Scene:
+{scene_json}
+
+User instruction:
+{instruction}

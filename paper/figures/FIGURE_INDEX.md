@@ -1,0 +1,21 @@
+# Figure Index
+
+## `api_main_net_utility.svg`
+
+Main API result. Shows net utility for DirectAct, prompted Ask-Needed, and API ECU on the 100-episode stratified GPT-4.1-mini evaluation.
+
+## `api_category_net_utility.svg`
+
+Category breakdown for the same API evaluation. This is the strongest single figure for the paper because it shows the difference between genuine ambiguity, context-resolved underspecification, equivalent outcomes, risk, and preference/social cases.
+
+## `api_calibration_ask_rate.svg`
+
+Ask-rate calibration by oracle expected-utility margin on the main API set. ECU tracks the oracle, while prompted Ask-Needed asks at similar rates when acting is preferred and when asking is preferred.
+
+## `cost_sensitivity_ask_cost.svg`
+
+Offline cost-sensitivity curve with wrong-action cost fixed at 1.0. ECU adapts to increasing clarification cost, while the prompted heuristic remains fixed.
+
+## `cost_sensitivity_wrong_cost.svg`
+
+Offline cost-sensitivity curve with ask cost fixed at 0.05. DirectAct degrades as wrong-action cost rises, while ECU remains robust by asking in high-stakes cases.

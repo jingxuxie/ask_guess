@@ -1,0 +1,13 @@
+# Qualitative Benchmark Examples
+
+Representative examples are selected deterministically from the canonical 100-episode API subset when available.
+They illustrate why the paper evaluates expected communicative utility rather than ambiguity detection alone.
+
+| Case | Episode | Instruction | Visible situation | Utility reason | Oracle | Prompted Ask-Needed | API ECU |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Context resolves | test_context_000251 | Pass me the folder I'm using. | in_use white folder at living_room_desk (Sam, salience 0.96, reachable); distractor stored white folder at kitchen_cabinet (Sam, salience 0.04, unreachable) | EU(ask)-EU(act)=-0.114; asking would waste cost 0.150 | Act | ACT pass folder_white_active_251_a; reward 1.000 | ACT pass folder_white_active_251_a; reward 1.000 |
+| Equivalent outcomes | test_equivalent_000122 | Move a spare folder to the table. | 3 spare folders; 1 success class for all targets | EU(ask)-EU(act)=-0.100; asking would waste cost 0.100 | Act | ASK then move spare_folder_brown_122_a; reward 0.900 | ACT move to table spare_folder_brown_122_a; reward 1.000 |
+| Referential ambiguity | test_referential_000395 | Can you bring me the black box? | cracked black box at kitchen_table (Alex, salience 0.54, reachable); dirty black box at bedroom_counter (Riley, salience 0.46, reachable) | EU(ask)-EU(act)=0.876 despite ask cost 0.050 | Ask | ASK then bring box_black_dirty_395_b; reward 0.950 | ASK then bring box_black_dirty_395_b; reward 0.950 |
+| High-risk ambiguity | test_risk_000033 | Delete the old draft. | top candidate old_private blue draft at office_desk (Riley, salience 0.78, reachable) with prior 0.841; wrong-action cost 3.000 | EU(ask)-EU(act)=0.586 despite ask cost 0.050 | Ask | ACT delete old_draft_private_33_a; reward 1.000 | ASK then delete old_draft_private_33_a; reward 0.950 |
+| Preference visible | test_preference_000294 | Put my cup away. | current_user=Sam; personal black cup at kitchen_desk (Sam, salience 0.99, reachable); guest black cup at kitchen_counter (Taylor, salience 0.01, reachable) | EU(ask)-EU(act)=-0.030; asking would waste cost 0.050 | Act | ACT put away pref_cup_black_294_a; reward 1.000 | ACT put_away pref_cup_black_294_a; reward 1.000 |
+| Preference hidden | test_preference_000339 | Put my box away. | current_user=Jordan; unlabeled red box at office_table (owner hidden, salience 0.55, reachable); unlabeled red box at kitchen_shelf (owner hidden, salience 0.45, reachable) | EU(ask)-EU(act)=0.850 despite ask cost 0.050 | Ask | ACT put away pref_box_red_339_a; reward -1.000 | ASK then put_away pref_box_red_339_b; reward 0.950 |

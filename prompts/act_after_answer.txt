@@ -1,0 +1,10 @@
+You asked the user a clarifying question and received an answer.
+Choose the final action.
+Return only valid JSON:
+{"type":"ACT", "action": string, "target_id": string}
+
+Scene:
+{scene_json}
+Original instruction: {instruction}
+Question: {question}
+User answer: {answer}
