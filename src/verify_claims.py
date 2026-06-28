@@ -10,6 +10,9 @@ from statistics import mean
 
 from api_ecu_ablation import ABLATIONS, replay_row
 from api_cache_replay_verification import run_checks as api_cache_replay_checks
+from api_candidate_calibration import pearson as candidate_pearson
+from api_candidate_calibration import row_records as candidate_row_records
+from api_candidate_calibration import spearman as candidate_spearman
 from api_subset_stability import CATEGORY_ORDER as API_SUBSET_CATEGORY_ORDER
 from api_subset_stability import mean_delta as api_subset_mean_delta
 from api_subset_stability import stratified_bootstrap_ci as api_subset_stratified_bootstrap_ci
@@ -49,6 +52,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
     parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
     parser.add_argument("--api-gpt54-mini-shuffled-results", default="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl")
+    parser.add_argument(
+        "--api-gpt54-mini-natural-language-results",
+        default="data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl",
+    )
     parser.add_argument("--ambiguity-mix-episodes", default="data/generated/ambiguity_mix_shift_episodes.jsonl")
     parser.add_argument("--ambiguity-mix-results", default="data/runs/ambiguity_mix_shift_results.jsonl")
     parser.add_argument("--api-cache", default="data/runs/api_cache.jsonl")
@@ -200,6 +207,7 @@ def main() -> None:
     api_gpt54_mini_rows = read_jsonl(args.api_gpt54_mini_results)
     api_gpt55_rows = read_jsonl(args.api_gpt55_results)
     api_gpt54_mini_shuffled_rows = read_jsonl(args.api_gpt54_mini_shuffled_results)
+    api_gpt54_mini_natural_language_rows = read_jsonl(args.api_gpt54_mini_natural_language_results)
     ambiguity_mix_episodes = read_jsonl(args.ambiguity_mix_episodes)
     ambiguity_mix_rows = read_jsonl(args.ambiguity_mix_results)
     api_extended_rows = api_rows + api_cot_rows
@@ -584,6 +592,50 @@ def main() -> None:
         "paper/tables/api_gpt_5_4_mini_scene_format_robustness.md",
     )
 
+    natural_scene_format = group_rows(api_gpt54_mini_natural_language_rows, ("split", "policy"))
+    natural_scene_format_expectations = [
+        ("api_direct_act", "net_utility", 0.420),
+        ("api_ask_needed", "net_utility", 0.788),
+        ("api_ask_needed", "missed_clarification_rate", 0.167),
+        ("api_ask_needed", "unnecessary_clarification_rate", 0.519),
+        ("api_ask_needed_cot", "net_utility", 0.904),
+        ("api_ecu", "net_utility", 0.975),
+        ("api_ecu", "success", 1.000),
+        ("api_ecu", "ask_rate", 0.490),
+        ("api_ecu", "missed_clarification_rate", 0.000),
+        ("api_ecu", "unnecessary_clarification_rate", 0.019),
+    ]
+    for policy, metric, expected in natural_scene_format_expectations:
+        stats = aggregate(natural_scene_format[("test", policy)])
+        ok &= check_float(
+            report_rows,
+            f"scene-format natural-language gpt-5.4-mini {policy} {metric}",
+            stats[metric],
+            expected,
+            args.api_gpt54_mini_natural_language_results,
+        )
+    ok &= check_float(
+        report_rows,
+        "scene-format natural-language gpt-5.4-mini paired ECU - Ask-Needed utility delta",
+        paired_delta(api_gpt54_mini_natural_language_rows, "api_ecu", "api_ask_needed"),
+        0.186,
+        "paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "scene-format natural-language gpt-5.4-mini paired ECU - CoT Ask-Needed utility delta",
+        paired_delta(api_gpt54_mini_natural_language_rows, "api_ecu", "api_ask_needed_cot"),
+        0.070,
+        "paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "scene-format natural-language gpt-5.4-mini ECU ask-act change rate",
+        ask_act_change_rate(api_gpt54_mini_rows, api_gpt54_mini_natural_language_rows, "api_ecu"),
+        0.010,
+        "paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md",
+    )
+
     question_expectations = [
         (api_rows, "test", "api_ask_needed", "ask_precision", 0.541, "paper/tables/api_eval_100_extended/question_usefulness.md"),
         (api_rows, "test", "api_ask_needed", "ask_recall", 0.417, "paper/tables/api_eval_100_extended/question_usefulness.md"),
@@ -629,6 +681,70 @@ def main() -> None:
         "paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md",
     )
 
+    candidate_calibration_records = candidate_row_records("gpt-4.1-mini", api_rows, episodes)
+    candidate_gpt55_records = candidate_row_records("gpt-5.5", api_gpt55_rows, episodes)
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration top benchmark match",
+        mean(1.0 if record["top_matches_benchmark"] else 0.0 for record in candidate_calibration_records),
+        0.970,
+        "paper/tables/api_candidate_calibration.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration top hidden match",
+        mean(1.0 if record["top_matches_hidden"] else 0.0 for record in candidate_calibration_records),
+        0.770,
+        "paper/tables/api_candidate_calibration.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration prior TV",
+        mean(float(record["prior_tv"]) for record in candidate_calibration_records),
+        0.057,
+        "paper/tables/api_candidate_calibration.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration gpt-4.1-mini margin Pearson",
+        candidate_pearson(
+            [float(record["model_margin"]) for record in candidate_calibration_records],
+            [float(record["oracle_margin"]) for record in candidate_calibration_records],
+        ),
+        0.948,
+        "paper/tables/api_candidate_calibration.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration gpt-4.1-mini margin Spearman",
+        candidate_spearman(
+            [float(record["model_margin"]) for record in candidate_calibration_records],
+            [float(record["oracle_margin"]) for record in candidate_calibration_records],
+        ),
+        0.741,
+        "paper/tables/api_candidate_calibration.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration gpt-5.5 margin Pearson",
+        candidate_pearson(
+            [float(record["model_margin"]) for record in candidate_gpt55_records],
+            [float(record["oracle_margin"]) for record in candidate_gpt55_records],
+        ),
+        0.991,
+        "paper/tables/api_candidate_calibration.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "API ECU candidate calibration gpt-5.5 margin Spearman",
+        candidate_spearman(
+            [float(record["model_margin"]) for record in candidate_gpt55_records],
+            [float(record["oracle_margin"]) for record in candidate_gpt55_records],
+        ),
+        0.954,
+        "paper/tables/api_candidate_calibration.md",
+    )
+
     cache_replay_checks = api_cache_replay_checks()
     ok &= check_equal(
         report_rows,
@@ -646,6 +762,10 @@ def main() -> None:
             "cot_100_gpt41mini": {"canonical_rows": 100, "replay_rows": 100, "mismatches": 0},
             "style_50_gpt41mini": {"canonical_rows": 150, "replay_rows": 150, "mismatches": 0},
             "second_model_25_gpt41nano": {"canonical_rows": 75, "replay_rows": 75, "mismatches": 0},
+            "current_100_gpt54mini": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
+            "current_100_gpt55": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
+            "shuffled_scene_100_gpt54mini": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
+            "natural_language_scene_100_gpt54mini": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
         },
         "paper/tables/api_cache_replay_verification.md",
     )

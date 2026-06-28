@@ -6,14 +6,14 @@ The companion zip is built deterministically from this file list with fixed arch
 ## Archive
 
 - Default path: `paper/clarify_to_act_supplement.zip`
-- Included files: 175
+- Included files: 185
 - Missing required files: none
 
 ## Groups
 
-- Source: 55 files
-- Canonical data and cached API evidence: 17 files
-- Paper, tables, figures, and audits: 101 files
+- Source: 56 files
+- Canonical data and cached API evidence: 19 files
+- Paper, tables, figures, and audits: 108 files
 - Top-level summaries: 2 files
 
 ## Exclusion Policy
@@ -58,6 +58,8 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `data/runs/api_eval_100_corrected_results.jsonl`
 - `data/runs/api_eval_100_cot_results.jsonl`
 - `data/runs/api_gpt_5_4_mini_cache.jsonl`
+- `data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl`
+- `data/runs/api_gpt_5_4_mini_nl_cache.jsonl`
 - `data/runs/api_gpt_5_4_mini_scene_cache.jsonl`
 - `data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl`
 - `data/runs/api_gpt_5_4_mini_test100_results.jsonl`
@@ -105,6 +107,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/ambiguity_mix_shift.md`
 - `paper/tables/ambiguity_utility_diagnostic.md`
 - `paper/tables/api_cache_replay_verification.md`
+- `paper/tables/api_candidate_calibration.md`
 - `paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md`
 - `paper/tables/api_eval_100_corrected/calibration_by_margin.md`
 - `paper/tables/api_eval_100_corrected/category_breakdown.md`
@@ -125,6 +128,12 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/api_eval_100_extended/main_results.md`
 - `paper/tables/api_eval_100_extended/paired_differences.md`
 - `paper/tables/api_eval_100_extended/question_usefulness.md`
+- `paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md`
+- `paper/tables/api_gpt_5_4_mini_natural_language_test100/category_breakdown.md`
+- `paper/tables/api_gpt_5_4_mini_natural_language_test100/failure_examples.md`
+- `paper/tables/api_gpt_5_4_mini_natural_language_test100/main_results.md`
+- `paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md`
+- `paper/tables/api_gpt_5_4_mini_natural_language_test100_results.md`
 - `paper/tables/api_gpt_5_4_mini_scene_format_robustness.md`
 - `paper/tables/api_gpt_5_4_mini_shuffled_test100/category_breakdown.md`
 - `paper/tables/api_gpt_5_4_mini_shuffled_test100/failure_examples.md`
@@ -179,6 +188,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `src/ambiguity_utility_diagnostic.py`
 - `src/analyze_results.py`
 - `src/api_cache_replay_verification.py`
+- `src/api_candidate_calibration.py`
 - `src/api_ecu_ablation.py`
 - `src/api_ecu_margin_analysis.py`
 - `src/api_subset_stability.py`

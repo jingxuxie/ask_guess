@@ -57,6 +57,7 @@ def normalize_action(action: object) -> str:
         "hand_over": "bring",
         "pick_up_and_hand_over": "bring",
         "pick_up": "bring",
+        "pickup": "bring",
         "bring_to_user": "bring",
         "pass_to_user": "bring",
         "bring_to_current_user": "bring",

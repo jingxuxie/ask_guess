@@ -88,6 +88,12 @@ class EnvironmentInvariantTests(unittest.TestCase):
         self.assertTrue(
             action_success(
                 bring_episode,
+                {"type": "ACT", "action": "pickup", "target_id": bring_hidden["target_id"]},
+            )
+        )
+        self.assertTrue(
+            action_success(
+                bring_episode,
                 {"type": "ACT", "action": "bring to current_user", "target_id": bring_hidden["target_id"]},
             )
         )

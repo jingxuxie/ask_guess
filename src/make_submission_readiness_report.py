@@ -25,11 +25,13 @@ CRITICAL_ARTIFACTS = [
     "data/runs/api_gpt_5_4_mini_test100_results.jsonl",
     "data/runs/api_gpt_5_5_test100_results.jsonl",
     "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl",
+    "data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl",
     "data/runs/api_cache.jsonl",
     "data/runs/api_second_model_cache.jsonl",
     "data/runs/api_gpt_5_4_mini_cache.jsonl",
     "data/runs/api_gpt_5_5_cache.jsonl",
     "data/runs/api_gpt_5_4_mini_scene_cache.jsonl",
+    "data/runs/api_gpt_5_4_mini_nl_cache.jsonl",
     "paper/dataset_card.md",
     "paper/claim_verification.md",
     "paper/claim_scope.md",
@@ -61,6 +63,7 @@ SUPPORTING_ARTIFACTS = [
     "paper/tables/api_eval_100_corrected/calibration_by_margin.md",
     "paper/tables/api_eval_100_corrected/ecu_ablation.md",
     "paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md",
+    "paper/tables/api_candidate_calibration.md",
     "paper/tables/api_eval_100_corrected/utility_sensitivity.md",
     "paper/tables/api_eval_100_extended/failure_taxonomy.md",
     "paper/tables/api_eval_100_extended/question_usefulness.md",
@@ -73,7 +76,9 @@ SUPPORTING_ARTIFACTS = [
     "paper/tables/api_gpt_5_4_mini_test100/paired_differences.md",
     "paper/tables/api_gpt_5_5_test100/paired_differences.md",
     "paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md",
     "paper/tables/api_gpt_5_4_mini_scene_format_robustness.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md",
     "paper/tables/current_model_sweep.md",
     "paper/audits/AUDIT_SUMMARY.md",
     "paper/dataset_card.md",
@@ -102,6 +107,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
     parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
     parser.add_argument("--api-gpt54-mini-shuffled-results", default="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl")
+    parser.add_argument(
+        "--api-gpt54-mini-natural-language-results",
+        default="data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl",
+    )
     parser.add_argument("--api-second-model-cache", default="data/runs/api_second_model_cache.jsonl")
     parser.add_argument("--ambiguity-mix-episodes", default="data/generated/ambiguity_mix_shift_episodes.jsonl")
     parser.add_argument("--ambiguity-mix-results", default="data/runs/ambiguity_mix_shift_results.jsonl")
@@ -260,6 +269,7 @@ def main() -> None:
     gpt54_rows = read_jsonl(args.api_gpt54_mini_results)
     gpt55_rows = read_jsonl(args.api_gpt55_results)
     gpt54_shuffled_rows = read_jsonl(args.api_gpt54_mini_shuffled_results)
+    gpt54_natural_language_rows = read_jsonl(args.api_gpt54_mini_natural_language_results)
     cache = cache_totals(Path(args.api_cache))
     second_model_cache = cache_totals(Path(args.api_second_model_cache))
 
@@ -288,6 +298,9 @@ def main() -> None:
     gpt54_shuffled_ask = stats_for(gpt54_shuffled_rows, "test", "api_ask_needed")
     gpt54_shuffled_cot = stats_for(gpt54_shuffled_rows, "test", "api_ask_needed_cot")
     gpt54_shuffled_ecu = stats_for(gpt54_shuffled_rows, "test", "api_ecu")
+    gpt54_natural_language_ask = stats_for(gpt54_natural_language_rows, "test", "api_ask_needed")
+    gpt54_natural_language_cot = stats_for(gpt54_natural_language_rows, "test", "api_ask_needed_cot")
+    gpt54_natural_language_ecu = stats_for(gpt54_natural_language_rows, "test", "api_ecu")
     offline_test_ecu = stats_for(offline_rows, "test", "ecu")
     offline_ood_ecu = stats_for(offline_rows, "ood_test", "ecu")
     ambiguity_mix_ecu = stats_for(ambiguity_mix_rows, "ood_ambiguity_mix", "ecu")
@@ -337,16 +350,29 @@ def main() -> None:
                 "Current calibration tables show ECU asks in ask-preferred bins and avoids act-preferred bins; "
                 "prompted Ask-Needed asks in both bins. Cached API ECU candidate margins agree with oracle ask labels on 0.990 of main API rows."
             ),
-            "paper/tables/api_eval_100_corrected/calibration_by_margin.md; paper/tables/api_style_stress_50/calibration_by_margin.md; paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md; paper/figures/api_calibration_ask_rate.svg",
+            "paper/tables/api_eval_100_corrected/calibration_by_margin.md; paper/tables/api_style_stress_50/calibration_by_margin.md; paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md; paper/tables/api_candidate_calibration.md; paper/figures/api_calibration_ask_rate.svg",
         ],
         [
-            "ECU is stable under a basic scene-serialization perturbation.",
+            "ECU uses plausible candidate probabilities, not perfect hidden-intent prediction.",
+            (
+                "On GPT-4.1-mini ECU rows, the model top success class matches the benchmark top-prior class on 0.970 of episodes, "
+                "with mean prior TV 0.057; the top class matches the sampled hidden class on 0.770. "
+                "Model and oracle utility margins remain strongly correlated."
+            ),
+            "paper/tables/api_candidate_calibration.md",
+        ],
+        [
+            "ECU is stable under bounded scene-serialization perturbations.",
             (
                 f"GPT-5.4-mini shuffled object order: ECU {format_float(gpt54_shuffled_ecu['net_utility'])}, "
                 f"Ask-Needed {format_float(gpt54_shuffled_ask['net_utility'])}, CoT {format_float(gpt54_shuffled_cot['net_utility'])}; "
-                "ECU changes ask/act decisions on 0/100 shared episodes."
+                "ECU changes ask/act decisions on 0/100 shared episodes. "
+                f"Natural-language scene: ECU {format_float(gpt54_natural_language_ecu['net_utility'])}, "
+                f"Ask-Needed {format_float(gpt54_natural_language_ask['net_utility'])}, "
+                f"CoT {format_float(gpt54_natural_language_cot['net_utility'])}; "
+                "ECU changes ask/act decisions on 1/100 shared episodes."
             ),
-            "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl; paper/tables/api_gpt_5_4_mini_scene_format_robustness.md; paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md",
+            "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl; data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl; paper/tables/api_gpt_5_4_mini_scene_format_robustness.md; paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md",
         ],
         [
             "The main API utility advantage is not tied to one narrow scoring parameter.",
@@ -412,7 +438,7 @@ def main() -> None:
         ],
         [
             "The shipped API evidence is cache-replayable without network calls.",
-            "Cache-only replay reproduces all 625 canonical API rows across the main, CoT, style-stress, and second-model result files with zero stable-row mismatches.",
+            "Cache-only replay reproduces all 2225 canonical API rows across the main, CoT, style-stress, second-model, current-model, and scene-format result files with zero stable-row mismatches.",
             "paper/tables/api_cache_replay_verification.md",
         ],
         [

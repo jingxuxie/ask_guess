@@ -50,6 +50,7 @@ class ReplayConfig:
     split: str
     limit_per_category: int
     policies: tuple[str, ...]
+    scene_format: str = "json"
 
 
 REPLAY_CONFIGS = [
@@ -93,6 +94,48 @@ REPLAY_CONFIGS = [
         limit_per_category=5,
         policies=("api_direct_act", "api_ask_needed", "api_ecu"),
     ),
+    ReplayConfig(
+        name="current_100_gpt54mini",
+        episodes="data/generated/episodes.jsonl",
+        canonical_results="data/runs/api_gpt_5_4_mini_test100_results.jsonl",
+        cache="data/runs/api_gpt_5_4_mini_cache.jsonl",
+        model="gpt-5.4-mini",
+        split="test",
+        limit_per_category=20,
+        policies=("api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"),
+    ),
+    ReplayConfig(
+        name="current_100_gpt55",
+        episodes="data/generated/episodes.jsonl",
+        canonical_results="data/runs/api_gpt_5_5_test100_results.jsonl",
+        cache="data/runs/api_gpt_5_5_cache.jsonl",
+        model="gpt-5.5",
+        split="test",
+        limit_per_category=20,
+        policies=("api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"),
+    ),
+    ReplayConfig(
+        name="shuffled_scene_100_gpt54mini",
+        episodes="data/generated/episodes.jsonl",
+        canonical_results="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl",
+        cache="data/runs/api_gpt_5_4_mini_scene_cache.jsonl",
+        model="gpt-5.4-mini",
+        split="test",
+        limit_per_category=20,
+        policies=("api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"),
+        scene_format="shuffled_json",
+    ),
+    ReplayConfig(
+        name="natural_language_scene_100_gpt54mini",
+        episodes="data/generated/episodes.jsonl",
+        canonical_results="data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl",
+        cache="data/runs/api_gpt_5_4_mini_nl_cache.jsonl",
+        model="gpt-5.4-mini",
+        split="test",
+        limit_per_category=20,
+        policies=("api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"),
+        scene_format="natural_language",
+    ),
 ]
 
 
@@ -128,7 +171,7 @@ def replay_rows(config: ReplayConfig) -> list[dict[str, Any]]:
     rows = []
     for episode in selected:
         for policy in config.policies:
-            rows.append(run_policy(client, policy, episode))
+            rows.append(run_policy(client, policy, episode, config.scene_format))
     return rows
 
 

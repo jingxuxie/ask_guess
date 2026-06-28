@@ -97,7 +97,7 @@ The auxiliary private-reasoning API baseline is cached in `data/runs/api_eval_10
 The style-stress result is summarized in `paper/tables/api_style_stress_50/`.
 The auxiliary 25-episode `gpt-4.1-nano` sanity check is cached in `data/runs/api_second_model_25_results.jsonl` and summarized in `paper/tables/api_second_model_25/`.
 The current-model 100-episode sweeps are cached in `data/runs/api_gpt_5_4_mini_test100_results.jsonl` and `data/runs/api_gpt_5_5_test100_results.jsonl`, with combined summary `paper/tables/current_model_sweep.md`.
-The `gpt-5.4-mini` shuffled-object-order robustness check is cached in `data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl` and summarized in `paper/tables/api_gpt_5_4_mini_scene_format_robustness.md`.
+The `gpt-5.4-mini` scene-serialization robustness checks are cached in `data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl` and `data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl`, with paired summaries in `paper/tables/api_gpt_5_4_mini_scene_format_robustness.md` and `paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md`.
 The no-API held-out ambiguity-mix diagnostic is in `data/generated/ambiguity_mix_shift_episodes.jsonl` and `data/runs/ambiguity_mix_shift_results.jsonl`, with summary table `paper/tables/ambiguity_mix_shift.md`.
 The no-API ambiguity-vs-utility diagnostic is summarized in `paper/tables/ambiguity_utility_diagnostic.md`; the situated contrast slices are summarized in `paper/tables/situated_contrast_analysis.md`.
 The CLAMBER external sanity check is summarized in `paper/tables/clamber_external_sanity.md`; it uses a locally downloaded public CLAMBER JSONL and does not make OpenAI API calls.

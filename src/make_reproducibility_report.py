@@ -24,11 +24,13 @@ ARTIFACTS = [
     "data/runs/api_gpt_5_4_mini_test100_results.jsonl",
     "data/runs/api_gpt_5_5_test100_results.jsonl",
     "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl",
+    "data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl",
     "data/runs/api_cache.jsonl",
     "data/runs/api_second_model_cache.jsonl",
     "data/runs/api_gpt_5_4_mini_cache.jsonl",
     "data/runs/api_gpt_5_5_cache.jsonl",
     "data/runs/api_gpt_5_4_mini_scene_cache.jsonl",
+    "data/runs/api_gpt_5_4_mini_nl_cache.jsonl",
     "paper/tables/benchmark_categories.md",
     "paper/tables/qualitative_examples.md",
     "paper/tables/main_results.md",
@@ -49,6 +51,7 @@ ARTIFACTS = [
     "paper/tables/api_eval_100_corrected/ecu_ablation.md",
     "paper/tables/api_eval_100_corrected/utility_sensitivity.md",
     "paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md",
+    "paper/tables/api_candidate_calibration.md",
     "paper/tables/api_eval_100_corrected/calibration_by_margin.md",
     "paper/tables/api_eval_100_cot_results.md",
     "paper/tables/api_eval_100_cot/main_results.md",
@@ -86,6 +89,12 @@ ARTIFACTS = [
     "paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md",
     "paper/tables/api_gpt_5_4_mini_shuffled_test100/failure_examples.md",
     "paper/tables/api_gpt_5_4_mini_scene_format_robustness.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_test100_results.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_test100/main_results.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_test100/category_breakdown.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_test100/failure_examples.md",
+    "paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md",
     "paper/tables/current_model_sweep.md",
     "paper/tables/cost_sensitivity.md",
     "paper/figures/api_main_net_utility.svg",
@@ -109,6 +118,7 @@ ARTIFACTS = [
     "src/api_subset_stability.py",
     "src/audit_supplement_release.py",
     "src/api_ecu_margin_analysis.py",
+    "src/api_candidate_calibration.py",
     "src/api_utility_sensitivity.py",
     "src/make_audit_packet.py",
     "src/complete_audit_packet.py",
@@ -159,11 +169,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
     parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
     parser.add_argument("--api-gpt54-mini-shuffled-results", default="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl")
+    parser.add_argument(
+        "--api-gpt54-mini-natural-language-results",
+        default="data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl",
+    )
     parser.add_argument("--api-cache", default="data/runs/api_cache.jsonl")
     parser.add_argument("--api-second-model-cache", default="data/runs/api_second_model_cache.jsonl")
     parser.add_argument("--api-gpt54-mini-cache", default="data/runs/api_gpt_5_4_mini_cache.jsonl")
     parser.add_argument("--api-gpt55-cache", default="data/runs/api_gpt_5_5_cache.jsonl")
     parser.add_argument("--api-gpt54-mini-scene-cache", default="data/runs/api_gpt_5_4_mini_scene_cache.jsonl")
+    parser.add_argument("--api-gpt54-mini-nl-cache", default="data/runs/api_gpt_5_4_mini_nl_cache.jsonl")
     parser.add_argument("--out", default="paper/reproducibility.md")
     return parser.parse_args()
 
@@ -292,10 +307,14 @@ conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-4.1-mi
 conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_shuffled_test100
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/scene_format_robustness_report.py --baseline data/runs/api_gpt_5_4_mini_test100_results.jsonl --perturbed data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_scene_format_robustness.md
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_natural_language_test100
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/scene_format_robustness_report.py --baseline data/runs/api_gpt_5_4_mini_test100_results.jsonl --perturbed data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md
 conda run -n ask_dont_guess python src/api_cache_replay_verification.py --out paper/tables/api_cache_replay_verification.md
 conda run -n ask_dont_guess python src/api_ecu_ablation.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/ecu_ablation.md
 conda run -n ask_dont_guess python src/api_utility_sensitivity.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/utility_sensitivity.md
 conda run -n ask_dont_guess python src/api_ecu_margin_analysis.py --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md
+conda run -n ask_guess python src/api_candidate_calibration.py --run gpt-4.1-mini=data/runs/api_eval_100_corrected_results.jsonl --run gpt-5.4-mini-json=data/runs/api_gpt_5_4_mini_test100_results.jsonl --run gpt-5.5=data/runs/api_gpt_5_5_test100_results.jsonl --run gpt-5.4-mini-shuffled=data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --run gpt-5.4-mini-natural-language=data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl --out paper/tables/api_candidate_calibration.md
 conda run -n ask_dont_guess python src/make_audit_packet.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl,data/runs/api_style_stress_50_results.jsonl --scenarios-per-category 20 --questions 100 --out-dir paper/audits
 conda run -n ask_dont_guess python src/complete_audit_packet.py --audit-dir paper/audits
 conda run -n ask_dont_guess python src/robustness_analysis.py --episodes data/generated/episodes.jsonl --results data/runs/offline_results.jsonl --out paper/tables/robustness_breakdown.md
@@ -349,6 +368,12 @@ Bounded paid API command for the GPT-5.4-mini shuffled-object-order scene-format
 conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md --cache data/runs/api_gpt_5_4_mini_scene_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format shuffled_json --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
 ```
 
+Bounded paid API command for the GPT-5.4-mini compact natural-language scene-format robustness check:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_natural_language_test100_results.md --cache data/runs/api_gpt_5_4_mini_nl_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format natural_language --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
 Safe cached API replay, with no network calls and no API spending. This fails on any cache miss:
 
 ```bash
@@ -386,6 +411,12 @@ Safe cached replay for the shuffled-object-order scene-format robustness check:
 conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_shuffled_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_shuffled_test100_replay.md --cache data/runs/api_gpt_5_4_mini_scene_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format shuffled_json --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
 ```
 
+Safe cached replay for the compact natural-language scene-format robustness check:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_natural_language_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_natural_language_test100_replay.md --cache data/runs/api_gpt_5_4_mini_nl_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format natural_language --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+```
+
 Paper build:
 
 ```bash
@@ -410,6 +441,7 @@ def main() -> None:
     api_gpt54_mini_rows = read_jsonl(args.api_gpt54_mini_results)
     api_gpt55_rows = read_jsonl(args.api_gpt55_results)
     api_gpt54_mini_shuffled_rows = read_jsonl(args.api_gpt54_mini_shuffled_results)
+    api_gpt54_mini_natural_language_rows = read_jsonl(args.api_gpt54_mini_natural_language_results)
 
     parts = [
         "# Reproducibility Report",
@@ -449,6 +481,14 @@ def main() -> None:
         "GPT-5.4-mini on the same 100 stratified test episodes with visible scene object order reversed:",
         "",
         metric_table(api_gpt54_mini_shuffled_rows, ["api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"], split_filter="test"),
+        "",
+        "GPT-5.4-mini on the same 100 stratified test episodes with a compact natural-language scene description:",
+        "",
+        metric_table(
+            api_gpt54_mini_natural_language_rows,
+            ["api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"],
+            split_filter="test",
+        ),
         "## API Cache",
         "",
         cache_summary(Path(args.api_cache)),
@@ -468,6 +508,10 @@ def main() -> None:
         "GPT-5.4-mini shuffled-scene cache:",
         "",
         cache_summary(Path(args.api_gpt54_mini_scene_cache)),
+        "",
+        "GPT-5.4-mini natural-language-scene cache:",
+        "",
+        cache_summary(Path(args.api_gpt54_mini_nl_cache)),
         "## Artifact Hashes",
         "",
         artifact_table(ARTIFACTS),

@@ -45,6 +45,7 @@ Use these canonical artifacts for the current draft.
 - `tables/api_eval_100_corrected/ecu_ablation.md`: no-API replay ablation of ECU decision-rule safeguards.
 - `tables/api_eval_100_corrected/utility_sensitivity.md`: no-API fixed-output rescoring of cached API results under alternate ask/wrong-action costs.
 - `tables/api_eval_100_corrected/api_ecu_margin_analysis.md`: no-API diagnostic of cached API ECU candidate utility margins.
+- `tables/api_candidate_calibration.md`: no-API diagnostic of cached API ECU candidate-probability calibration.
 - `tables/api_eval_100_corrected/calibration_by_margin.md`: utility-margin calibration for the final API result.
 - `tables/api_eval_100_corrected/failure_examples.md`: final API failure examples.
 - `tables/api_eval_100_extended/`: auxiliary API comparison including the private-reasoning Ask-Needed baseline, failure taxonomy, and question-usefulness diagnostics.
@@ -60,6 +61,9 @@ Use these canonical artifacts for the current draft.
 - `tables/api_gpt_5_4_mini_shuffled_test100_results.md`: 100-episode `gpt-5.4-mini` shuffled-object-order robustness result.
 - `tables/api_gpt_5_4_mini_shuffled_test100/`: detailed shuffled-object-order main, category, paired-difference, and failure-example tables.
 - `tables/api_gpt_5_4_mini_scene_format_robustness.md`: baseline-vs-shuffled object-order sensitivity report.
+- `tables/api_gpt_5_4_mini_natural_language_test100_results.md`: 100-episode `gpt-5.4-mini` compact natural-language scene robustness result.
+- `tables/api_gpt_5_4_mini_natural_language_test100/`: detailed natural-language scene main, category, paired-difference, and failure-example tables.
+- `tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md`: baseline-vs-natural-language scene sensitivity report.
 
 Older `api_smoke*`, current-model smoke files, and `api_eval_100_results.md` files are retained as development traces, not paper evidence.
 

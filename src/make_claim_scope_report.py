@@ -93,6 +93,12 @@ def main() -> None:
             "Do not treat this internal cached-row diagnostic as an independent external benchmark.",
         ],
         [
+            "API ECU uses rough candidate probabilities rather than perfect hidden-intent calibration.",
+            "On the main cached API subset, the model top success class matches the benchmark top-prior class on 0.970 of rows, but the sampled hidden class on 0.770; model and oracle utility margins have Pearson correlation 0.948.",
+            "paper/tables/api_candidate_calibration.md",
+            "Do not claim the model estimates exact user-intent probabilities.",
+        ],
+        [
             "Private reasoning alone does not close the calibration gap.",
             f"CoT Ask-Needed utility {format_float(cot['net_utility'])}; missed clarification {format_float(cot['missed_clarification_rate'])}.",
             "data/runs/api_eval_100_cot_results.jsonl",
@@ -118,7 +124,7 @@ def main() -> None:
         ],
         [
             "The API evidence is reproducible from shipped caches.",
-            "Cache-only replay reproduces all 625 canonical API rows with zero stable-row mismatches.",
+            "Cache-only replay reproduces all 2225 canonical API rows with zero stable-row mismatches.",
             "paper/tables/api_cache_replay_verification.md",
             "Do not present cache replay as a fresh model evaluation.",
         ],
