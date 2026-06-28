@@ -6,14 +6,14 @@ The companion zip is built deterministically from this file list with fixed arch
 ## Archive
 
 - Default path: `paper/clarify_to_act_supplement.zip`
-- Included files: 150
+- Included files: 175
 - Missing required files: none
 
 ## Groups
 
-- Source: 53 files
-- Canonical data and cached API evidence: 11 files
-- Paper, tables, figures, and audits: 84 files
+- Source: 55 files
+- Canonical data and cached API evidence: 17 files
+- Paper, tables, figures, and audits: 101 files
 - Top-level summaries: 2 files
 
 ## Exclusion Policy
@@ -35,10 +35,12 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/clarify_to_act_supplement.zip`
 - `data/generated/smoke_episodes.jsonl`
 - `data/runs/api_smoke*.jsonl`
+- `data/runs/api_gpt_*_smoke*.jsonl`
 - `data/runs/smoke_*.jsonl`
 - `data/runs/api_eval_100_results.jsonl`
 - `data/runs/api_second_model_viability_results.jsonl`
 - `paper/tables/api_smoke*`
+- `paper/tables/api_gpt_*_smoke*`
 - `paper/tables/smoke*`
 - `paper/tables/api_eval_100/*`
 - `paper/tables/api_eval_100_results.md`
@@ -55,6 +57,12 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `data/runs/api_cache.jsonl`
 - `data/runs/api_eval_100_corrected_results.jsonl`
 - `data/runs/api_eval_100_cot_results.jsonl`
+- `data/runs/api_gpt_5_4_mini_cache.jsonl`
+- `data/runs/api_gpt_5_4_mini_scene_cache.jsonl`
+- `data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl`
+- `data/runs/api_gpt_5_4_mini_test100_results.jsonl`
+- `data/runs/api_gpt_5_5_cache.jsonl`
+- `data/runs/api_gpt_5_5_test100_results.jsonl`
 - `data/runs/api_second_model_25_results.jsonl`
 - `data/runs/api_second_model_cache.jsonl`
 - `data/runs/api_style_stress_50_results.jsonl`
@@ -117,6 +125,22 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/api_eval_100_extended/main_results.md`
 - `paper/tables/api_eval_100_extended/paired_differences.md`
 - `paper/tables/api_eval_100_extended/question_usefulness.md`
+- `paper/tables/api_gpt_5_4_mini_scene_format_robustness.md`
+- `paper/tables/api_gpt_5_4_mini_shuffled_test100/category_breakdown.md`
+- `paper/tables/api_gpt_5_4_mini_shuffled_test100/failure_examples.md`
+- `paper/tables/api_gpt_5_4_mini_shuffled_test100/main_results.md`
+- `paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md`
+- `paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md`
+- `paper/tables/api_gpt_5_4_mini_test100/category_breakdown.md`
+- `paper/tables/api_gpt_5_4_mini_test100/failure_examples.md`
+- `paper/tables/api_gpt_5_4_mini_test100/main_results.md`
+- `paper/tables/api_gpt_5_4_mini_test100/paired_differences.md`
+- `paper/tables/api_gpt_5_4_mini_test100_results.md`
+- `paper/tables/api_gpt_5_5_test100/category_breakdown.md`
+- `paper/tables/api_gpt_5_5_test100/failure_examples.md`
+- `paper/tables/api_gpt_5_5_test100/main_results.md`
+- `paper/tables/api_gpt_5_5_test100/paired_differences.md`
+- `paper/tables/api_gpt_5_5_test100_results.md`
 - `paper/tables/api_second_model_25/category_breakdown.md`
 - `paper/tables/api_second_model_25/failure_examples.md`
 - `paper/tables/api_second_model_25/main_results.md`
@@ -135,6 +159,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/clamber_external_sanity.md`
 - `paper/tables/controller_analysis.md`
 - `paper/tables/cost_sensitivity.md`
+- `paper/tables/current_model_sweep.md`
 - `paper/tables/failure_examples.md`
 - `paper/tables/main_results.md`
 - `paper/tables/paired_differences.md`
@@ -173,6 +198,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `src/complete_audit_packet.py`
 - `src/controller_analysis.py`
 - `src/cost_sensitivity.py`
+- `src/current_model_sweep_report.py`
 - `src/failure_taxonomy.py`
 - `src/generate_scenarios.py`
 - `src/inspect_scenarios.py`
@@ -192,6 +218,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `src/robustness_analysis.py`
 - `src/run_api_experiment.py`
 - `src/run_experiment.py`
+- `src/scene_format_robustness_report.py`
 - `src/simulated_user_audit.py`
 - `src/situated_contrast_analysis.py`
 - `src/verify_claims.py`

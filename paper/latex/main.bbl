@@ -1,9 +1,82 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ahn et~al.(2022)Ahn, Brohan, Brown, Chebotar, Cortes, David, Finn, Fu,
+  Gopalakrishnan, Hausman, Herzog, Ho, Hsu, Ibarz, Ichter, Irpan, Jang, Ruano,
+  Jeffrey, Jesmonth, Joshi, Julian, Kalashnikov, Kuang, Lee, Levine, Lu, Luu,
+  Parada, Pastor, Quiambao, Rao, Rettinghouse, Reyes, Sermanet, Sievers, Tan,
+  Toshev, Vanhoucke, Xia, Xiao, Xu, Xu, and Yan]{ahn2022saycan}
+Michael Ahn, Anthony Brohan, Noah Brown, Yevgen Chebotar, Omar Cortes, Byron
+  David, Chelsea Finn, Chuyuan Fu, Keerthana Gopalakrishnan, Karol Hausman,
+  Alexander Herzog, Daniel Ho, Jasmine Hsu, Julian Ibarz, Brian Ichter, Alex
+  Irpan, Eric Jang, Rosario~Jauregui Ruano, Kyle Jeffrey, Sally Jesmonth,
+  Nikhil~J. Joshi, Ryan Julian, Dmitry Kalashnikov, Yuheng Kuang, Kuang-Huei
+  Lee, Sergey Levine, Yao Lu, Linda Luu, Carolina Parada, Peter Pastor, Jodilyn
+  Quiambao, Kanishka Rao, Jarek Rettinghouse, Diego Reyes, Pierre Sermanet,
+  Nicolas Sievers, Clayton Tan, Alexander Toshev, Vincent Vanhoucke, Fei Xia,
+  Ted Xiao, Peng Xu, Sichun Xu, and Mengyuan Yan.
+\newblock Do as i can, not as i say: Grounding language in robotic affordances.
+\newblock \emph{arXiv preprint arXiv:2204.01691}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2204.01691}.
+
+\bibitem[Aliannejadi et~al.(2019)Aliannejadi, Zamani, Crestani, and
+  Croft]{aliannejadi2019asking}
+Mohammad Aliannejadi, Hamed Zamani, Fabio Crestani, and W.~Bruce Croft.
+\newblock Asking clarifying questions in open-domain information-seeking
+  conversations.
+\newblock In \emph{Proceedings of the 42nd International ACM SIGIR Conference
+  on Research and Development in Information Retrieval}, pp.\  475--484, 2019.
+\newblock \doi{10.1145/3331184.3331265}.
+
+\bibitem[Bisk et~al.(2020)Bisk, Holtzman, Thomason, Andreas, Bengio, Chai,
+  Lapata, Lazaridou, May, Nisnevich, Pinto, and Turian]{bisk2020experience}
+Yonatan Bisk, Ari Holtzman, Jesse Thomason, Jacob Andreas, Yoshua Bengio, Joyce
+  Chai, Mirella Lapata, Angeliki Lazaridou, Jonathan May, Aleksandr Nisnevich,
+  Nicolas Pinto, and Joseph Turian.
+\newblock Experience grounds language.
+\newblock In \emph{Proceedings of the 2020 Conference on Empirical Methods in
+  Natural Language Processing}, pp.\  8718--8735, 2020.
+\newblock \doi{10.18653/v1/2020.emnlp-main.703}.
+
+\bibitem[Clark \& Wilkes-Gibbs(1986)Clark and Wilkes-Gibbs]{clark1986referring}
+Herbert~H. Clark and Deanna Wilkes-Gibbs.
+\newblock Referring as a collaborative process.
+\newblock \emph{Cognition}, 22\penalty0 (1):\penalty0 1--39, 1986.
+\newblock \doi{10.1016/0010-0277(86)90010-7}.
+
+\bibitem[de~Vries et~al.(2017)de~Vries, Strub, Chandar, Pietquin, Larochelle,
+  and Courville]{devries2017guesswhat}
+Harm de~Vries, Florian Strub, Sarath Chandar, Olivier Pietquin, Hugo
+  Larochelle, and Aaron Courville.
+\newblock Guesswhat?! visual object discovery through multi-modal dialogue.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pp.\  5503--5512, 2017.
+
+\bibitem[Frank \& Goodman(2012)Frank and Goodman]{frank2012predicting}
+Michael~C. Frank and Noah~D. Goodman.
+\newblock Predicting pragmatic reasoning in language games.
+\newblock \emph{Science}, 336\penalty0 (6084):\penalty0 998, 2012.
+\newblock \doi{10.1126/science.1218633}.
+
+\bibitem[Grice(1975)]{grice1975logic}
+H.~Paul Grice.
+\newblock Logic and conversation.
+\newblock In Peter Cole and Jerry~L. Morgan (eds.), \emph{Syntax and Semantics,
+  Volume 3: Speech Acts}, pp.\  41--58. Academic Press, 1975.
+
+\bibitem[Kim et~al.(2019)Kim, Kitaev, Chen, Rohrbach, Tian, Batra, and
+  Parikh]{kim2019codraw}
+Jin-Hwa Kim, Nikita Kitaev, Xinlei Chen, Marcus Rohrbach, Yuandong Tian, Dhruv
+  Batra, and Devi Parikh.
+\newblock Codraw: Collaborative drawing as a testbed for grounded goal-driven
+  communication.
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics}, pp.\  6495--6513, 2019.
+\newblock \doi{10.18653/v1/P19-1651}.
 
 \bibitem[Kuhn et~al.(2022)Kuhn, Gal, and Farquhar]{kuhn2022clam}
 Lorenz Kuhn, Yarin Gal, and Sebastian Farquhar.
@@ -12,6 +85,13 @@ Lorenz Kuhn, Yarin Gal, and Sebastian Farquhar.
 \newblock \emph{arXiv preprint arXiv:2212.07769}, 2022.
 \newblock \doi{10.48550/arXiv.2212.07769}.
 \newblock URL \url{https://arxiv.org/abs/2212.07769}.
+
+\bibitem[Lazaridou et~al.(2017)Lazaridou, Peysakhovich, and
+  Baroni]{lazaridou2017multi}
+Angeliki Lazaridou, Alexander Peysakhovich, and Marco Baroni.
+\newblock Multi-agent cooperation and the emergence of natural language.
+\newblock In \emph{International Conference on Learning Representations}, 2017.
+\newblock URL \url{https://arxiv.org/abs/1612.07182}.
 
 \bibitem[Madge et~al.(2025)Madge, Purver, and Poesio]{madge2025referential}
 Chris Madge, Matthew Purver, and Massimo Poesio.
@@ -22,6 +102,14 @@ Chris Madge, Matthew Purver, and Massimo Poesio.
 \newblock \doi{10.18653/v1/2025.crac-1.1}.
 \newblock URL \url{https://aclanthology.org/2025.crac-1.1/}.
 
+\bibitem[Min et~al.(2020)Min, Michael, Hajishirzi, and
+  Zettlemoyer]{min2020ambigqa}
+Sewon Min, Julian Michael, Hannaneh Hajishirzi, and Luke Zettlemoyer.
+\newblock {AmbigQA}: Answering ambiguous open-domain questions.
+\newblock In \emph{Proceedings of the 2020 Conference on Empirical Methods in
+  Natural Language Processing}, pp.\  5783--5797, 2020.
+\newblock \doi{10.18653/v1/2020.emnlp-main.466}.
+
 \bibitem[Min et~al.(2024)Min, Puig, Chaplot, Yang, Rai, Parashar,
   Salakhutdinov, Bisk, and Mottaghi]{min2024situated}
 So~Yeon Min, Xavi Puig, Devendra~Singh Chaplot, Tsung-Yen Yang, Akshara Rai,
@@ -30,6 +118,24 @@ So~Yeon Min, Xavi Puig, Devendra~Singh Chaplot, Tsung-Yen Yang, Akshara Rai,
 \newblock \emph{arXiv preprint arXiv:2407.12061}, 2024.
 \newblock \doi{10.48550/arXiv.2407.12061}.
 \newblock URL \url{https://arxiv.org/abs/2407.12061}.
+
+\bibitem[Monroe et~al.(2017)Monroe, Hawkins, Goodman, and
+  Potts]{monroe2017colors}
+Will Monroe, Robert X.~D. Hawkins, Noah~D. Goodman, and Christopher Potts.
+\newblock Colors in context: A pragmatic neural model for grounded language
+  understanding.
+\newblock \emph{Transactions of the Association for Computational Linguistics},
+  5:\penalty0 325--338, 2017.
+\newblock \doi{10.1162/tacl_a_00064}.
+
+\bibitem[Padmakumar et~al.(2022)Padmakumar, Thomason, Shrivastava, Lange,
+  Narayan-Chen, Gella, Piramuthu, Tur, and Hakkani-Tur]{padmakumar2022teach}
+Aishwarya Padmakumar, Jesse Thomason, Ayush Shrivastava, Patrick Lange, Anjali
+  Narayan-Chen, Spandana Gella, Robinson Piramuthu, Gokhan Tur, and Dilek
+  Hakkani-Tur.
+\newblock {TEACh}: Task-driven embodied agents that chat.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, volume~36, pp.\  2017--2025, 2022.
 
 \bibitem[Qian et~al.(2024)Qian, He, Zhuang, Deng, Qin, Cong, Zhang, Zhou, Lin,
   Liu, and Sun]{qian2024tell}
@@ -58,5 +164,15 @@ Tong Zhang, Peixin Qin, Yang Deng, Chen Huang, Wenqiang Lei, Junhong Liu,
   for Computational Linguistics}, pp.\  10746--10766, 2024.
 \newblock \doi{10.18653/v1/2024.acl-long.578}.
 \newblock URL \url{https://aclanthology.org/2024.acl-long.578/}.
+
+\bibitem[Zhou et~al.(2024)Zhou, Zhu, Mathur, Zhang, Yu, Qi, Morency, Bisk,
+  Fried, Neubig, and Sap]{zhou2024sotopia}
+Xuhui Zhou, Hao Zhu, Leena Mathur, Ruohong Zhang, Haofei Yu, Zhengyang Qi,
+  Louis-Philippe Morency, Yonatan Bisk, Daniel Fried, Graham Neubig, and
+  Maarten Sap.
+\newblock {SOTOPIA}: Interactive evaluation for social intelligence in language
+  agents.
+\newblock \emph{arXiv preprint arXiv:2310.11667}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2310.11667}.
 
 \end{thebibliography}

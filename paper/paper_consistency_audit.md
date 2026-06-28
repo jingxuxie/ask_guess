@@ -15,11 +15,13 @@ Overall status: **PASS**
 | API ECU margin diagnostic | paper/latex/main.tex | PASS | The paper should mention that the API-side margin diagnostic is internal and cached-row based. | none |
 | external CLAMBER sanity | paper/latex/main.tex | PASS | External evidence must remain framed as motivation, not method evaluation. | none |
 | style stress result | paper/latex/main.tex | PASS | The stress result should include both effect size and its limited scope. | none |
+| scene-format robustness | paper/latex/main.tex | PASS | The manuscript should report object-order robustness without overstating broad prompt robustness. | none |
 | second model sanity check | paper/latex/main.tex | PASS | The auxiliary model result should be present but not oversold. | none |
 | fixed-output utility sensitivity | paper/latex/main.tex | PASS | Reward-sensitivity claims should make clear that outputs are fixed cached API rows. | none |
 | failure taxonomy | paper/latex/main.tex | PASS | Qualitative failure claims should match the generated taxonomy counts. | none |
 | cache-only reproducibility caveat | paper/latex/main.tex | PASS | The paper should state how API evidence is replayed without spending more API budget. | none |
 | COLM template shell | paper/latex/main.tex | PASS | The LaTeX source should use the official COLM submission shell conventions. | none |
+| current-model sweep | paper/latex/main.tex | PASS | The manuscript should report the current-model sweep without overstating it as a universal frontier result. | none |
 | main limitations | paper/latex/main.tex | PASS | Top-tier submission framing needs explicit scope boundaries in the main paper. | none |
 | simulated user audit counts in manuscript | paper/latex/main.tex | PASS | The paper should give exact evidence for the deterministic simulated-user audit. | none |
 | simulated user audit counts in full draft | paper/clarify_to_act_paper_draft.md | PASS | The longer draft should carry exact audit counts and the human-study caveat. | none |

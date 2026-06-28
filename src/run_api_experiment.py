@@ -27,6 +27,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--split", default="test")
     parser.add_argument("--limit-per-category", type=int, default=2)
     parser.add_argument("--policies", default="api_direct_act,api_ask_needed,api_ecu")
+    parser.add_argument(
+        "--scene-format",
+        choices=["json", "shuffled_json", "natural_language"],
+        default="json",
+        help="How to serialize the visible scene into API prompts.",
+    )
     parser.add_argument("--cache-only", action="store_true", help="Replay from cache and fail on any cache miss without API calls.")
     return parser.parse_args()
 
@@ -40,7 +46,46 @@ def prompt_text(name: str, **values) -> str:
 
 
 def scene_json(episode: dict) -> str:
-    return json.dumps(visible_scene(episode), sort_keys=True)
+    return scene_text(episode, "json")
+
+
+def scene_text(episode: dict, scene_format: str) -> str:
+    scene = visible_scene(episode)
+    if scene_format == "json":
+        return json.dumps(scene, sort_keys=True)
+    if scene_format == "shuffled_json":
+        shuffled = json.loads(json.dumps(scene))
+        shuffled["objects"] = list(reversed(shuffled.get("objects", [])))
+        return json.dumps(shuffled, sort_keys=True)
+    if scene_format == "natural_language":
+        return natural_language_scene(scene)
+    raise ValueError(f"Unknown scene format: {scene_format}")
+
+
+def natural_language_scene(scene: dict) -> str:
+    rooms = ", ".join(str(room).replace("_", " ") for room in scene.get("rooms", []))
+    current_user = scene.get("current_user")
+    parts = []
+    if rooms:
+        parts.append(f"Rooms: {rooms}.")
+    if current_user:
+        parts.append(f"Current user: {current_user}.")
+    object_sentences = []
+    for obj in scene.get("objects", []):
+        fields = [
+            f"id {obj.get('id')}",
+            str(obj.get("color", "")).replace("_", " "),
+            str(obj.get("state", "")).replace("_", " "),
+            str(obj.get("type", "")).replace("_", " "),
+            f"owned by {obj.get('owner')}",
+            f"at {str(obj.get('location', '')).replace('_', ' ')}",
+            "reachable" if obj.get("reachable") else "not reachable",
+            f"salience {obj.get('salience')}",
+        ]
+        object_sentences.append("; ".join(field for field in fields if field and field != "owned by None") + ".")
+    if object_sentences:
+        parts.append("Objects: " + " ".join(object_sentences))
+    return " ".join(parts)
 
 
 def visible_scene(episode: dict) -> dict:
@@ -84,32 +129,38 @@ def api_equivalence_allowed(episode: dict) -> bool:
     return bool(candidate_objects) and all(obj.get("state") == "spare" for obj in candidate_objects)
 
 
-def api_direct_act(client: CachedResponsesClient, episode: dict) -> tuple[dict, dict]:
-    prompt = prompt_text("direct_act.txt", scene_json=scene_json(episode), instruction=episode["user_instruction"])
+def api_direct_act(client: CachedResponsesClient, episode: dict, scene_format: str) -> tuple[dict, dict]:
+    prompt = prompt_text("direct_act.txt", scene_json=scene_text(episode, scene_format), instruction=episode["user_instruction"])
     parsed, meta = client.complete_json(prompt, max_output_tokens=160)
     return coerce_action(parsed), {"raw_first": parsed, "api": meta}
 
 
-def api_ask_needed_first(client: CachedResponsesClient, episode: dict) -> tuple[dict, dict]:
-    prompt = prompt_text("ask_when_needed.txt", scene_json=scene_json(episode), instruction=episode["user_instruction"])
+def api_ask_needed_first(client: CachedResponsesClient, episode: dict, scene_format: str = "json") -> tuple[dict, dict]:
+    prompt = prompt_text("ask_when_needed.txt", scene_json=scene_text(episode, scene_format), instruction=episode["user_instruction"])
     parsed, meta = client.complete_json(prompt, max_output_tokens=200)
     if parsed.get("type") == "ASK":
         return {"type": "ASK", "question": str(parsed.get("question", ""))}, {"raw_first": parsed, "api": meta}
     return coerce_action(parsed), {"raw_first": parsed, "api": meta}
 
 
-def api_ask_needed_cot_first(client: CachedResponsesClient, episode: dict) -> tuple[dict, dict]:
-    prompt = prompt_text("ask_when_needed_cot.txt", scene_json=scene_json(episode), instruction=episode["user_instruction"])
+def api_ask_needed_cot_first(client: CachedResponsesClient, episode: dict, scene_format: str) -> tuple[dict, dict]:
+    prompt = prompt_text("ask_when_needed_cot.txt", scene_json=scene_text(episode, scene_format), instruction=episode["user_instruction"])
     parsed, meta = client.complete_json(prompt, max_output_tokens=240)
     if parsed.get("type") == "ASK":
         return {"type": "ASK", "question": str(parsed.get("question", ""))}, {"raw_first": parsed, "api": meta}
     return coerce_action(parsed), {"raw_first": parsed, "api": meta}
 
 
-def api_act_after_answer(client: CachedResponsesClient, episode: dict, question: str, answer: str) -> tuple[dict, dict]:
+def api_act_after_answer(
+    client: CachedResponsesClient,
+    episode: dict,
+    question: str,
+    answer: str,
+    scene_format: str,
+) -> tuple[dict, dict]:
     prompt = prompt_text(
         "act_after_answer.txt",
-        scene_json=scene_json(episode),
+        scene_json=scene_text(episode, scene_format),
         instruction=episode["user_instruction"],
         question=question,
         answer=answer,
@@ -118,12 +169,16 @@ def api_act_after_answer(client: CachedResponsesClient, episode: dict, question:
     return coerce_action(parsed), {"raw_second": parsed, "api_second": meta}
 
 
-def api_ecu_first(client: CachedResponsesClient, episode: dict) -> tuple[dict, dict]:
-    prompt = prompt_text("candidate_interpretations.txt", scene_json=scene_json(episode), instruction=episode["user_instruction"])
+def api_ecu_first(client: CachedResponsesClient, episode: dict, scene_format: str) -> tuple[dict, dict]:
+    prompt = prompt_text(
+        "candidate_interpretations.txt",
+        scene_json=scene_text(episode, scene_format),
+        instruction=episode["user_instruction"],
+    )
     parsed, meta = client.complete_json(prompt, max_output_tokens=420)
     candidates = parsed.get("candidates", [])
     if not isinstance(candidates, list) or not candidates:
-        return api_ask_needed_first(client, episode)
+        return api_ask_needed_first(client, episode, scene_format)
 
     cleaned = []
     total_probability = 0.0
@@ -143,7 +198,7 @@ def api_ecu_first(client: CachedResponsesClient, episode: dict) -> tuple[dict, d
             }
         )
     if not cleaned:
-        return api_ask_needed_first(client, episode)
+        return api_ask_needed_first(client, episode, scene_format)
     if total_probability <= 0:
         for c in cleaned:
             c["prior"] = 1.0 / len(cleaned)
@@ -162,7 +217,7 @@ def api_ecu_first(client: CachedResponsesClient, episode: dict) -> tuple[dict, d
     if advantage > API_ECU_ASK_MARGIN and not context_resolved_enough:
         question_prompt = prompt_text(
             "generate_question.txt",
-            scene_json=scene_json(episode),
+            scene_json=scene_text(episode, scene_format),
             instruction=episode["user_instruction"],
             candidate_json=json.dumps(cleaned, sort_keys=True),
         )
@@ -188,16 +243,16 @@ def api_ecu_first(client: CachedResponsesClient, episode: dict) -> tuple[dict, d
     }
 
 
-def run_policy(client: CachedResponsesClient, policy: str, episode: dict) -> dict:
+def run_policy(client: CachedResponsesClient, policy: str, episode: dict, scene_format: str = "json") -> dict:
     debug = {}
     if policy == "api_direct_act":
-        first, debug = api_direct_act(client, episode)
+        first, debug = api_direct_act(client, episode, scene_format)
     elif policy == "api_ask_needed":
-        first, debug = api_ask_needed_first(client, episode)
+        first, debug = api_ask_needed_first(client, episode, scene_format)
     elif policy == "api_ask_needed_cot":
-        first, debug = api_ask_needed_cot_first(client, episode)
+        first, debug = api_ask_needed_cot_first(client, episode, scene_format)
     elif policy == "api_ecu":
-        first, debug = api_ecu_first(client, episode)
+        first, debug = api_ecu_first(client, episode, scene_format)
     else:
         raise ValueError(f"Unknown API policy: {policy}")
 
@@ -206,7 +261,7 @@ def run_policy(client: CachedResponsesClient, policy: str, episode: dict) -> dic
     answer = None
     if asked:
         answer = simulated_user_answer(episode, question or "")
-        final, second_debug = api_act_after_answer(client, episode, question or "", answer)
+        final, second_debug = api_act_after_answer(client, episode, question or "", answer, scene_format)
         debug.update(second_debug)
     else:
         final = first
@@ -220,6 +275,7 @@ def run_policy(client: CachedResponsesClient, policy: str, episode: dict) -> dic
         "variant": episode["variant"],
         "policy": policy,
         "model": client.model,
+        "scene_format": scene_format,
         "asked": asked,
         "question": question,
         "answer": answer,
@@ -267,7 +323,7 @@ def main() -> None:
     for episode in selected:
         for policy in policies:
             try:
-                rows.append(run_policy(client, policy, episode))
+                rows.append(run_policy(client, policy, episode, args.scene_format))
             except (OpenAIAPIError, ValueError, json.JSONDecodeError) as exc:
                 rows.append(
                     {
@@ -277,6 +333,7 @@ def main() -> None:
                         "variant": episode["variant"],
                         "policy": policy,
                         "model": client.model,
+                        "scene_format": args.scene_format,
                         "asked": False,
                         "question": None,
                         "answer": None,

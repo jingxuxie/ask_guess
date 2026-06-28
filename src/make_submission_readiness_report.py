@@ -22,8 +22,14 @@ CRITICAL_ARTIFACTS = [
     "data/runs/api_eval_100_cot_results.jsonl",
     "data/runs/api_style_stress_50_results.jsonl",
     "data/runs/api_second_model_25_results.jsonl",
+    "data/runs/api_gpt_5_4_mini_test100_results.jsonl",
+    "data/runs/api_gpt_5_5_test100_results.jsonl",
+    "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl",
     "data/runs/api_cache.jsonl",
     "data/runs/api_second_model_cache.jsonl",
+    "data/runs/api_gpt_5_4_mini_cache.jsonl",
+    "data/runs/api_gpt_5_5_cache.jsonl",
+    "data/runs/api_gpt_5_4_mini_scene_cache.jsonl",
     "paper/dataset_card.md",
     "paper/claim_verification.md",
     "paper/claim_scope.md",
@@ -64,6 +70,11 @@ SUPPORTING_ARTIFACTS = [
     "paper/tables/api_style_stress_50/question_usefulness.md",
     "paper/tables/api_second_model_25/paired_differences.md",
     "paper/tables/api_second_model_25/category_breakdown.md",
+    "paper/tables/api_gpt_5_4_mini_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_5_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_4_mini_scene_format_robustness.md",
+    "paper/tables/current_model_sweep.md",
     "paper/audits/AUDIT_SUMMARY.md",
     "paper/dataset_card.md",
     "paper/claim_scope.md",
@@ -88,6 +99,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-cot-results", default="data/runs/api_eval_100_cot_results.jsonl")
     parser.add_argument("--api-style-results", default="data/runs/api_style_stress_50_results.jsonl")
     parser.add_argument("--api-second-model-results", default="data/runs/api_second_model_25_results.jsonl")
+    parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
+    parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
+    parser.add_argument("--api-gpt54-mini-shuffled-results", default="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl")
     parser.add_argument("--api-second-model-cache", default="data/runs/api_second_model_cache.jsonl")
     parser.add_argument("--ambiguity-mix-episodes", default="data/generated/ambiguity_mix_shift_episodes.jsonl")
     parser.add_argument("--ambiguity-mix-results", default="data/runs/ambiguity_mix_shift_results.jsonl")
@@ -243,6 +257,9 @@ def main() -> None:
     cot_rows = read_jsonl(args.api_cot_results)
     style_rows = read_jsonl(args.api_style_results)
     second_model_rows = read_jsonl(args.api_second_model_results)
+    gpt54_rows = read_jsonl(args.api_gpt54_mini_results)
+    gpt55_rows = read_jsonl(args.api_gpt55_results)
+    gpt54_shuffled_rows = read_jsonl(args.api_gpt54_mini_shuffled_results)
     cache = cache_totals(Path(args.api_cache))
     second_model_cache = cache_totals(Path(args.api_second_model_cache))
 
@@ -262,6 +279,15 @@ def main() -> None:
     second_model_direct = stats_for(second_model_rows, "test", "api_direct_act")
     second_model_ask = stats_for(second_model_rows, "test", "api_ask_needed")
     second_model_ecu = stats_for(second_model_rows, "test", "api_ecu")
+    gpt54_ask = stats_for(gpt54_rows, "test", "api_ask_needed")
+    gpt54_cot = stats_for(gpt54_rows, "test", "api_ask_needed_cot")
+    gpt54_ecu = stats_for(gpt54_rows, "test", "api_ecu")
+    gpt55_ask = stats_for(gpt55_rows, "test", "api_ask_needed")
+    gpt55_cot = stats_for(gpt55_rows, "test", "api_ask_needed_cot")
+    gpt55_ecu = stats_for(gpt55_rows, "test", "api_ecu")
+    gpt54_shuffled_ask = stats_for(gpt54_shuffled_rows, "test", "api_ask_needed")
+    gpt54_shuffled_cot = stats_for(gpt54_shuffled_rows, "test", "api_ask_needed_cot")
+    gpt54_shuffled_ecu = stats_for(gpt54_shuffled_rows, "test", "api_ecu")
     offline_test_ecu = stats_for(offline_rows, "test", "ecu")
     offline_ood_ecu = stats_for(offline_rows, "ood_test", "ecu")
     ambiguity_mix_ecu = stats_for(ambiguity_mix_rows, "ood_ambiguity_mix", "ecu")
@@ -288,12 +314,22 @@ def main() -> None:
             "data/runs/api_eval_100_corrected_results.jsonl; paper/tables/api_eval_100_corrected/paired_differences.md; paper/tables/api_eval_100_corrected/subset_stability.md",
         ],
         [
-            "Private-reasoning prompting does not close the calibration gap.",
+            "Private-reasoning helps with scale but does not replace utility calibration in general.",
             (
-                f"CoT Ask-Needed utility {format_float(cot['net_utility'])}, ask rate {format_float(cot['ask_rate'])}, "
-                f"missed clarification {format_float(cot['missed_clarification_rate'])}."
+                f"GPT-4.1-mini CoT Ask-Needed utility {format_float(cot['net_utility'])}; "
+                f"GPT-5.4-mini CoT {format_float(gpt54_cot['net_utility'])} versus ECU {format_float(gpt54_ecu['net_utility'])}; "
+                f"GPT-5.5 CoT {format_float(gpt55_cot['net_utility'])} ties ECU {format_float(gpt55_ecu['net_utility'])} on the 100-episode subset."
             ),
-            "data/runs/api_eval_100_cot_results.jsonl; paper/tables/api_eval_100_extended/main_results.md",
+            "data/runs/api_eval_100_cot_results.jsonl; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl; paper/tables/current_model_sweep.md",
+        ],
+        [
+            "Current hosted models preserve the plain Ask-Needed calibration gap.",
+            (
+                f"GPT-5.4-mini: ECU {format_float(gpt54_ecu['net_utility'])}, Ask-Needed {format_float(gpt54_ask['net_utility'])}; "
+                f"GPT-5.5: ECU {format_float(gpt55_ecu['net_utility'])}, Ask-Needed {format_float(gpt55_ask['net_utility'])}. "
+                "ECU has zero missed and unnecessary clarifications in both current-model rows."
+            ),
+            "paper/tables/current_model_sweep.md; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl",
         ],
         [
             "ECU tracks utility margins.",
@@ -302,6 +338,15 @@ def main() -> None:
                 "prompted Ask-Needed asks in both bins. Cached API ECU candidate margins agree with oracle ask labels on 0.990 of main API rows."
             ),
             "paper/tables/api_eval_100_corrected/calibration_by_margin.md; paper/tables/api_style_stress_50/calibration_by_margin.md; paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md; paper/figures/api_calibration_ask_rate.svg",
+        ],
+        [
+            "ECU is stable under a basic scene-serialization perturbation.",
+            (
+                f"GPT-5.4-mini shuffled object order: ECU {format_float(gpt54_shuffled_ecu['net_utility'])}, "
+                f"Ask-Needed {format_float(gpt54_shuffled_ask['net_utility'])}, CoT {format_float(gpt54_shuffled_cot['net_utility'])}; "
+                "ECU changes ask/act decisions on 0/100 shared episodes."
+            ),
+            "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl; paper/tables/api_gpt_5_4_mini_scene_format_robustness.md; paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md",
         ],
         [
             "The main API utility advantage is not tied to one narrow scoring parameter.",

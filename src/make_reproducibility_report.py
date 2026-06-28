@@ -21,8 +21,14 @@ ARTIFACTS = [
     "data/runs/api_eval_100_cot_results.jsonl",
     "data/runs/api_style_stress_50_results.jsonl",
     "data/runs/api_second_model_25_results.jsonl",
+    "data/runs/api_gpt_5_4_mini_test100_results.jsonl",
+    "data/runs/api_gpt_5_5_test100_results.jsonl",
+    "data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl",
     "data/runs/api_cache.jsonl",
     "data/runs/api_second_model_cache.jsonl",
+    "data/runs/api_gpt_5_4_mini_cache.jsonl",
+    "data/runs/api_gpt_5_5_cache.jsonl",
+    "data/runs/api_gpt_5_4_mini_scene_cache.jsonl",
     "paper/tables/benchmark_categories.md",
     "paper/tables/qualitative_examples.md",
     "paper/tables/main_results.md",
@@ -64,6 +70,23 @@ ARTIFACTS = [
     "paper/tables/api_second_model_25/category_breakdown.md",
     "paper/tables/api_second_model_25/paired_differences.md",
     "paper/tables/api_second_model_25/failure_examples.md",
+    "paper/tables/api_gpt_5_4_mini_test100_results.md",
+    "paper/tables/api_gpt_5_4_mini_test100/main_results.md",
+    "paper/tables/api_gpt_5_4_mini_test100/category_breakdown.md",
+    "paper/tables/api_gpt_5_4_mini_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_4_mini_test100/failure_examples.md",
+    "paper/tables/api_gpt_5_5_test100_results.md",
+    "paper/tables/api_gpt_5_5_test100/main_results.md",
+    "paper/tables/api_gpt_5_5_test100/category_breakdown.md",
+    "paper/tables/api_gpt_5_5_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_5_test100/failure_examples.md",
+    "paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md",
+    "paper/tables/api_gpt_5_4_mini_shuffled_test100/main_results.md",
+    "paper/tables/api_gpt_5_4_mini_shuffled_test100/category_breakdown.md",
+    "paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md",
+    "paper/tables/api_gpt_5_4_mini_shuffled_test100/failure_examples.md",
+    "paper/tables/api_gpt_5_4_mini_scene_format_robustness.md",
+    "paper/tables/current_model_sweep.md",
     "paper/tables/cost_sensitivity.md",
     "paper/figures/api_main_net_utility.svg",
     "paper/figures/api_category_net_utility.svg",
@@ -97,6 +120,7 @@ ARTIFACTS = [
     "src/ambiguity_mix_shift_analysis.py",
     "src/clamber_external_sanity.py",
     "src/simulated_user_audit.py",
+    "src/current_model_sweep_report.py",
     "src/paper_consistency_audit.py",
     "src/make_claim_scope_report.py",
     "src/run_api_experiment.py",
@@ -132,8 +156,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-results", default="data/runs/api_eval_100_corrected_results.jsonl")
     parser.add_argument("--api-style-results", default="data/runs/api_style_stress_50_results.jsonl")
     parser.add_argument("--api-second-model-results", default="data/runs/api_second_model_25_results.jsonl")
+    parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
+    parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
+    parser.add_argument("--api-gpt54-mini-shuffled-results", default="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl")
     parser.add_argument("--api-cache", default="data/runs/api_cache.jsonl")
     parser.add_argument("--api-second-model-cache", default="data/runs/api_second_model_cache.jsonl")
+    parser.add_argument("--api-gpt54-mini-cache", default="data/runs/api_gpt_5_4_mini_cache.jsonl")
+    parser.add_argument("--api-gpt55-cache", default="data/runs/api_gpt_5_5_cache.jsonl")
+    parser.add_argument("--api-gpt54-mini-scene-cache", default="data/runs/api_gpt_5_4_mini_scene_cache.jsonl")
     parser.add_argument("--out", default="paper/reproducibility.md")
     return parser.parse_args()
 
@@ -254,6 +284,14 @@ conda run -n ask_dont_guess python src/failure_taxonomy.py --episodes data/gener
 conda run -n ask_dont_guess python src/failure_taxonomy.py --episodes data/generated/style_stress_episodes.jsonl --results data/runs/api_style_stress_50_results.jsonl --out paper/tables/api_style_stress_50/failure_taxonomy.md
 conda run -n ask_dont_guess python src/question_usefulness_analysis.py --results data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --out paper/tables/api_eval_100_extended/question_usefulness.md
 conda run -n ask_dont_guess python src/question_usefulness_analysis.py --results data/runs/api_style_stress_50_results.jsonl --out paper/tables/api_style_stress_50/question_usefulness.md
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_test100
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out-dir paper/tables/api_gpt_5_5_test100
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/api_gpt_5_5_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-4.1-mini=data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --run gpt-5.4-mini=data/runs/api_gpt_5_4_mini_test100_results.jsonl --run gpt-5.5=data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/current_model_sweep.md
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_shuffled_test100
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/scene_format_robustness_report.py --baseline data/runs/api_gpt_5_4_mini_test100_results.jsonl --perturbed data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_scene_format_robustness.md
 conda run -n ask_dont_guess python src/api_cache_replay_verification.py --out paper/tables/api_cache_replay_verification.md
 conda run -n ask_dont_guess python src/api_ecu_ablation.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/ecu_ablation.md
 conda run -n ask_dont_guess python src/api_utility_sensitivity.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/utility_sensitivity.md
@@ -298,6 +336,19 @@ Bounded paid API command for the 50-episode paraphrase and answer-style stress s
 conda run -n ask_dont_guess python src/run_api_experiment.py --episodes data/generated/style_stress_episodes.jsonl --out data/runs/api_style_stress_50_results.jsonl --summary-out paper/tables/api_style_stress_50_results.md --cache data/runs/api_cache.jsonl --model gpt-4.1-mini --split style_test --limit-per-category 10 --policies api_direct_act,api_ask_needed,api_ecu
 ```
 
+Bounded paid API commands for the current-model 100-episode sweep. These were run after smoke tests and are cached in separate model-specific cache files:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_test100_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_test100_results.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_5_test100_results.jsonl --summary-out paper/tables/api_gpt_5_5_test100_results.md --cache data/runs/api_gpt_5_5_cache.jsonl --api-key-path apikey.txt --model gpt-5.5 --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
+Bounded paid API command for the GPT-5.4-mini shuffled-object-order scene-format robustness check:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md --cache data/runs/api_gpt_5_4_mini_scene_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format shuffled_json --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
 Safe cached API replay, with no network calls and no API spending. This fails on any cache miss:
 
 ```bash
@@ -322,6 +373,19 @@ Safe cached replay for the auxiliary 25-episode gpt-4.1-nano second-model sanity
 conda run -n ask_dont_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_second_model_25_replay.jsonl --summary-out /tmp/api_second_model_25_replay.md --cache data/runs/api_second_model_cache.jsonl --model gpt-4.1-nano --split test --limit-per-category 5 --policies api_direct_act,api_ask_needed,api_ecu --cache-only
 ```
 
+Safe cached replay for the current-model 100-episode sweeps:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_test100_replay.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_5_test100_replay.jsonl --summary-out /tmp/api_gpt_5_5_test100_replay.md --cache data/runs/api_gpt_5_5_cache.jsonl --model gpt-5.5 --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+```
+
+Safe cached replay for the shuffled-object-order scene-format robustness check:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_shuffled_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_shuffled_test100_replay.md --cache data/runs/api_gpt_5_4_mini_scene_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format shuffled_json --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+```
+
 Paper build:
 
 ```bash
@@ -343,6 +407,9 @@ def main() -> None:
     api_rows = read_jsonl(args.api_results)
     api_style_rows = read_jsonl(args.api_style_results)
     api_second_model_rows = read_jsonl(args.api_second_model_results)
+    api_gpt54_mini_rows = read_jsonl(args.api_gpt54_mini_results)
+    api_gpt55_rows = read_jsonl(args.api_gpt55_results)
+    api_gpt54_mini_shuffled_rows = read_jsonl(args.api_gpt54_mini_shuffled_results)
 
     parts = [
         "# Reproducibility Report",
@@ -368,12 +435,39 @@ def main() -> None:
         "This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the headline API result.",
         "",
         metric_table(api_second_model_rows, API_POLICY_ORDER, split_filter="test"),
+        "## Current-Model API Metrics",
+        "",
+        "GPT-5.4-mini on the same 100 stratified test episodes:",
+        "",
+        metric_table(api_gpt54_mini_rows, ["api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"], split_filter="test"),
+        "",
+        "GPT-5.5 on the same 100 stratified test episodes:",
+        "",
+        metric_table(api_gpt55_rows, ["api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"], split_filter="test"),
+        "## Scene-Format Robustness API Metrics",
+        "",
+        "GPT-5.4-mini on the same 100 stratified test episodes with visible scene object order reversed:",
+        "",
+        metric_table(api_gpt54_mini_shuffled_rows, ["api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"], split_filter="test"),
         "## API Cache",
         "",
         cache_summary(Path(args.api_cache)),
         "## Auxiliary Second-Model API Cache",
         "",
         cache_summary(Path(args.api_second_model_cache)),
+        "## Current-Model API Caches",
+        "",
+        "GPT-5.4-mini cache:",
+        "",
+        cache_summary(Path(args.api_gpt54_mini_cache)),
+        "",
+        "GPT-5.5 cache:",
+        "",
+        cache_summary(Path(args.api_gpt55_cache)),
+        "",
+        "GPT-5.4-mini shuffled-scene cache:",
+        "",
+        cache_summary(Path(args.api_gpt54_mini_scene_cache)),
         "## Artifact Hashes",
         "",
         artifact_table(ARTIFACTS),

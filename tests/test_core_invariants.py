@@ -91,6 +91,24 @@ class EnvironmentInvariantTests(unittest.TestCase):
                 {"type": "ACT", "action": "bring to current_user", "target_id": bring_hidden["target_id"]},
             )
         )
+        self.assertTrue(
+            action_success(
+                bring_episode,
+                {"type": "ACT", "action": "pass to user", "target_id": bring_hidden["target_id"]},
+            )
+        )
+        self.assertTrue(
+            action_success(
+                bring_episode,
+                {"type": "ACT", "action": "pick up and hand over", "target_id": bring_hidden["target_id"]},
+            )
+        )
+        self.assertTrue(
+            action_success(
+                bring_episode,
+                {"type": "ACT", "action": "deliver", "target_id": bring_hidden["target_id"]},
+            )
+        )
 
         put_away_episode = make_preference_social(2, "test", random.Random(0), EVERYDAY_TYPES)
         put_away_hidden = next(
@@ -105,6 +123,19 @@ class EnvironmentInvariantTests(unittest.TestCase):
                     "action": "move to storage or designated place",
                     "target_id": put_away_hidden["target_id"],
                 },
+            )
+        )
+
+        equivalent_episode = make_equivalent_outcome(6, "test", random.Random(6), EVERYDAY_TYPES)
+        equivalent_hidden = next(
+            intent
+            for intent in equivalent_episode["candidate_intents"]
+            if intent["intent_id"] == equivalent_episode["hidden_intent_id"]
+        )
+        self.assertTrue(
+            action_success(
+                equivalent_episode,
+                {"type": "ACT", "action": "move a spare box to the table", "target_id": equivalent_hidden["target_id"]},
             )
         )
 

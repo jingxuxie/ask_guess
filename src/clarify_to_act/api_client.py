@@ -62,6 +62,14 @@ def parse_json_object(text: str) -> dict:
     raise ValueError(f"Could not parse JSON object from model output: {text[:300]}")
 
 
+def uses_reasoning_budget(model: str) -> bool:
+    return model.startswith("gpt-5") or model.startswith("o3") or model.startswith("o4")
+
+
+def supports_temperature(model: str) -> bool:
+    return not model.startswith("gpt-5.5")
+
+
 class CachedResponsesClient:
     def __init__(
         self,
@@ -89,14 +97,21 @@ class CachedResponsesClient:
                         self.cache[row["cache_key"]] = row
 
     def complete_json(self, prompt: str, max_output_tokens: int = 300) -> tuple[dict, dict]:
+        effective_max_output_tokens = max_output_tokens
+        if uses_reasoning_budget(self.model):
+            effective_max_output_tokens = max(max_output_tokens, 512)
+
         body = {
             "model": self.model,
             "input": prompt,
-            "temperature": 0,
-            "max_output_tokens": max_output_tokens,
+            "max_output_tokens": effective_max_output_tokens,
             "store": False,
             "text": {"format": {"type": "json_object"}},
         }
+        if supports_temperature(self.model):
+            body["temperature"] = 0
+        if uses_reasoning_budget(self.model):
+            body["reasoning"] = {"effort": "none"}
         cache_key = stable_hash(body)
         if cache_key in self.cache:
             row = self.cache[cache_key]
@@ -104,7 +119,20 @@ class CachedResponsesClient:
         if self.cache_only:
             raise OpenAIAPIError(f"Cache miss in cache-only mode for key {cache_key}.")
 
-        raw_response = self._post(body)
+        try:
+            raw_response = self._post(body)
+        except OpenAIAPIError as exc:
+            if "Unsupported parameter" not in str(exc) or "temperature" not in str(exc):
+                raise
+            body = dict(body)
+            body.pop("temperature", None)
+            cache_key = stable_hash(body)
+            if cache_key in self.cache:
+                row = self.cache[cache_key]
+                return row["parsed"], row
+            if self.cache_only:
+                raise OpenAIAPIError(f"Cache miss in cache-only mode for key {cache_key}.") from exc
+            raw_response = self._post(body)
         output_text = extract_output_text(raw_response)
         parsed = parse_json_object(output_text)
         row = {
@@ -112,6 +140,11 @@ class CachedResponsesClient:
             "model": self.model,
             "created_at": time.time(),
             "prompt_hash": stable_hash(prompt),
+            "request": {
+                "max_output_tokens": effective_max_output_tokens,
+                "reasoning_effort": body.get("reasoning", {}).get("effort"),
+                "temperature": body.get("temperature"),
+            },
             "parsed": parsed,
             "output_text": output_text,
             "usage": raw_response.get("usage", {}),

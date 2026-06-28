@@ -75,6 +75,47 @@ This report recomputes headline claims from the canonical JSONL artifacts and ge
 | API second-model api_ecu missed_clarification_rate | 0.182 | 0.182 | PASS | data/runs/api_second_model_25_results.jsonl |
 | paired second-model ECU - Ask-Needed utility delta | 0.624 | 0.624 | PASS | paper/tables/api_second_model_25/paired_differences.md |
 | paired second-model ECU - DirectAct utility delta | 0.682 | 0.682 | PASS | paper/tables/api_second_model_25/paired_differences.md |
+| current-model gpt-5.4-mini api_direct_act net_utility | 0.380 | 0.380 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_direct_act success | 0.750 | 0.750 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ask_needed net_utility | 0.868 | 0.868 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ask_needed success | 0.970 | 0.970 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ask_needed missed_clarification_rate | 0.125 | 0.125 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ask_needed unnecessary_clarification_rate | 0.519 | 0.519 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ask_needed_cot net_utility | 0.864 | 0.864 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ecu net_utility | 0.976 | 0.976 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ecu success | 1.000 | 1.000 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ecu ask_rate | 0.480 | 0.480 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ecu missed_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| current-model gpt-5.4-mini api_ecu unnecessary_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_4_mini_test100_results.jsonl |
+| paired current-model gpt-5.4-mini api_ecu - api_ask_needed utility delta | 0.107 | 0.107 | PASS | paper/tables/current_model_sweep.md |
+| paired current-model gpt-5.4-mini api_ecu - api_ask_needed_cot utility delta | 0.112 | 0.112 | PASS | paper/tables/current_model_sweep.md |
+| current-model gpt-5.5 api_direct_act net_utility | 0.240 | 0.240 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_direct_act success | 0.720 | 0.720 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ask_needed net_utility | 0.821 | 0.821 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ask_needed success | 0.960 | 0.960 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ask_needed missed_clarification_rate | 0.271 | 0.271 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ask_needed unnecessary_clarification_rate | 0.038 | 0.038 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ask_needed_cot net_utility | 0.976 | 0.976 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ecu net_utility | 0.976 | 0.976 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ecu success | 1.000 | 1.000 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ecu ask_rate | 0.480 | 0.480 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ecu missed_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| current-model gpt-5.5 api_ecu unnecessary_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
+| paired current-model gpt-5.5 api_ecu - api_ask_needed utility delta | 0.155 | 0.155 | PASS | paper/tables/current_model_sweep.md |
+| paired current-model gpt-5.5 api_ecu - api_ask_needed_cot utility delta | 0.000 | 0.000 | PASS | paper/tables/current_model_sweep.md |
+| scene-format shuffled gpt-5.4-mini api_direct_act net_utility | 0.420 | 0.420 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ask_needed net_utility | 0.908 | 0.908 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ask_needed missed_clarification_rate | 0.042 | 0.042 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ask_needed unnecessary_clarification_rate | 0.481 | 0.481 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ask_needed_cot net_utility | 0.926 | 0.926 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ecu net_utility | 0.976 | 0.976 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ecu success | 1.000 | 1.000 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ecu ask_rate | 0.480 | 0.480 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ecu missed_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini api_ecu unnecessary_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
+| scene-format shuffled gpt-5.4-mini paired ECU - Ask-Needed utility delta | 0.068 | 0.068 | PASS | paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md |
+| scene-format shuffled gpt-5.4-mini paired ECU - CoT Ask-Needed utility delta | 0.049 | 0.049 | PASS | paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md |
+| scene-format shuffled gpt-5.4-mini ECU ask-act change rate | 0.000 | 0.000 | PASS | paper/tables/api_gpt_5_4_mini_scene_format_robustness.md |
 | API question usefulness test api_ask_needed ask_precision | 0.541 | 0.541 | PASS | paper/tables/api_eval_100_extended/question_usefulness.md |
 | API question usefulness test api_ask_needed ask_recall | 0.417 | 0.417 | PASS | paper/tables/api_eval_100_extended/question_usefulness.md |
 | API question usefulness test api_ask_needed post_answer_success | 1.000 | 1.000 | PASS | paper/tables/api_eval_100_extended/question_usefulness.md |

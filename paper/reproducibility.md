@@ -1,6 +1,6 @@
 # Reproducibility Report
 
-Generated: 2026-06-28 03:06:06
+Generated: 2026-06-28 05:16:06
 
 This report records the canonical data, result, cache, and paper artifacts used by the current draft.
 
@@ -64,6 +64,38 @@ This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the
 | test | api_ask_needed | 25 | 0.098 | [-0.456, 0.586] | 0.680 | 0.240 | 0.909 | 0.357 |
 | test | api_ecu | 25 | 0.722 | [0.412, 0.954] | 0.880 | 0.560 | 0.182 | 0.357 |
 
+## Current-Model API Metrics
+
+GPT-5.4-mini on the same 100 stratified test episodes:
+
+| Split | Method | N | Net utility | 95% CI | Success | Ask rate | Missed clarif. | Unnecessary clarif. |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| test | api_direct_act | 100 | 0.380 | [0.140, 0.600] | 0.750 | 0.000 | 1.000 | 0.000 |
+| test | api_ask_needed | 100 | 0.868 | [0.768, 0.948] | 0.970 | 0.690 | 0.125 | 0.519 |
+| test | api_ask_needed_cot | 100 | 0.864 | [0.745, 0.947] | 0.980 | 0.740 | 0.062 | 0.558 |
+| test | api_ecu | 100 | 0.976 | [0.972, 0.981] | 1.000 | 0.480 | 0.000 | 0.000 |
+
+
+GPT-5.5 on the same 100 stratified test episodes:
+
+| Split | Method | N | Net utility | 95% CI | Success | Ask rate | Missed clarif. | Unnecessary clarif. |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| test | api_direct_act | 100 | 0.240 | [-0.020, 0.500] | 0.720 | 0.000 | 1.000 | 0.000 |
+| test | api_ask_needed | 100 | 0.821 | [0.660, 0.942] | 0.960 | 0.370 | 0.271 | 0.038 |
+| test | api_ask_needed_cot | 100 | 0.976 | [0.972, 0.981] | 1.000 | 0.480 | 0.000 | 0.000 |
+| test | api_ecu | 100 | 0.976 | [0.972, 0.981] | 1.000 | 0.480 | 0.000 | 0.000 |
+
+## Scene-Format Robustness API Metrics
+
+GPT-5.4-mini on the same 100 stratified test episodes with visible scene object order reversed:
+
+| Split | Method | N | Net utility | 95% CI | Success | Ask rate | Missed clarif. | Unnecessary clarif. |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| test | api_direct_act | 100 | 0.420 | [0.200, 0.620] | 0.770 | 0.000 | 1.000 | 0.000 |
+| test | api_ask_needed | 100 | 0.908 | [0.827, 0.955] | 0.990 | 0.710 | 0.042 | 0.481 |
+| test | api_ask_needed_cot | 100 | 0.926 | [0.882, 0.953] | 0.990 | 0.730 | 0.042 | 0.519 |
+| test | api_ecu | 100 | 0.976 | [0.972, 0.981] | 1.000 | 0.480 | 0.000 | 0.000 |
+
 ## API Cache
 
 | Cache entries | Models | Input tokens | Output tokens | Total tokens |
@@ -75,6 +107,28 @@ This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the
 | Cache entries | Models | Input tokens | Output tokens | Total tokens |
 | --- | --- | --- | --- | --- |
 | 109 | gpt-4.1-nano: 109 | 32996 | 6599 | 39595 |
+
+## Current-Model API Caches
+
+GPT-5.4-mini cache:
+
+| Cache entries | Models | Input tokens | Output tokens | Total tokens |
+| --- | --- | --- | --- | --- |
+| 667 | gpt-5.4-mini: 667 | 196060 | 34351 | 230411 |
+
+
+GPT-5.5 cache:
+
+| Cache entries | Models | Input tokens | Output tokens | Total tokens |
+| --- | --- | --- | --- | --- |
+| 609 | gpt-5.5: 609 | 181147 | 35581 | 216728 |
+
+
+GPT-5.4-mini shuffled-scene cache:
+
+| Cache entries | Models | Input tokens | Output tokens | Total tokens |
+| --- | --- | --- | --- | --- |
+| 616 | gpt-5.4-mini: 616 | 180571 | 31846 | 212417 |
 
 ## Artifact Hashes
 
@@ -89,8 +143,14 @@ This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the
 | data/runs/api_eval_100_cot_results.jsonl | 156755 | 100 | 3ed2d43cbba0b45767ff397bac88e82fb6bda4b7383e4958cc12202e393f7d3e |
 | data/runs/api_style_stress_50_results.jsonl | 340112 | 150 | 7b9df754155d3298711da9f48e735f0d0abeb731eab6b51d6fa2b0977d6e657a |
 | data/runs/api_second_model_25_results.jsonl | 171250 | 75 | bd9841ef740e3fe4092b4fdebea35180b28bbd9bf12e2e84e9fa478c81d06ef8 |
+| data/runs/api_gpt_5_4_mini_test100_results.jsonl | 947779 | 400 | 391691fa33cc2314ea4a1d3ed27322d65e73ba34d73eac1c907ab909254397d9 |
+| data/runs/api_gpt_5_5_test100_results.jsonl | 899888 | 400 | 1fd27d3f6305fbb2a2d7bb6ae3c0ccbc32e7256bcd347bfbbc736696086595bd |
+| data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl | 961287 | 400 | 5036ca081e2c2c96539a540fb056e3082603c45a7868ac6e0ce33cfe9f688ae8 |
 | data/runs/api_cache.jsonl | 808118 | 914 | 97a3eeed8d4abf4ca16e72975c9d501428f5c98a1964f44177b14bc2462f6ca5 |
 | data/runs/api_second_model_cache.jsonl | 100851 | 109 | 1ee5f89a612d5be0c5f3a1dc1bfa8fd9f2bdc629c5c75d16ead6c8aca3b748c6 |
+| data/runs/api_gpt_5_4_mini_cache.jsonl | 616813 | 667 | 46198424fc3772223b8d36c2f306c5a030ce2f51739b490f268c225912ac48a3 |
+| data/runs/api_gpt_5_5_cache.jsonl | 576365 | 609 | 519231ae5a01edf10d0f6f9a440436d019cba84b6292654a3a2d287a6b3f3dd7 |
+| data/runs/api_gpt_5_4_mini_scene_cache.jsonl | 572844 | 616 | b544d7551fc78179a91c9fe698f5505c0afae72d635db4690fb46d90e245e7b5 |
 | paper/tables/benchmark_categories.md | 886 | - | cc9e128bc3d7be2da603f027be3370c89b621a38d0e806a9c73f04ac01013e3a |
 | paper/tables/qualitative_examples.md | 2652 | - | 05b19bf7396948287d17b2024b032ddee41527e3f69d32c24c6bd7cc8f2c8fc5 |
 | paper/tables/main_results.md | 1426 | - | 63bba9ac6fa825423c8b261d0f2cfe2426595210b4a81a6f906c877fa7a59f62 |
@@ -132,6 +192,23 @@ This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the
 | paper/tables/api_second_model_25/category_breakdown.md | 1332 | - | be36f603e4447f10f99dc1d1e80eeeaa000fd123f69a7c2caf61d2cd510ae189 |
 | paper/tables/api_second_model_25/paired_differences.md | 353 | - | 25f6e439463cc7b73f52acfa1b20407cf3584a7dbf72a0023271f0294af53365 |
 | paper/tables/api_second_model_25/failure_examples.md | 6883 | - | 0f8e92638ecda358752f2357b343deedf32cd7a86f8905a95a2d4816c584acd0 |
+| paper/tables/api_gpt_5_4_mini_test100_results.md | 411 | - | e67ffe029c95dfd95070b29642dd5159dcaeb473eae637524b7393128f19e284 |
+| paper/tables/api_gpt_5_4_mini_test100/main_results.md | 531 | - | 4273cd545da8be7b9ac217508b328b594cb4394258c2916f68e96a8dbbe8a015 |
+| paper/tables/api_gpt_5_4_mini_test100/category_breakdown.md | 1770 | - | d8bff507b224f527ffbb11047c82c3f70f66950bab9159fa9b8b6e18eb321ff3 |
+| paper/tables/api_gpt_5_4_mini_test100/paired_differences.md | 352 | - | 6fc10e31e7456b69bc61b65e6f246e7ea950702051c6f3f496d24fb235e18921 |
+| paper/tables/api_gpt_5_4_mini_test100/failure_examples.md | 7372 | - | f9e8f9631c89dd2d6f1158370cc8f4d4ec30fb32e0415c4bf2362b3f1e26c76b |
+| paper/tables/api_gpt_5_5_test100_results.md | 411 | - | fbedad2cb4891927261ec97891b51b5f12566f65f0eb31654d7058cbaa6c4953 |
+| paper/tables/api_gpt_5_5_test100/main_results.md | 532 | - | 4bee0fdd9c2591e198e5c3cdccfc0f7b0f8090f9ff0a29647c11af0ce2d3086f |
+| paper/tables/api_gpt_5_5_test100/category_breakdown.md | 1770 | - | 377334d2fd0b3e2e763e9d2c53a0eeee1b5465609b33c522867407bd23c7449f |
+| paper/tables/api_gpt_5_5_test100/paired_differences.md | 352 | - | 508ba3755dbfb3837412bff076d9a09e08358046bdfd0a4a95b062865c796c35 |
+| paper/tables/api_gpt_5_5_test100/failure_examples.md | 5622 | - | baeb95dd9d69119bfbe5f13a91bcfdd893b6a0cf47ab6f8a8d8c89491717b469 |
+| paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md | 411 | - | 63839fc56f0fff428de1fcee0d927ee41938e69c82af75a5412cc5309c7fc068 |
+| paper/tables/api_gpt_5_4_mini_shuffled_test100/main_results.md | 531 | - | 2d74258b749b4ede9ec488e640e1a628cdb1835b12160ef2d2f8ba9c6a372803 |
+| paper/tables/api_gpt_5_4_mini_shuffled_test100/category_breakdown.md | 1770 | - | 88f7248eb17194b737d70831417361f885bc2ddb9f0b88a8746c0d88438d485c |
+| paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md | 352 | - | 644db03ecda04af01f072d9b60b2a16c5a6f53907db651523601175624e072a4 |
+| paper/tables/api_gpt_5_4_mini_shuffled_test100/failure_examples.md | 7566 | - | dd58cf28c6be6b46a1f59a4aa99b0e0bbe85adc328281f51fadda02e9a523980 |
+| paper/tables/api_gpt_5_4_mini_scene_format_robustness.md | 2639 | - | c86fd82c356f69a5265cdf540b5d4715234655ccce395793965b4a1ba2ab10ba |
+| paper/tables/current_model_sweep.md | 799 | - | 6dd6a5e3877d1eb750dc2e3ab4069ce869f3562dd0ff84c157f0dcac3a970c25 |
 | paper/tables/cost_sensitivity.md | 6030 | - | 6dea4c8b48cd0de3a9f62aef113cb55f85d78c3018bb65d8440b6fbe6211e0e8 |
 | paper/figures/api_main_net_utility.svg | 2215 | - | 291bd34ba21dbc0b00748ae9d0a20ab41b3df861ab7c5b46b7d1c2ca8180986c |
 | paper/figures/api_category_net_utility.svg | 4545 | - | a38855fa7c739c14e910e02940639a0a68b44b4e39f44d72c15d4daef8006f17 |
@@ -144,20 +221,20 @@ This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the
 | paper/audits/scenario_audit_completed.md | 43622 | - | 68038747914f4e1369f296a1b8f93283dbe9dedb35e6fc647a5fa3cd274d65f4 |
 | paper/audits/question_audit_completed.md | 36771 | - | 7afebf901c9bb3922d4d7aa3ec2afabbe65e5ac9643613ae3a7ad3665c55e224 |
 | paper/dataset_card.md | 5408 | - | d38a344715a5dd59a30e16c12d0b175f797fe5373686418bc2d5a522aaa144b4 |
-| paper/claim_verification.md | 24473 | - | 606705793058d8ce9b377b735b731d58d352ba5171a0ca2439f9a5d6c81b22dd |
+| paper/claim_verification.md | 30120 | - | 318942c4190490596039903470e0ae9f9d34593e67fb5bbae7e0a679f24672ed |
 | paper/claim_scope.md | 8659 | - | 24ff107f76ec097b1be89daa2e5bcf491a7f877169561b8e6ffe412afd9fc319 |
-| paper/paper_consistency_audit.md | 3156 | - | bb9681e206741131dfb25c7fdd013896b984c335ca07750f9d482d137aa9225b |
-| paper/submission_readiness.md | 15973 | - | 6cfbd0d63920b31aae51a44cd1161c47956cf04b09adc66f2dd9ca7f1d2b5784 |
-| paper/supplement_manifest.md | 7368 | - | e205a7fbdcfe024d13eedb46b971df33be0d70ede627885f01b44cd0d021eefe |
-| paper/supplement_audit.md | 1406 | - | 89e4852d5fed6d030aa09cfa02d34528d93883f4adc8ee4ad8d6f5fd03091a1c |
+| paper/paper_consistency_audit.md | 3492 | - | 6862f95bbfe1dc0625a68dced20bac3d8502fd3fb4bf6c8b92536b2abdb926be |
+| paper/submission_readiness.md | 17745 | - | aa062d052767699aeaa7f1360d176733334877e6f2511f0304c9099a91d4401d |
+| paper/supplement_manifest.md | 8276 | - | 6268daa9cd02ebc70f0feb495f678b0bfbe07477b33ad2d88d2bd9a6c74e2c11 |
+| paper/supplement_audit.md | 1406 | - | 861599e0d11cca46d28318f8698a1ce2c20e076b0dc15cf10085b98438d7b831 |
 | src/api_cache_replay_verification.py | 8859 | - | 8523f5619cb95c0fc52316cbd29ffbfc6b86346b8ea1accd98f85e7629aff0ba |
 | src/api_subset_stability.py | 7647 | - | d229caae694bec11a29392a22d6eb8a4cefcb73583cc50d2c6a740ee2385cb13 |
-| src/audit_supplement_release.py | 6980 | - | 2a411c09fe9ae6334b15636a971f249f00cb7910498c54c1c6383b2143061f31 |
+| src/audit_supplement_release.py | 7057 | - | 3f1f1102e9ac7f740e2180065b8386ef22d8f7dce3555d610c0610d8a82fd518 |
 | src/api_ecu_margin_analysis.py | 7627 | - | 99c13b3beab8a709db8d0b8bb43d40405a60b1d1a920673c1cb522822ea74cee |
 | src/api_utility_sensitivity.py | 8300 | - | ed80310920c45959715459c1095340c76b4352f65f96a6fde09864c1296e2e10 |
 | src/make_audit_packet.py | 7031 | - | d72867fb85bc7944e4df90e9417e561f00ba34268da0804ca3a57e9213a8a116 |
 | src/complete_audit_packet.py | 5310 | - | 30e1c0d756c03c4f7c7706b4772f25790c2989e8865ea4c3408c5a805d08e12c |
-| src/clarify_to_act/environment.py | 4874 | - | 64247f293590b6111d021e195021213d5e9fefe4ca05f217d2cac2ea653c6f64 |
+| src/clarify_to_act/environment.py | 5136 | - | 9eeeb37eb2e1e2f79816ff56a21d1e165aaa9a4168d958c3dc1ce1ac26b8d314 |
 | src/make_dataset_card.py | 10215 | - | c393e3d7531e35d52c2e602940bfa951a3348b9ff7333e90c9d967bb5b574fc4 |
 | src/ambiguity_utility_diagnostic.py | 13142 | - | b5d7111ba2b57a389677108c0cbb67aed57b9b82f5a2e451a12e38bb02881559 |
 | src/situated_contrast_analysis.py | 7299 | - | 42061fda226affeb3008d2211973f24dfd17b80a96dcf0635dd4277577cedd7d |
@@ -165,19 +242,20 @@ This small check uses gpt-4.1-nano on 25 stratified test episodes and is not the
 | src/ambiguity_mix_shift_analysis.py | 6120 | - | fc1422ef6dfe99391ab614d40c49a8a6f152987a0707f335de4530e989c6c6d9 |
 | src/clamber_external_sanity.py | 7705 | - | e057545e959c9f77865e5c29e10ed7dfa36c612142c66438bc980a2ce604cf6e |
 | src/simulated_user_audit.py | 9661 | - | 8eaf409f9465a3c4a7610b510b400178d482db39630184653e42b993624ae096 |
-| src/paper_consistency_audit.py | 11058 | - | 5a2a4527e8d96bf2a28b4aa3c84023bb98d8aca8db5f860b23ceee8b94341ded |
+| src/current_model_sweep_report.py | 6174 | - | a88bf4683ec2d223230e0c7ea426fa83b3528138a024188932d7bf7c2e874b4a |
+| src/paper_consistency_audit.py | 12133 | - | 773d04630f8c2ddfbbbac08065010a00f3f94788637183966abe86522ef720ab |
 | src/make_claim_scope_report.py | 15262 | - | e5f8901a4e4c5d071ab5a4d572f2d1d80e06889af3b6ed2ce5d8d5177320c779 |
-| src/run_api_experiment.py | 12854 | - | 4f236a82a1f95626b14a5c4de2141daf747a1628cc79475b4949338c5134d155 |
-| src/verify_claims.py | 46981 | - | a4bb9aaf344b00e11ebc7e029b619cad4d683ba25a470e3c605fdab1a205dec7 |
-| tests/test_core_invariants.py | 11994 | - | e89d9c36c517cd01cc9c0b7450a2689f37f7348250c3b206eb99ae1090afffca |
-| paper/latex/main.tex | 26671 | - | f7e021b520e6cba7692f089df532ae5fd8b37478beada7015450b34b7f22421a |
-| paper/latex/refs.bib | 2525 | - | 0bb64407b24b770285a012580402c4f8987c98e3544e1efb2645789a75749f30 |
+| src/run_api_experiment.py | 15153 | - | 98416865583f087e5b16d66abb1eb62893bfb6b7232d426db8cf043dec5bf2d1 |
+| src/verify_claims.py | 52646 | - | 4e0e4c3e169075c2008fb65354c56e24179b79cf709a035dba5e92d0e118af7c |
+| tests/test_core_invariants.py | 13158 | - | bddbc55212e955c3cb5394962f76346d9ba4fa458e53c3c312a0ea249567b2ba |
+| paper/latex/main.tex | 39729 | - | 07c8d2baa449b353fbaa37a525775e9a625931781d7563c17078f135ca1fa945 |
+| paper/latex/refs.bib | 8136 | - | bc9be2fde2b222e3fa59b892670fc3f1beaedd6fffd5bede1aae958917c809e4 |
 | paper/latex/colm2026_conference.sty | 7727 | - | 55962ae80c25a50335825c85d23eb5f1cd9015aa8e77f7af32b483b646c7483e |
 | paper/latex/colm2026_conference.bst | 26973 | - | 2d67552db7ed38ccfccb5957b52f95656e25c249724761d3cf5f7922ad1844c5 |
 | paper/latex/fancyhdr.sty | 20521 | - | b56ec4434b9f4607529a4b23dc68ad8d4b94f1f631c8cddaf7da78140d53a5ea |
 | paper/latex/natbib.sty | 45154 | - | 88bc70c0e48461934cab5b2accef06b74a8b3ac45ad03ccd3f2a6b7e0d6d530d |
 | paper/latex/math_commands.tex | 12284 | - | 90473c4d0542070db244cea73ef962d6cddc5b2a746757e6a40ddf5fdfb90ba9 |
-| paper/latex/main.pdf | 153537 | - | 81774b34b0a99e9da38a63185917306f23e1e777c6ab39ad1cc9374a3127af16 |
+| paper/latex/main.pdf | 178424 | - | 56f0ba6a3fce227baa59845c547046c718d0e5e920860d0dbc05c8df1264d12e |
 
 ## Reproduction Commands
 
@@ -206,6 +284,14 @@ conda run -n ask_dont_guess python src/failure_taxonomy.py --episodes data/gener
 conda run -n ask_dont_guess python src/failure_taxonomy.py --episodes data/generated/style_stress_episodes.jsonl --results data/runs/api_style_stress_50_results.jsonl --out paper/tables/api_style_stress_50/failure_taxonomy.md
 conda run -n ask_dont_guess python src/question_usefulness_analysis.py --results data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --out paper/tables/api_eval_100_extended/question_usefulness.md
 conda run -n ask_dont_guess python src/question_usefulness_analysis.py --results data/runs/api_style_stress_50_results.jsonl --out paper/tables/api_style_stress_50/question_usefulness.md
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_test100
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out-dir paper/tables/api_gpt_5_5_test100
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/api_gpt_5_5_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-4.1-mini=data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --run gpt-5.4-mini=data/runs/api_gpt_5_4_mini_test100_results.jsonl --run gpt-5.5=data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/current_model_sweep.md
+conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_shuffled_test100
+conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
+conda run -n ask_guess python src/scene_format_robustness_report.py --baseline data/runs/api_gpt_5_4_mini_test100_results.jsonl --perturbed data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_scene_format_robustness.md
 conda run -n ask_dont_guess python src/api_cache_replay_verification.py --out paper/tables/api_cache_replay_verification.md
 conda run -n ask_dont_guess python src/api_ecu_ablation.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/ecu_ablation.md
 conda run -n ask_dont_guess python src/api_utility_sensitivity.py --episodes data/generated/episodes.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --out paper/tables/api_eval_100_corrected/utility_sensitivity.md
@@ -250,6 +336,19 @@ Bounded paid API command for the 50-episode paraphrase and answer-style stress s
 conda run -n ask_dont_guess python src/run_api_experiment.py --episodes data/generated/style_stress_episodes.jsonl --out data/runs/api_style_stress_50_results.jsonl --summary-out paper/tables/api_style_stress_50_results.md --cache data/runs/api_cache.jsonl --model gpt-4.1-mini --split style_test --limit-per-category 10 --policies api_direct_act,api_ask_needed,api_ecu
 ```
 
+Bounded paid API commands for the current-model 100-episode sweep. These were run after smoke tests and are cached in separate model-specific cache files:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_test100_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_test100_results.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_5_test100_results.jsonl --summary-out paper/tables/api_gpt_5_5_test100_results.md --cache data/runs/api_gpt_5_5_cache.jsonl --api-key-path apikey.txt --model gpt-5.5 --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
+Bounded paid API command for the GPT-5.4-mini shuffled-object-order scene-format robustness check:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md --cache data/runs/api_gpt_5_4_mini_scene_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format shuffled_json --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
 Safe cached API replay, with no network calls and no API spending. This fails on any cache miss:
 
 ```bash
@@ -272,6 +371,19 @@ Safe cached replay for the auxiliary 25-episode gpt-4.1-nano second-model sanity
 
 ```bash
 conda run -n ask_dont_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_second_model_25_replay.jsonl --summary-out /tmp/api_second_model_25_replay.md --cache data/runs/api_second_model_cache.jsonl --model gpt-4.1-nano --split test --limit-per-category 5 --policies api_direct_act,api_ask_needed,api_ecu --cache-only
+```
+
+Safe cached replay for the current-model 100-episode sweeps:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_test100_replay.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_5_test100_replay.jsonl --summary-out /tmp/api_gpt_5_5_test100_replay.md --cache data/runs/api_gpt_5_5_cache.jsonl --model gpt-5.5 --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+```
+
+Safe cached replay for the shuffled-object-order scene-format robustness check:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_shuffled_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_shuffled_test100_replay.md --cache data/runs/api_gpt_5_4_mini_scene_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --scene-format shuffled_json --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
 ```
 
 Paper build:

@@ -127,6 +127,19 @@ CHECKS: tuple[TextCheck, ...] = (
         "The stress result should include both effect size and its limited scope.",
     ),
     TextCheck(
+        "scene-format robustness",
+        "paper/latex/main.tex",
+        (
+            r"Reversing the object order",
+            r"GPT-5\.4-mini episodes",
+            r"0\.976 net utility",
+            r"ask/act decision changes on 0/100",
+            r"Prompted Ask-Needed changes ask/act decisions on 10\\%",
+            r"only one serialization perturbation",
+        ),
+        "The manuscript should report object-order robustness without overstating broad prompt robustness.",
+    ),
+    TextCheck(
         "second model sanity check",
         "paper/latex/main.tex",
         (
@@ -185,15 +198,28 @@ CHECKS: tuple[TextCheck, ...] = (
         "The LaTeX source should use the official COLM submission shell conventions.",
     ),
     TextCheck(
+        "current-model sweep",
+        "paper/latex/main.tex",
+        (
+            r"GPT-5\.4-mini",
+            r"GPT-5\.5",
+            r"plain Ask-Needed remains below",
+            r"GPT-5\.5 with private reasoning matches \\ecu",
+            r"reasoning effort set to \\texttt\{none\}",
+        ),
+        "The manuscript should report the current-model sweep without overstating it as a universal frontier result.",
+    ),
+    TextCheck(
         "main limitations",
         "paper/latex/main.tex",
         (
             r"synthetic text/JSON environment",
             r"not a physical simulator",
             r"not a human-response study",
-            r"one mini model",
-            r"25-episode nano check",
-            r"Broader model comparisons",
+            r"hosted models on 100-episode stratified subsets",
+            r"not a replacement for full-scale deployment evaluations",
+            r"not open-weight local models",
+            r"long-horizon embodied controllers",
         ),
         "Top-tier submission framing needs explicit scope boundaries in the main paper.",
     ),

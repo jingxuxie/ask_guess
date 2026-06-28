@@ -11,7 +11,7 @@ Use these canonical artifacts for the current draft.
 - `latex/refs.bib`: BibTeX entries.
 - `latex/colm2026_conference.sty` and `latex/colm2026_conference.bst`: COLM 2026 template style files.
 - `latex/fancyhdr.sty`, `latex/natbib.sty`, `latex/math_commands.tex`, `latex/colm2026_conference.pdf`: support files from `Template-2026.zip`.
-- `latex/main.pdf`: compiled 7-page PDF.
+- `latex/main.pdf`: compiled 12-page PDF.
 - `latex/Makefile`: rebuild with `make` from `paper/latex`.
 - `reproducibility.md`: artifact hashes, recomputed metrics, cache totals, and exact reproduction commands.
 - `claim_verification.md`: automated check that headline claims match canonical artifacts.
@@ -52,8 +52,16 @@ Use these canonical artifacts for the current draft.
 - `tables/api_style_stress_50/`: detailed style-stress main, category, paired-difference, calibration, failure-taxonomy, question-usefulness, and failure-example tables.
 - `tables/api_second_model_25_results.md`: auxiliary 25-episode `gpt-4.1-nano` sanity check.
 - `tables/api_second_model_25/`: detailed second-model main, category, paired-difference, and failure-example tables.
+- `tables/api_gpt_5_4_mini_test100_results.md`: current-model 100-episode `gpt-5.4-mini` sweep.
+- `tables/api_gpt_5_4_mini_test100/`: detailed `gpt-5.4-mini` current-model main, category, paired-difference, and failure-example tables.
+- `tables/api_gpt_5_5_test100_results.md`: current-model 100-episode `gpt-5.5` sweep.
+- `tables/api_gpt_5_5_test100/`: detailed `gpt-5.5` current-model main, category, paired-difference, and failure-example tables.
+- `tables/current_model_sweep.md`: combined GPT-4.1/GPT-5.4/GPT-5.5 comparison table.
+- `tables/api_gpt_5_4_mini_shuffled_test100_results.md`: 100-episode `gpt-5.4-mini` shuffled-object-order robustness result.
+- `tables/api_gpt_5_4_mini_shuffled_test100/`: detailed shuffled-object-order main, category, paired-difference, and failure-example tables.
+- `tables/api_gpt_5_4_mini_scene_format_robustness.md`: baseline-vs-shuffled object-order sensitivity report.
 
-Older `api_smoke*` and `api_eval_100_results.md` files are retained as development traces, not paper evidence.
+Older `api_smoke*`, current-model smoke files, and `api_eval_100_results.md` files are retained as development traces, not paper evidence.
 
 ## Figures
 
