@@ -1,6 +1,6 @@
 # Reproducibility Report
 
-Generated: 2026-06-28 14:18:31
+Generated: 2026-06-28 14:50:31
 
 This report records the canonical data, result, cache, and paper artifacts used by the current draft.
 
@@ -232,27 +232,29 @@ GPT-5.4-mini natural-language-scene cache:
 | paper/tables/api_gpt_5_4_mini_natural_language_test100/main_results.md | 531 | - | 4240d66a3ce60cca9bc275b2d01ad53a8ebd013a29c222645d6d656918371087 |
 | paper/tables/api_gpt_5_4_mini_natural_language_test100/category_breakdown.md | 1770 | - | 0e1bf157defa14ae71de5a1b4e191f5f4327de7cdc66bc9193f09b8c91e795dc |
 | paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md | 352 | - | b1b2a1d9ab1bb40799cf90df043f1b293748994259fd25d6a51c9ef710934ae5 |
-| paper/tables/api_gpt_5_4_mini_natural_language_test100/failure_examples.md | 7715 | - | d3eb10538d3342ae22189d39a77f258e43d4b377e4275e53cd34bf02846b25fa |
-| paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md | 2641 | - | d9dd324b3322e82b23178bad6da49cab4dfcd438c478801cd0d15fc8747fb79c |
+| paper/tables/api_gpt_5_4_mini_natural_language_test100/failure_examples.md | 7713 | - | fa6e9f9ebaa926657219e8bd6c466842f835d6a255d0ae8b348fc5bc82332861 |
+| paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md | 2640 | - | 9aad8fbce495801e4c2a2eeec6c8e67fa9294b62b0c47449c462703df147e8b1 |
 | paper/tables/current_model_sweep.md | 798 | - | 1a627cb37ffd1fd5324f84f516e465ac7414ba4709aa19fe00a7166429523376 |
+| paper/tables/current_model_category_failure_modes.md | 2782 | - | 6f7418b2863cddef5864c4d96be61e610a320755930aa3c05b681d744d2296d9 |
 | paper/tables/cost_sensitivity.md | 6030 | - | 6dea4c8b48cd0de3a9f62aef113cb55f85d78c3018bb65d8440b6fbe6211e0e8 |
 | paper/figures/api_main_net_utility.svg | 2215 | - | 291bd34ba21dbc0b00748ae9d0a20ab41b3df861ab7c5b46b7d1c2ca8180986c |
 | paper/figures/api_category_net_utility.svg | 4545 | - | a38855fa7c739c14e910e02940639a0a68b44b4e39f44d72c15d4daef8006f17 |
+| paper/figures/current_model_category_net_utility.svg | 8723 | - | e50d2e824d236a2c921ea3a8c286abff2594de800c28f5984003ec68581561f7 |
 | paper/figures/api_calibration_ask_rate.svg | 3385 | - | 4ba1b8e70fdfc09c78d3cc7737189b7a4a02454c8deb817b67892f040d50775a |
 | paper/figures/cost_sensitivity_ask_cost.svg | 3460 | - | c6b698a767747a6f8920bc6ba7ddee63bf65ae19d365f921c42620ec7a5df7a1 |
 | paper/figures/cost_sensitivity_wrong_cost.svg | 3452 | - | 5e38a1d7b8a3f8a1c632382525e0aa416a2d9a010971db9283b95521762ccbad |
-| paper/figures/FIGURE_INDEX.md | 1106 | - | 9d2892b8f9f89b74946083eb05c266de261823b44e06bdaa3f752701edaeda46 |
+| paper/figures/FIGURE_INDEX.md | 1374 | - | 0c965ebe668e4c8a1148ed6e65c674d150d16811fc07e2352b04f7f9017e71e6 |
 | paper/audits/AUDIT_SUMMARY.md | 845 | - | 68624508358b9251c3bd40a4462aa05dad57470d34abe15f5cf53f6a70b9e5e6 |
 | paper/audits/AUDIT_INDEX.md | 530 | - | 353504122c95023d2b8d97d844099f135f6c4a4a93aad9fab71a53d18446e8ce |
 | paper/audits/scenario_audit_completed.md | 43622 | - | 68038747914f4e1369f296a1b8f93283dbe9dedb35e6fc647a5fa3cd274d65f4 |
 | paper/audits/question_audit_completed.md | 36771 | - | 7afebf901c9bb3922d4d7aa3ec2afabbe65e5ac9643613ae3a7ad3665c55e224 |
 | paper/dataset_card.md | 5408 | - | d38a344715a5dd59a30e16c12d0b175f797fe5373686418bc2d5a522aaa144b4 |
-| paper/claim_verification.md | 33078 | - | 1448b19cdadd7d08cb02ffbe73f90a6897d5d15cc74140c92600508b9a73a950 |
-| paper/claim_scope.md | 9087 | - | ab839835567985510a807055a2c3b306e6d487f398be67622872a68a7ba6fa2a |
-| paper/paper_consistency_audit.md | 3493 | - | 30a4c64dcdf9c29ddfefc007b9c65543a5d287a19a256c8d60aba1c0efc1c952 |
-| paper/submission_readiness.md | 18834 | - | 310c9a0b13c8c74cf43f3f22b8b453811595d0ce614df1f06ea82a7c6d10f928 |
-| paper/supplement_manifest.md | 9417 | - | 7f98d53f49b64c80523bad2f99c079ee801d83bf9a7cc18034b949272e831e87 |
-| paper/supplement_audit.md | 1406 | - | c2f0c76634a2dcfa52f0312e298a4f7deaacceb5ac281de2adfb3b2bd11d7f8a |
+| paper/claim_verification.md | 34836 | - | 80848b3d45958841bd7f3e10c7bb3dfb8f1c8f71a4754fbbdb8f208a4c206978 |
+| paper/claim_scope.md | 10174 | - | ebdd758494a454a47d160993cf45b5dad57bcc98bce67331e0ebe987d666e867 |
+| paper/paper_consistency_audit.md | 3853 | - | a3c8bb8b50ef06844326fb39cd0d67c30097f1cc7396995f95116f3e18d13111 |
+| paper/submission_readiness.md | 19339 | - | 5803a455d7e007d15ea536307dcb581649c25efcb05563329d7176ecc6b4f2d2 |
+| paper/supplement_manifest.md | 9654 | - | e0a90a32c19658e26505c19ff5f2f2907556d1fc1f8ff79d13becfc8d4f34c2b |
+| paper/supplement_audit.md | 1406 | - | 7dbf4f68b1b25818ca8b8701c04b7f930f121286bb6294162fdfb97a0aba1538 |
 | src/api_cache_replay_verification.py | 10700 | - | a37f62d36305dc9d99413513ca9e01ba6439c73b2a054a3fbfe9af4cf11842f7 |
 | src/api_subset_stability.py | 7647 | - | d229caae694bec11a29392a22d6eb8a4cefcb73583cc50d2c6a740ee2385cb13 |
 | src/audit_supplement_release.py | 7057 | - | 3f1f1102e9ac7f740e2180065b8386ef22d8f7dce3555d610c0610d8a82fd518 |
@@ -270,19 +272,20 @@ GPT-5.4-mini natural-language-scene cache:
 | src/clamber_external_sanity.py | 7705 | - | e057545e959c9f77865e5c29e10ed7dfa36c612142c66438bc980a2ce604cf6e |
 | src/simulated_user_audit.py | 9661 | - | 8eaf409f9465a3c4a7610b510b400178d482db39630184653e42b993624ae096 |
 | src/current_model_sweep_report.py | 6174 | - | a88bf4683ec2d223230e0c7ea426fa83b3528138a024188932d7bf7c2e874b4a |
-| src/paper_consistency_audit.py | 12994 | - | c01bcd5475651810bc8169b2a4a0cf092b04dc7f39e17ce6836db892ffdcccf5 |
-| src/make_claim_scope_report.py | 15761 | - | fcb3c6c088ebab08627251ab4a921f69961237ba3fbbfa70f13b33ad6b13d7d2 |
+| src/current_model_category_modes.py | 12313 | - | e88eb0dfa83fcd9481d9e469e828c17e0f63c04b632da845b84d73765a1e4a74 |
+| src/paper_consistency_audit.py | 13765 | - | ef314fb3b615ba2dccad39f2180a50c93b3a56d988e4acab03f24469269e6ada |
+| src/make_claim_scope_report.py | 17788 | - | 32a740b79ef27a2574a42e0d5bef7e80bbf5d47bd76c929109c79f54cebb298a |
 | src/run_api_experiment.py | 15153 | - | 98416865583f087e5b16d66abb1eb62893bfb6b7232d426db8cf043dec5bf2d1 |
-| src/verify_claims.py | 58189 | - | d17ae1f8b8f4fa3e3d9f396c93ce0b14862265d2e8b214ebd5c906080c55114d |
+| src/verify_claims.py | 61174 | - | cc3651b195daf3c849e07eaeb9d2e9056a0a46e2bf401bc87e1522f884abf223 |
 | tests/test_core_invariants.py | 13359 | - | 4d87cec8b2d44d2f1046286d1d587f99dff05289c6365430ab27cb0ade9f7f84 |
-| paper/latex/main.tex | 41021 | - | 11aa64adefbca1c892422be75d31d0ce7b922be9a15247f8b0ad977c4f33e533 |
-| paper/latex/refs.bib | 8136 | - | bc9be2fde2b222e3fa59b892670fc3f1beaedd6fffd5bede1aae958917c809e4 |
+| paper/latex/main.tex | 39433 | - | dbc51201fbc0c361ab4cb52f70b4faea3ee37a9c68662dc5d0685c4ce1a8766e |
+| paper/latex/refs.bib | 8120 | - | 456e6c40e675074b567c64adf6ac16262135c81c8a6d5832ce6c239c30da3abc |
 | paper/latex/colm2026_conference.sty | 7727 | - | 55962ae80c25a50335825c85d23eb5f1cd9015aa8e77f7af32b483b646c7483e |
 | paper/latex/colm2026_conference.bst | 26973 | - | 2d67552db7ed38ccfccb5957b52f95656e25c249724761d3cf5f7922ad1844c5 |
 | paper/latex/fancyhdr.sty | 20521 | - | b56ec4434b9f4607529a4b23dc68ad8d4b94f1f631c8cddaf7da78140d53a5ea |
 | paper/latex/natbib.sty | 45154 | - | 88bc70c0e48461934cab5b2accef06b74a8b3ac45ad03ccd3f2a6b7e0d6d530d |
 | paper/latex/math_commands.tex | 12284 | - | 90473c4d0542070db244cea73ef962d6cddc5b2a746757e6a40ddf5fdfb90ba9 |
-| paper/latex/main.pdf | 178704 | - | 3d250586d93a1d27edef3b07f72f3e5cff4ed511fe60c31389ac39d6651502d2 |
+| paper/latex/main.pdf | 178505 | - | 5c2dea82627220ec34bfb52928dd91b7218aeab2c7c52522f38d105a7b49986e |
 
 ## Reproduction Commands
 
@@ -316,6 +319,7 @@ conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/api_gpt_5_5_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-4.1-mini=data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --run gpt-5.4-mini=data/runs/api_gpt_5_4_mini_test100_results.jsonl --run gpt-5.5=data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/current_model_sweep.md
+conda run -n ask_guess python src/current_model_category_modes.py --out paper/tables/current_model_category_failure_modes.md --figure-out paper/figures/current_model_category_net_utility.svg
 conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_shuffled_test100
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/scene_format_robustness_report.py --baseline data/runs/api_gpt_5_4_mini_test100_results.jsonl --perturbed data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_scene_format_robustness.md
@@ -346,6 +350,7 @@ conda run -n ask_dont_guess python src/make_figures.py --api-results data/runs/a
 conda run -n ask_dont_guess python -m unittest discover -s tests
 conda run -n ask_dont_guess python src/verify_claims.py --episodes data/generated/episodes.jsonl --offline-results data/runs/offline_results.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --api-cot-results data/runs/api_eval_100_cot_results.jsonl --style-episodes data/generated/style_stress_episodes.jsonl --api-style-results data/runs/api_style_stress_50_results.jsonl --api-cache data/runs/api_cache.jsonl --out paper/claim_verification.md
 conda run -n ask_dont_guess python src/make_claim_scope_report.py
+cd paper/latex && latexmk -pdf -interaction=nonstopmode main.tex && cd ../..
 conda run -n ask_dont_guess python src/make_submission_readiness_report.py --episodes data/generated/episodes.jsonl --style-episodes data/generated/style_stress_episodes.jsonl --offline-results data/runs/offline_results.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --api-cot-results data/runs/api_eval_100_cot_results.jsonl --api-style-results data/runs/api_style_stress_50_results.jsonl --api-cache data/runs/api_cache.jsonl --claim-verification paper/claim_verification.md --pdf paper/latex/main.pdf --out paper/submission_readiness.md
 conda run -n ask_dont_guess python src/make_supplement_package.py --manifest-only
 conda run -n ask_dont_guess python src/make_reproducibility_report.py

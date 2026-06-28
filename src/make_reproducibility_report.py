@@ -96,9 +96,11 @@ ARTIFACTS = [
     "paper/tables/api_gpt_5_4_mini_natural_language_test100/failure_examples.md",
     "paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md",
     "paper/tables/current_model_sweep.md",
+    "paper/tables/current_model_category_failure_modes.md",
     "paper/tables/cost_sensitivity.md",
     "paper/figures/api_main_net_utility.svg",
     "paper/figures/api_category_net_utility.svg",
+    "paper/figures/current_model_category_net_utility.svg",
     "paper/figures/api_calibration_ask_rate.svg",
     "paper/figures/cost_sensitivity_ask_cost.svg",
     "paper/figures/cost_sensitivity_wrong_cost.svg",
@@ -131,6 +133,7 @@ ARTIFACTS = [
     "src/clamber_external_sanity.py",
     "src/simulated_user_audit.py",
     "src/current_model_sweep_report.py",
+    "src/current_model_category_modes.py",
     "src/paper_consistency_audit.py",
     "src/make_claim_scope_report.py",
     "src/run_api_experiment.py",
@@ -304,6 +307,7 @@ conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/api_gpt_5_5_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-4.1-mini=data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --run gpt-5.4-mini=data/runs/api_gpt_5_4_mini_test100_results.jsonl --run gpt-5.5=data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/current_model_sweep.md
+conda run -n ask_guess python src/current_model_category_modes.py --out paper/tables/current_model_category_failure_modes.md --figure-out paper/figures/current_model_category_net_utility.svg
 conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_shuffled_test100
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/scene_format_robustness_report.py --baseline data/runs/api_gpt_5_4_mini_test100_results.jsonl --perturbed data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_scene_format_robustness.md
@@ -334,6 +338,7 @@ conda run -n ask_dont_guess python src/make_figures.py --api-results data/runs/a
 conda run -n ask_dont_guess python -m unittest discover -s tests
 conda run -n ask_dont_guess python src/verify_claims.py --episodes data/generated/episodes.jsonl --offline-results data/runs/offline_results.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --api-cot-results data/runs/api_eval_100_cot_results.jsonl --style-episodes data/generated/style_stress_episodes.jsonl --api-style-results data/runs/api_style_stress_50_results.jsonl --api-cache data/runs/api_cache.jsonl --out paper/claim_verification.md
 conda run -n ask_dont_guess python src/make_claim_scope_report.py
+cd paper/latex && latexmk -pdf -interaction=nonstopmode main.tex && cd ../..
 conda run -n ask_dont_guess python src/make_submission_readiness_report.py --episodes data/generated/episodes.jsonl --style-episodes data/generated/style_stress_episodes.jsonl --offline-results data/runs/offline_results.jsonl --api-results data/runs/api_eval_100_corrected_results.jsonl --api-cot-results data/runs/api_eval_100_cot_results.jsonl --api-style-results data/runs/api_style_stress_50_results.jsonl --api-cache data/runs/api_cache.jsonl --claim-verification paper/claim_verification.md --pdf paper/latex/main.pdf --out paper/submission_readiness.md
 conda run -n ask_dont_guess python src/make_supplement_package.py --manifest-only
 conda run -n ask_dont_guess python src/make_reproducibility_report.py

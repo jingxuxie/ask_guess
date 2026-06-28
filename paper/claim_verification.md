@@ -103,6 +103,12 @@ This report recomputes headline claims from the canonical JSONL artifacts and ge
 | current-model gpt-5.5 api_ecu unnecessary_clarification_rate | 0.000 | 0.000 | PASS | data/runs/api_gpt_5_5_test100_results.jsonl |
 | paired current-model gpt-5.5 api_ecu - api_ask_needed utility delta | 0.155 | 0.155 | PASS | paper/tables/current_model_sweep.md |
 | paired current-model gpt-5.5 api_ecu - api_ask_needed_cot utility delta | 0.000 | 0.000 | PASS | paper/tables/current_model_sweep.md |
+| current-model category gpt-5.4-mini preference ECU - Ask-Needed utility delta | 0.193 | 0.193 | PASS | paper/tables/current_model_category_failure_modes.md |
+| current-model category gpt-5.4-mini preference Ask-Needed missed clarification | 0.375 | 0.375 | PASS | paper/tables/current_model_category_failure_modes.md |
+| current-model category gpt-5.5 risk ECU - Ask-Needed utility delta | 0.767 | 0.767 | PASS | paper/tables/current_model_category_failure_modes.md |
+| current-model category gpt-5.5 risk Ask-Needed missed clarification | 0.650 | 0.650 | PASS | paper/tables/current_model_category_failure_modes.md |
+| current-model category maximum ECU missed clarification | 0.000 | 0.000 | PASS | paper/tables/current_model_category_failure_modes.md |
+| current-model category maximum ECU unnecessary clarification | 0.000 | 0.000 | PASS | paper/tables/current_model_category_failure_modes.md |
 | scene-format shuffled gpt-5.4-mini api_direct_act net_utility | 0.420 | 0.420 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
 | scene-format shuffled gpt-5.4-mini api_ask_needed net_utility | 0.908 | 0.908 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |
 | scene-format shuffled gpt-5.4-mini api_ask_needed missed_clarification_rate | 0.042 | 0.042 | PASS | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl |

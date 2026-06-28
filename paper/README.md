@@ -58,6 +58,7 @@ Use these canonical artifacts for the current draft.
 - `tables/api_gpt_5_5_test100_results.md`: current-model 100-episode `gpt-5.5` sweep.
 - `tables/api_gpt_5_5_test100/`: detailed `gpt-5.5` current-model main, category, paired-difference, and failure-example tables.
 - `tables/current_model_sweep.md`: combined GPT-4.1/GPT-5.4/GPT-5.5 comparison table.
+- `tables/current_model_category_failure_modes.md`: no-API category-slice comparison showing where plain Ask-Needed still fails under current models.
 - `tables/api_gpt_5_4_mini_shuffled_test100_results.md`: 100-episode `gpt-5.4-mini` shuffled-object-order robustness result.
 - `tables/api_gpt_5_4_mini_shuffled_test100/`: detailed shuffled-object-order main, category, paired-difference, and failure-example tables.
 - `tables/api_gpt_5_4_mini_scene_format_robustness.md`: baseline-vs-shuffled object-order sensitivity report.
@@ -71,6 +72,7 @@ Older `api_smoke*`, current-model smoke files, and `api_eval_100_results.md` fil
 
 - `figures/api_main_net_utility.svg`
 - `figures/api_category_net_utility.svg`
+- `figures/current_model_category_net_utility.svg`
 - `figures/api_calibration_ask_rate.svg`
 - `figures/cost_sensitivity_ask_cost.svg`
 - `figures/cost_sensitivity_wrong_cost.svg`

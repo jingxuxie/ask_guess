@@ -1,6 +1,6 @@
 # Submission Readiness Report
 
-Generated: 2026-06-28 14:18:32
+Generated: 2026-06-28 14:48:55
 
 This report maps the current paper claims to the canonical evidence package and highlights what is ready versus still limited.
 
@@ -12,6 +12,9 @@ This report maps the current paper claims to the canonical evidence package and 
 | Claim verification | PASS |
 | Critical artifacts missing | none |
 | Compiled PDF pages | 12 |
+| References start page | 10 |
+| Main text pages before references | 9 |
+| COLM 9-page main-text budget | PASS |
 | Main benchmark rows | 1400 |
 | Main split counts | dev: 200, ood_test: 200, test: 400, train: 600 |
 | Style-stress rows | 50 |
@@ -32,7 +35,7 @@ This report maps the current paper claims to the canonical evidence package and 
 | Clarification should be utility-dependent, not ambiguity-only. | All 400 canonical test episodes have multiple candidate interpretations, but 200 are oracle-act and 200 are oracle-ask. Situated contrast slices show same-action and same-instruction families flipping ask/act decisions under context, ownership, equivalence, and risk. | paper/tables/ambiguity_utility_diagnostic.md; paper/tables/situated_contrast_analysis.md; paper/tables/cost_sensitivity.md; paper/tables/qualitative_examples.md; paper/figures/cost_sensitivity_ask_cost.svg; paper/figures/cost_sensitivity_wrong_cost.svg |
 | ECU improves first-turn API utility over prompting. | Main 100: ECU 0.976, Ask-Needed 0.632, DirectAct 0.420; paired ECU - Ask-Needed 0.343. Leave-one-category and leave-one-episode subset checks keep the ECU - Ask-Needed delta positive. | data/runs/api_eval_100_corrected_results.jsonl; paper/tables/api_eval_100_corrected/paired_differences.md; paper/tables/api_eval_100_corrected/subset_stability.md |
 | Private-reasoning helps with scale but does not replace utility calibration in general. | GPT-4.1-mini CoT Ask-Needed utility 0.632; GPT-5.4-mini CoT 0.864 versus ECU 0.976; GPT-5.5 CoT 0.976 ties ECU 0.976 on the 100-episode subset. | data/runs/api_eval_100_cot_results.jsonl; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl; paper/tables/current_model_sweep.md |
-| Current hosted models preserve the plain Ask-Needed calibration gap. | GPT-5.4-mini: ECU 0.976, Ask-Needed 0.868; GPT-5.5: ECU 0.976, Ask-Needed 0.821. ECU has zero missed and unnecessary clarifications in both current-model rows. | paper/tables/current_model_sweep.md; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl |
+| Current hosted models preserve the plain Ask-Needed calibration gap. | GPT-5.4-mini: ECU 0.976, Ask-Needed 0.868; GPT-5.5: ECU 0.976, Ask-Needed 0.821. ECU has zero missed and unnecessary clarifications in both current-model rows; the category failure-mode table localizes the remaining plain Ask-Needed gaps. | paper/tables/current_model_sweep.md; paper/tables/current_model_category_failure_modes.md; paper/figures/current_model_category_net_utility.svg; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl |
 | ECU tracks utility margins. | Current calibration tables show ECU asks in ask-preferred bins and avoids act-preferred bins; prompted Ask-Needed asks in both bins. Cached API ECU candidate margins agree with oracle ask labels on 0.990 of main API rows. | paper/tables/api_eval_100_corrected/calibration_by_margin.md; paper/tables/api_style_stress_50/calibration_by_margin.md; paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md; paper/tables/api_candidate_calibration.md; paper/figures/api_calibration_ask_rate.svg |
 | ECU uses plausible candidate probabilities, not perfect hidden-intent prediction. | On GPT-4.1-mini ECU rows, the model top success class matches the benchmark top-prior class on 0.970 of episodes, with mean prior TV 0.057; the top class matches the sampled hidden class on 0.770. Model and oracle utility margins remain strongly correlated. | paper/tables/api_candidate_calibration.md |
 | ECU is stable under bounded scene-serialization perturbations. | GPT-5.4-mini shuffled object order: ECU 0.976, Ask-Needed 0.908, CoT 0.926; ECU changes ask/act decisions on 0/100 shared episodes. Natural-language scene: ECU 0.975, Ask-Needed 0.788, CoT 0.904; ECU changes ask/act decisions on 1/100 shared episodes. | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl; data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl; paper/tables/api_gpt_5_4_mini_scene_format_robustness.md; paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md |
@@ -102,18 +105,18 @@ This report maps the current paper claims to the canonical evidence package and 
 | data/runs/api_gpt_5_4_mini_scene_cache.jsonl | present | 572844 | 616 |
 | data/runs/api_gpt_5_4_mini_nl_cache.jsonl | present | 575823 | 616 |
 | paper/dataset_card.md | present | 5408 | - |
-| paper/claim_verification.md | present | 33078 | - |
-| paper/claim_scope.md | present | 9087 | - |
-| paper/paper_consistency_audit.md | present | 3493 | - |
+| paper/claim_verification.md | present | 34836 | - |
+| paper/claim_scope.md | present | 10174 | - |
+| paper/paper_consistency_audit.md | present | 3853 | - |
 | paper/supplement_audit.md | present | 1406 | - |
-| paper/latex/main.tex | present | 41021 | - |
-| paper/latex/refs.bib | present | 8136 | - |
+| paper/latex/main.tex | present | 39433 | - |
+| paper/latex/refs.bib | present | 8120 | - |
 | paper/latex/colm2026_conference.sty | present | 7727 | - |
 | paper/latex/colm2026_conference.bst | present | 26973 | - |
 | paper/latex/fancyhdr.sty | present | 20521 | - |
 | paper/latex/natbib.sty | present | 45154 | - |
 | paper/latex/math_commands.tex | present | 12284 | - |
-| paper/latex/main.pdf | present | 178704 | - |
+| paper/latex/main.pdf | present | 178505 | - |
 
 ## Supporting Artifacts
 
@@ -149,19 +152,21 @@ This report maps the current paper claims to the canonical evidence package and 
 | paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md | present | 352 | - |
 | paper/tables/api_gpt_5_4_mini_natural_language_test100/paired_differences.md | present | 352 | - |
 | paper/tables/api_gpt_5_4_mini_scene_format_robustness.md | present | 2638 | - |
-| paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md | present | 2641 | - |
+| paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md | present | 2640 | - |
 | paper/tables/current_model_sweep.md | present | 798 | - |
+| paper/tables/current_model_category_failure_modes.md | present | 2782 | - |
 | paper/audits/AUDIT_SUMMARY.md | present | 845 | - |
 | paper/dataset_card.md | present | 5408 | - |
-| paper/claim_scope.md | present | 9087 | - |
-| paper/paper_consistency_audit.md | present | 3493 | - |
+| paper/claim_scope.md | present | 10174 | - |
+| paper/paper_consistency_audit.md | present | 3853 | - |
 | paper/supplement_audit.md | present | 1406 | - |
 | paper/figures/api_main_net_utility.svg | present | 2215 | - |
 | paper/figures/api_category_net_utility.svg | present | 4545 | - |
+| paper/figures/current_model_category_net_utility.svg | present | 8723 | - |
 | paper/figures/api_calibration_ask_rate.svg | present | 3385 | - |
 | paper/figures/cost_sensitivity_ask_cost.svg | present | 3460 | - |
 | paper/figures/cost_sensitivity_wrong_cost.svg | present | 3452 | - |
-| paper/supplement_manifest.md | present | 9417 | - |
+| paper/supplement_manifest.md | present | 9654 | - |
 | tests/test_core_invariants.py | present | 13359 | - |
 
 ## Validation Commands
@@ -182,6 +187,7 @@ conda run -n ask_dont_guess python src/paper_consistency_audit.py
 conda run -n ask_dont_guess python src/verify_claims.py
 conda run -n ask_dont_guess python src/make_dataset_card.py
 conda run -n ask_dont_guess python src/make_claim_scope_report.py
+cd paper/latex && latexmk -pdf -interaction=nonstopmode main.tex && cd ../..
 conda run -n ask_dont_guess python src/make_submission_readiness_report.py
 conda run -n ask_dont_guess python src/make_supplement_package.py --manifest-only
 conda run -n ask_dont_guess python src/make_reproducibility_report.py
@@ -189,7 +195,6 @@ conda run -n ask_dont_guess python src/make_supplement_package.py
 conda run -n ask_dont_guess python src/audit_supplement_release.py
 conda run -n ask_dont_guess python src/make_reproducibility_report.py
 conda run -n ask_dont_guess python src/make_supplement_package.py
-cd paper/latex && latexmk -pdf -interaction=nonstopmode main.tex
 ```
 
 ## Cache-Only API Replays
@@ -208,7 +213,7 @@ conda run -n ask_dont_guess python src/run_api_experiment.py --episodes data/gen
 | Limitation | Submission framing |
 | --- | --- |
 | Synthetic benchmark | Claims are about situated instruction-following episodes generated by the local benchmark, not real household deployment. |
-| Model coverage | The headline API evidence uses gpt-4.1-mini. A 25-episode gpt-4.1-nano sanity check supports the direction, but broader model sweeps remain future work. |
+| Model coverage | The headline API evidence uses gpt-4.1-mini, with 100-episode GPT-5.4-mini/GPT-5.5 sweeps and a 25-episode gpt-4.1-nano sanity check; open-weight and multimodal agents remain future work. |
 | Scale | Main API result is 100 stratified episodes, with subset-stability checks and a 50-episode style-stress set; offline results cover the full generated test/OOD splits. |
 | User model | Clarification answers are deterministic simulated user answers; the visible-answer audit supports diagnostic clarity, but this is not a human-response study. |
 | Submission framing | The strongest claim is value-of-information calibration for first-turn clarify-vs-act decisions, not general interactive dialogue mastery. |

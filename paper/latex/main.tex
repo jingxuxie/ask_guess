@@ -155,25 +155,7 @@ This decomposition is deliberately conservative. The model is used as a semantic
 
 \paragraph{Learned controller.}
 The offline learned controller is a lightweight logistic ask/act model trained from automatic oracle labels. It uses features such as number of candidates, number of success classes, top prior, entropy, ask cost, wrong-action cost, salience gap, risk, context resolution, equivalence, and expected-utility margin. It is not a learned language model; rather, it tests whether interaction-derived oracle labels are sufficient to train a transparent ask-or-act controller.
-
-\begin{table}[t]
-\centering
-\scriptsize
-\begin{tabular}{@{}lll@{}}
-\toprule
-Method & Ask/act signal & Diagnostic role \\
-\midrule
-DirectAct & Never asks & Guessing under ambiguity and risk \\
-AskAlways / raw ambiguity & Always ask / target count & Over-clarification and ambiguity-only behavior \\
-Prompted Ask-Needed & Ask-or-act prompt & Strong simple prompting baseline \\
-CoT Ask-Needed & Private-reasoning prompt & Reasoning-only calibration test \\
-API \ecu & Model candidates + expected utility & Main utility-calibrated policy \\
-Threshold / controller & Tuned margin / logistic model & Interaction-supervised calibration \\
-\bottomrule
-\end{tabular}
-\caption{Method summary. The central comparison is whether the ask/act decision is calibrated to expected task utility.}
-\label{tab:methods}
-\end{table}
+Together, these methods separate four hypotheses: guessing can be sufficient, asking on ambiguity can be sufficient, direct prompting can infer the utility rule, or explicit expected-utility calibration is needed.
 
 \section{Experiments}
 
@@ -203,7 +185,7 @@ Table~\ref{tab:api-main} and Figure~\ref{fig:api-main} show the main API result.
 
 Because all policies run on the same episodes, paired deltas are the appropriate comparison. API \ecu exceeds Ask-Needed by 0.343 net utility with 95\% paired CI [0.168, 0.559], and exceeds the private-reasoning variant by 0.344 [0.171, 0.564]. Conditional on asking, both Ask-Needed and \ecu successfully ground the simulated answer in the main set; the gap is ask timing. \ecu has ask precision/recall/post-answer success of 1.000/1.000/1.000, while Ask-Needed has 0.541/0.417/1.000.
 
-Table~\ref{tab:current-model-sweep} asks whether model scaling solves the first-turn clarification decision. It helps, but does not remove the calibration issue. On GPT-5.4-mini, \ecu reaches 0.976 utility versus 0.868 for plain Ask-Needed and 0.864 for the private-reasoning variant. On GPT-5.5, the private-reasoning prompt closes the gap and ties \ecu at 0.976, but plain Ask-Needed remains lower at 0.821 because it still under-asks some oracle-clarification cases. Across all three 100-episode model rows, \ecu has zero missed and zero unnecessary clarifications.
+Table~\ref{tab:current-model-sweep} asks whether model scaling solves the first-turn clarification decision. It helps, but does not remove the calibration issue. On GPT-5.4-mini, \ecu reaches 0.976 utility versus 0.868 for plain Ask-Needed and 0.864 for the private-reasoning variant. On GPT-5.5, the private-reasoning prompt closes the gap and ties \ecu at 0.976, but plain Ask-Needed remains lower at 0.821 because it still under-asks some oracle-clarification cases. Across all three 100-episode model rows, \ecu has zero missed and zero unnecessary clarifications. A category-slice analysis localizes the residual plain-prompt gaps: the largest GPT-5.4-mini gap is preference/social (+0.193 \ecu--Ask utility, 37.5\% missed oracle asks), while the largest GPT-5.5 gap is risk-sensitive (+0.767, 65.0\% missed); \ecu has zero missed or unnecessary clarifications in every model/category cell.
 
 \begin{figure}[t]
 \centering
@@ -338,25 +320,7 @@ Finally, re-scoring fixed cached API outputs under alternate costs shows that th
 
 We label a failure event whenever the final action fails or the first-turn ask/act decision disagrees with the utility oracle. This counts successful but unnecessary questions and lucky unsafe guesses as calibration failures. On the main API set plus the private-reasoning baseline, DirectAct has 48 failure events, Ask-Needed has 45, and Ask-Needed with private reasoning has 47. In plain-text terms, API ECU has 0 failure events. The largest failure modes are risk blindness (57 events), equivalence blindness (33), and referential guessing (25).
 
-\begin{table}[t]
-\centering
-\scriptsize
-\begin{tabular}{@{}p{0.18\linewidth}p{0.40\linewidth}p{0.35\linewidth}@{}}
-\toprule
-Failure mode & Observed baseline behavior & \ecu decision reason \\
-\midrule
-Referential guessing & ``Bring me the black box'': DirectAct chose one matching box without asking and failed. & Candidate success classes differ, so asking has higher expected utility. \\
-Risk blindness & ``Delete the old draft'': Ask-Needed acted immediately; lucky success still violates the ask oracle. & High wrong-action cost makes clarification valuable even when one target seems likely. \\
-Preference blindness & ``Put my box away'': the model acted with ownership hidden and selected the wrong box. & Hidden owner information prevents resolving ``my'' from the scene alone. \\
-Equivalence blindness & ``Move a spare folder to the table'': Ask-Needed asked which spare folder, paying an unnecessary cost. & All spare folders share the same success class, so acting is sufficient. \\
-Context overask & ``Bring me the folder'': Ask-Needed asked even though the active workspace identified the target. & Context-resolved salience makes immediate action utility-dominant. \\
-\bottomrule
-\end{tabular}
-\caption{Representative first-turn calibration failures. The examples illustrate why ambiguity detection alone is insufficient: the right decision depends on outcome equivalence, context, and stakes.}
-\label{tab:qualitative-failures}
-\end{table}
-
-Prompted Ask-Needed exhibits two recurring failure modes. First, it over-clarifies equivalent-outcome instructions. For example, when asked to move a spare folder to the table, it often asks which spare folder the user means even though any spare folder succeeds. Second, it under-clarifies high-risk actions. In several delete-file cases, the prompt baseline acts immediately despite high wrong-action cost. \ecu avoids these failures because its decision rule explicitly compares the value of asking to the value of acting.
+Prompted Ask-Needed exhibits two recurring failure modes. First, it over-clarifies equivalent-outcome instructions: when asked to move a spare folder to the table, it often asks which spare folder the user means even though any spare folder succeeds. Second, it under-clarifies high-risk actions: in delete-file cases, it sometimes acts immediately despite high wrong-action cost. Similar calibration errors appear in ownership-hidden preference cases and active-context over-asking. \ecu avoids these failures because its decision rule explicitly compares the value of asking to the value of acting; detailed examples are included in the released failure tables.
 
 The analysis also clarifies what \ecu is \emph{not} doing. It is not simply asking more: its ask rate is lower than the prompted heuristic offline and close to the oracle rate in the API setting. It is not only improving second-turn grounding: conditional on asking, Ask-Needed and \ecu both ground the simulated answer successfully in the main set. The improvement comes from first-turn timing---asking when information changes the optimal action and acting when it does not.
 

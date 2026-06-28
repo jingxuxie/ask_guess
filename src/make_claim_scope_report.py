@@ -16,6 +16,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-cot-results", default="data/runs/api_eval_100_cot_results.jsonl")
     parser.add_argument("--api-style-results", default="data/runs/api_style_stress_50_results.jsonl")
     parser.add_argument("--api-second-model-results", default="data/runs/api_second_model_25_results.jsonl")
+    parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
+    parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
     parser.add_argument("--ambiguity-mix-results", default="data/runs/ambiguity_mix_shift_results.jsonl")
     parser.add_argument("--claim-verification", default="paper/claim_verification.md")
     parser.add_argument("--out", default="paper/claim_scope.md")
@@ -51,6 +53,8 @@ def main() -> None:
     cot_rows = read_jsonl(args.api_cot_results)
     style_rows = read_jsonl(args.api_style_results)
     second_rows = read_jsonl(args.api_second_model_results)
+    gpt54_rows = read_jsonl(args.api_gpt54_mini_results)
+    gpt55_rows = read_jsonl(args.api_gpt55_results)
     ambiguity_mix_rows = read_jsonl(args.ambiguity_mix_results)
 
     main_direct = stats_for(api_rows, "test", "api_direct_act")
@@ -61,6 +65,12 @@ def main() -> None:
     style_ecu = stats_for(style_rows, "style_test", "api_ecu")
     second_ask = stats_for(second_rows, "test", "api_ask_needed")
     second_ecu = stats_for(second_rows, "test", "api_ecu")
+    gpt54_ask = stats_for(gpt54_rows, "test", "api_ask_needed")
+    gpt54_cot = stats_for(gpt54_rows, "test", "api_ask_needed_cot")
+    gpt54_ecu = stats_for(gpt54_rows, "test", "api_ecu")
+    gpt55_ask = stats_for(gpt55_rows, "test", "api_ask_needed")
+    gpt55_cot = stats_for(gpt55_rows, "test", "api_ask_needed_cot")
+    gpt55_ecu = stats_for(gpt55_rows, "test", "api_ecu")
     offline_test_ecu = stats_for(offline_rows, "test", "ecu")
     offline_ood_ecu = stats_for(offline_rows, "ood_test", "ecu")
     ambiguity_mix_ecu = stats_for(ambiguity_mix_rows, "ood_ambiguity_mix", "ecu")
@@ -100,9 +110,15 @@ def main() -> None:
         ],
         [
             "Private reasoning alone does not close the calibration gap.",
-            f"CoT Ask-Needed utility {format_float(cot['net_utility'])}; missed clarification {format_float(cot['missed_clarification_rate'])}.",
-            "data/runs/api_eval_100_cot_results.jsonl",
-            "Do not claim all chain-of-thought methods fail.",
+            f"GPT-4.1-mini CoT Ask-Needed utility {format_float(cot['net_utility'])}; GPT-5.4-mini CoT {format_float(gpt54_cot['net_utility'])} remains below ECU {format_float(gpt54_ecu['net_utility'])}. GPT-5.5 CoT ties ECU on this subset.",
+            "data/runs/api_eval_100_cot_results.jsonl; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl; paper/tables/current_model_sweep.md",
+            "Do not claim all private-reasoning prompts fail or that ECU always beats CoT at frontier scale.",
+        ],
+        [
+            "Current hosted-model sweeps preserve the plain Ask-Needed calibration gap.",
+            f"GPT-5.4-mini: ECU {format_float(gpt54_ecu['net_utility'])} vs Ask-Needed {format_float(gpt54_ask['net_utility'])}; GPT-5.5: ECU {format_float(gpt55_ecu['net_utility'])} vs Ask-Needed {format_float(gpt55_ask['net_utility'])}. ECU has zero missed and unnecessary clarifications in both rows.",
+            "data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl; paper/tables/current_model_sweep.md; paper/tables/current_model_category_failure_modes.md",
+            "Do not present the 100-episode OpenAI-only sweep as full cross-family or full-test coverage.",
         ],
         [
             "The API utility advantage survives fixed-output reward rescoring.",
@@ -120,7 +136,7 @@ def main() -> None:
             "A tiny second-model check supports the direction.",
             f"gpt-4.1-nano 25: ECU {format_float(second_ecu['net_utility'])} vs Ask-Needed {format_float(second_ask['net_utility'])}.",
             "data/runs/api_second_model_25_results.jsonl",
-            "Do not present this as a comprehensive model sweep.",
+            "Do not present this tiny nano check as the main model-robustness evidence.",
         ],
         [
             "The API evidence is reproducible from shipped caches.",
@@ -174,10 +190,10 @@ def main() -> None:
             "Do not claim physical robot deployment or real household generalization.",
         ],
         [
-            "Single headline API model",
+            "Model coverage",
             "Medium",
-            "Use gpt-4.1-mini as headline and gpt-4.1-nano as auxiliary direction check.",
-            "Broader model sweep remains future work.",
+            "Use GPT-4.1-mini as historical headline, GPT-5.4-mini/GPT-5.5 as current hosted-model sweeps, and GPT-4.1-nano as a tiny weak-model sanity check.",
+            "Full 400-episode current-model sweeps, open-weight models, multimodal agents, and non-OpenAI model families remain future work.",
         ],
         [
             "Small paid API subset",
@@ -233,14 +249,14 @@ def main() -> None:
         ["Real-world embodied performance", "No perception, physics, long-horizon planning, or human-in-the-loop deployment is evaluated."],
         ["General dialogue mastery", "Episodes are one ask-or-act decision plus one answer before final action."],
         ["Model training breakthrough", "The learned component is a lightweight controller; API model weights are frozen."],
-        ["Broad model robustness", "Only one headline model and one tiny second-model sanity check are included."],
+        ["Broad cross-family model robustness", "The evidence includes GPT-4.1-mini, GPT-5.4-mini, GPT-5.5, and a tiny GPT-4.1-nano check, but no open-weight, multimodal, or non-OpenAI model families."],
         ["Learned-controller category transfer", "When trained without risk-sensitive and preference/social categories, the controller over-asks held-out preference/social cases."],
         ["External benchmark transfer", "CLAMBER analysis uses the dataset's provided ambiguity prediction, not a Clarify-to-Act agent running in CLAMBER."],
         ["Human preference validation", "The user model is deterministic; author audits check coherence and question naturalness."],
     ]
 
     upgrade_rows = [
-        ["Broader model sweep", "Repeat the 100-episode API set on 2-3 additional model families."],
+        ["Broader model sweep", "Run full 400-episode current-model tests and add open-weight or non-OpenAI model families."],
         ["Human/user study", "Ask humans to answer sampled clarification questions and rate whether questions are necessary."],
         ["External transfer", "Map a small CLAMBER or situated-instruction subset into ask/act utility labels."],
         ["Realistic action backend", "Connect the first-turn ask/act policy to a simulator or tool environment with irreversible actions."],
@@ -260,7 +276,7 @@ def main() -> None:
                     ["Claim verification", verification],
                     ["Headline API model", "gpt-4.1-mini"],
                     ["Headline API episodes", "100 stratified test episodes"],
-                    ["Auxiliary stress evidence", "50 style-stress episodes; 25 gpt-4.1-nano episodes; offline held-out ambiguity-mix diagnostic"],
+                    ["Auxiliary stress evidence", "100-episode GPT-5.4-mini/GPT-5.5 sweeps; 50 style-stress episodes; 25 gpt-4.1-nano episodes; offline held-out ambiguity-mix diagnostic"],
                 ],
             ),
             "## Supported Claims",

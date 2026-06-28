@@ -9,7 +9,7 @@ This generated report is a writing guardrail. It separates claims supported by t
 | Claim verification | PASS |
 | Headline API model | gpt-4.1-mini |
 | Headline API episodes | 100 stratified test episodes |
-| Auxiliary stress evidence | 50 style-stress episodes; 25 gpt-4.1-nano episodes; offline held-out ambiguity-mix diagnostic |
+| Auxiliary stress evidence | 100-episode GPT-5.4-mini/GPT-5.5 sweeps; 50 style-stress episodes; 25 gpt-4.1-nano episodes; offline held-out ambiguity-mix diagnostic |
 
 ## Supported Claims
 
@@ -20,10 +20,11 @@ This generated report is a writing guardrail. It separates claims supported by t
 | The gap is ask timing, not inability to act after useful answers. | Ask-Needed post-answer success is 1.000 but ask recall is 0.417; ECU ask precision/recall is 1.000/1.000. | paper/tables/api_eval_100_extended/question_usefulness.md | Do not claim open-ended dialogue competence. |
 | API ECU's model-derived candidate margins align on the main cached API subset. | The candidate-margin threshold agrees with the oracle ask label on 0.990 of rows; final ask/oracle agreement is 1.000 after the effective context override. | paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md | Do not treat this internal cached-row diagnostic as an independent external benchmark. |
 | API ECU uses rough candidate probabilities rather than perfect hidden-intent calibration. | On the main cached API subset, the model top success class matches the benchmark top-prior class on 0.970 of rows, but the sampled hidden class on 0.770; model and oracle utility margins have Pearson correlation 0.948. | paper/tables/api_candidate_calibration.md | Do not claim the model estimates exact user-intent probabilities. |
-| Private reasoning alone does not close the calibration gap. | CoT Ask-Needed utility 0.632; missed clarification 0.604. | data/runs/api_eval_100_cot_results.jsonl | Do not claim all chain-of-thought methods fail. |
+| Private reasoning alone does not close the calibration gap. | GPT-4.1-mini CoT Ask-Needed utility 0.632; GPT-5.4-mini CoT 0.864 remains below ECU 0.976. GPT-5.5 CoT ties ECU on this subset. | data/runs/api_eval_100_cot_results.jsonl; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl; paper/tables/current_model_sweep.md | Do not claim all private-reasoning prompts fail or that ECU always beats CoT at frontier scale. |
+| Current hosted-model sweeps preserve the plain Ask-Needed calibration gap. | GPT-5.4-mini: ECU 0.976 vs Ask-Needed 0.868; GPT-5.5: ECU 0.976 vs Ask-Needed 0.821. ECU has zero missed and unnecessary clarifications in both rows. | data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl; paper/tables/current_model_sweep.md; paper/tables/current_model_category_failure_modes.md | Do not present the 100-episode OpenAI-only sweep as full cross-family or full-test coverage. |
 | The API utility advantage survives fixed-output reward rescoring. | Cached API outputs keep positive ECU minus Ask-Needed deltas over the tested ask-cost and wrong-action-cost grid; the smallest paired bootstrap lower bound is +0.070. | paper/tables/api_eval_100_corrected/utility_sensitivity.md | Do not claim the API policy was rerun or adaptively retuned under each cost. |
 | The result survives small paraphrase and answer-style stress. | Style set ECU 0.977 vs Ask-Needed 0.814. | data/runs/api_style_stress_50_results.jsonl | Do not call this broad linguistic robustness. |
-| A tiny second-model check supports the direction. | gpt-4.1-nano 25: ECU 0.722 vs Ask-Needed 0.098. | data/runs/api_second_model_25_results.jsonl | Do not present this as a comprehensive model sweep. |
+| A tiny second-model check supports the direction. | gpt-4.1-nano 25: ECU 0.722 vs Ask-Needed 0.098. | data/runs/api_second_model_25_results.jsonl | Do not present this tiny nano check as the main model-robustness evidence. |
 | The API evidence is reproducible from shipped caches. | Cache-only replay reproduces all 2225 canonical API rows with zero stable-row mismatches. | paper/tables/api_cache_replay_verification.md | Do not present cache replay as a fresh model evaluation. |
 | The main API advantage is not carried by a single category or episode. | Leave-one-category minimum ECU minus Ask-Needed delta is 0.190; leave-one-episode minimum is 0.307; stratified bootstrap lower bound is 0.183. | paper/tables/api_eval_100_corrected/subset_stability.md | Do not present this as a substitute for a larger paid API sweep. |
 | The simulated user is visibly diagnostic in the released benchmark. | Generated oracle-ask answers resolve 1233/1233 hidden success classes, and actual API asked-row answers resolve 184/184 from visible scene fields. | paper/tables/simulated_user_audit.md | Do not claim this replaces human-response validation. |
@@ -37,7 +38,7 @@ This generated report is a writing guardrail. It separates claims supported by t
 | Risk | Severity | How to frame | Boundary |
 | --- | --- | --- | --- |
 | Synthetic benchmark | High | Frame as controlled diagnostic benchmark; emphasize deterministic rewards and category design. | Do not claim physical robot deployment or real household generalization. |
-| Single headline API model | Medium | Use gpt-4.1-mini as headline and gpt-4.1-nano as auxiliary direction check. | Broader model sweep remains future work. |
+| Model coverage | Medium | Use GPT-4.1-mini as historical headline, GPT-5.4-mini/GPT-5.5 as current hosted-model sweeps, and GPT-4.1-nano as a tiny weak-model sanity check. | Full 400-episode current-model sweeps, open-weight models, multimodal agents, and non-OpenAI model families remain future work. |
 | Small paid API subset | Medium | Report paired CIs, subset-stability checks, full offline splits, cache-only replay, and style-stress set. | Do not hide that the main API set is 100 episodes. |
 | Category-shift learning boundary | Medium | Use the held-out ambiguity-mix diagnostic to separate ECU's rule-based transfer from learned-controller over-asking. | Do not present the learned controller as robust to unseen ambiguity categories. |
 | External CLAMBER sanity check | Low | Use as motivation that query-level ambiguity prediction can miss clarification needs. | Do not claim CLAMBER has situated action rewards or that ECU was evaluated on it. |
@@ -54,7 +55,7 @@ This generated report is a writing guardrail. It separates claims supported by t
 | Real-world embodied performance | No perception, physics, long-horizon planning, or human-in-the-loop deployment is evaluated. |
 | General dialogue mastery | Episodes are one ask-or-act decision plus one answer before final action. |
 | Model training breakthrough | The learned component is a lightweight controller; API model weights are frozen. |
-| Broad model robustness | Only one headline model and one tiny second-model sanity check are included. |
+| Broad cross-family model robustness | The evidence includes GPT-4.1-mini, GPT-5.4-mini, GPT-5.5, and a tiny GPT-4.1-nano check, but no open-weight, multimodal, or non-OpenAI model families. |
 | Learned-controller category transfer | When trained without risk-sensitive and preference/social categories, the controller over-asks held-out preference/social cases. |
 | External benchmark transfer | CLAMBER analysis uses the dataset's provided ambiguity prediction, not a Clarify-to-Act agent running in CLAMBER. |
 | Human preference validation | The user model is deterministic; author audits check coherence and question naturalness. |
@@ -63,7 +64,7 @@ This generated report is a writing guardrail. It separates claims supported by t
 
 | Upgrade | Concrete next evidence |
 | --- | --- |
-| Broader model sweep | Repeat the 100-episode API set on 2-3 additional model families. |
+| Broader model sweep | Run full 400-episode current-model tests and add open-weight or non-OpenAI model families. |
 | Human/user study | Ask humans to answer sampled clarification questions and rate whether questions are necessary. |
 | External transfer | Map a small CLAMBER or situated-instruction subset into ask/act utility labels. |
 | Realistic action backend | Connect the first-turn ask/act policy to a simulator or tool environment with irreversible actions. |

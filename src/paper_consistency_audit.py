@@ -228,6 +228,20 @@ CHECKS: tuple[TextCheck, ...] = (
         "The manuscript should report the current-model sweep without overstating it as a universal frontier result.",
     ),
     TextCheck(
+        "current-model category failure modes",
+        "paper/latex/main.tex",
+        (
+            r"largest GPT-5\.4-mini gap is preference/social",
+            r"\+0\.193 \\ecu--Ask utility",
+            r"37\.5\\% missed oracle asks",
+            r"largest GPT-5\.5 gap is risk-sensitive",
+            r"\+0\.767",
+            r"65\.0\\% missed",
+            r"zero missed or unnecessary clarifications in every model/category cell",
+        ),
+        "The manuscript should localize residual current-model prompting gaps by category without overclaiming.",
+    ),
+    TextCheck(
         "main limitations",
         "paper/latex/main.tex",
         (
@@ -278,7 +292,8 @@ CHECKS: tuple[TextCheck, ...] = (
         "paper/claim_scope.md",
         (
             r"Do not claim physical robot deployment",
-            r"Do not present this as a comprehensive model sweep",
+            r"Full 400-episode current-model sweeps, open-weight models, multimodal agents, and non-OpenAI model families remain future work",
+            r"Do not present the 100-episode OpenAI-only sweep as full cross-family or full-test coverage",
             r"Human interaction study is not included",
             r"Do not present cache replay as a fresh model evaluation",
         ),

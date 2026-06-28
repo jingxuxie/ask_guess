@@ -80,6 +80,7 @@ SUPPORTING_ARTIFACTS = [
     "paper/tables/api_gpt_5_4_mini_scene_format_robustness.md",
     "paper/tables/api_gpt_5_4_mini_natural_language_scene_format_robustness.md",
     "paper/tables/current_model_sweep.md",
+    "paper/tables/current_model_category_failure_modes.md",
     "paper/audits/AUDIT_SUMMARY.md",
     "paper/dataset_card.md",
     "paper/claim_scope.md",
@@ -87,6 +88,7 @@ SUPPORTING_ARTIFACTS = [
     "paper/supplement_audit.md",
     "paper/figures/api_main_net_utility.svg",
     "paper/figures/api_category_net_utility.svg",
+    "paper/figures/current_model_category_net_utility.svg",
     "paper/figures/api_calibration_ask_rate.svg",
     "paper/figures/cost_sensitivity_ask_cost.svg",
     "paper/figures/cost_sensitivity_wrong_cost.svg",
@@ -117,6 +119,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-cache", default="data/runs/api_cache.jsonl")
     parser.add_argument("--claim-verification", default="paper/claim_verification.md")
     parser.add_argument("--pdf", default="paper/latex/main.pdf")
+    parser.add_argument("--latex-log", default="paper/latex/main.log")
     parser.add_argument("--out", default="paper/submission_readiness.md")
     return parser.parse_args()
 
@@ -196,6 +199,16 @@ def pdf_page_count(path: Path) -> str:
     return "unknown"
 
 
+def bibliography_start_page(path: Path) -> str:
+    if not path.exists():
+        return "missing"
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    match = re.search(r"\(./main\.bbl\s+\[(\d+)\]", text)
+    if match:
+        return match.group(1)
+    return "unknown"
+
+
 def metric_table(rows: list[dict], split: str, policies: list[str]) -> str:
     table_rows = []
     for policy in policies:
@@ -235,6 +248,7 @@ conda run -n ask_dont_guess python src/paper_consistency_audit.py
 conda run -n ask_dont_guess python src/verify_claims.py
 conda run -n ask_dont_guess python src/make_dataset_card.py
 conda run -n ask_dont_guess python src/make_claim_scope_report.py
+cd paper/latex && latexmk -pdf -interaction=nonstopmode main.tex && cd ../..
 conda run -n ask_dont_guess python src/make_submission_readiness_report.py
 conda run -n ask_dont_guess python src/make_supplement_package.py --manifest-only
 conda run -n ask_dont_guess python src/make_reproducibility_report.py
@@ -242,7 +256,6 @@ conda run -n ask_dont_guess python src/make_supplement_package.py
 conda run -n ask_dont_guess python src/audit_supplement_release.py
 conda run -n ask_dont_guess python src/make_reproducibility_report.py
 conda run -n ask_dont_guess python src/make_supplement_package.py
-cd paper/latex && latexmk -pdf -interaction=nonstopmode main.tex
 ```"""
 
 
@@ -276,7 +289,10 @@ def main() -> None:
     missing = [path for path in CRITICAL_ARTIFACTS if not Path(path).exists()]
     verification = claim_status(Path(args.claim_verification))
     pages = pdf_page_count(Path(args.pdf))
-    ready = not missing and verification == "PASS" and pages not in {"missing", "unknown"}
+    references_start = bibliography_start_page(Path(args.latex_log))
+    main_text_pages = str(int(references_start) - 1) if references_start.isdigit() else "unknown"
+    page_budget_ok = main_text_pages.isdigit() and int(main_text_pages) <= 9
+    ready = not missing and verification == "PASS" and pages not in {"missing", "unknown"} and page_budget_ok
     overall = "ready with stated limitations" if ready else "not ready: refresh missing or failed checks"
 
     main_direct = stats_for(api_rows, "test", "api_direct_act")
@@ -340,9 +356,9 @@ def main() -> None:
             (
                 f"GPT-5.4-mini: ECU {format_float(gpt54_ecu['net_utility'])}, Ask-Needed {format_float(gpt54_ask['net_utility'])}; "
                 f"GPT-5.5: ECU {format_float(gpt55_ecu['net_utility'])}, Ask-Needed {format_float(gpt55_ask['net_utility'])}. "
-                "ECU has zero missed and unnecessary clarifications in both current-model rows."
+                "ECU has zero missed and unnecessary clarifications in both current-model rows; the category failure-mode table localizes the remaining plain Ask-Needed gaps."
             ),
-            "paper/tables/current_model_sweep.md; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl",
+            "paper/tables/current_model_sweep.md; paper/tables/current_model_category_failure_modes.md; paper/figures/current_model_category_net_utility.svg; data/runs/api_gpt_5_4_mini_test100_results.jsonl; data/runs/api_gpt_5_5_test100_results.jsonl",
         ],
         [
             "ECU tracks utility margins.",
@@ -453,6 +469,9 @@ def main() -> None:
         ["Claim verification", verification],
         ["Critical artifacts missing", ", ".join(missing) if missing else "none"],
         ["Compiled PDF pages", pages],
+        ["References start page", references_start],
+        ["Main text pages before references", main_text_pages],
+        ["COLM 9-page main-text budget", "PASS" if page_budget_ok else "FAIL"],
         ["Main benchmark rows", str(len(episodes))],
         ["Main split counts", ", ".join(f"{key}: {value}" for key, value in sorted(split_counts.items()))],
         ["Style-stress rows", str(len(style_episodes))],
@@ -469,7 +488,7 @@ def main() -> None:
 
     limitation_rows = [
         ["Synthetic benchmark", "Claims are about situated instruction-following episodes generated by the local benchmark, not real household deployment."],
-        ["Model coverage", "The headline API evidence uses gpt-4.1-mini. A 25-episode gpt-4.1-nano sanity check supports the direction, but broader model sweeps remain future work."],
+        ["Model coverage", "The headline API evidence uses gpt-4.1-mini, with 100-episode GPT-5.4-mini/GPT-5.5 sweeps and a 25-episode gpt-4.1-nano sanity check; open-weight and multimodal agents remain future work."],
         ["Scale", "Main API result is 100 stratified episodes, with subset-stability checks and a 50-episode style-stress set; offline results cover the full generated test/OOD splits."],
         ["User model", "Clarification answers are deterministic simulated user answers; the visible-answer audit supports diagnostic clarity, but this is not a human-response study."],
         ["Submission framing", "The strongest claim is value-of-information calibration for first-turn clarify-vs-act decisions, not general interactive dialogue mastery."],

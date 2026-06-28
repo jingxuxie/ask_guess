@@ -548,6 +548,76 @@ def main() -> None:
                 "paper/tables/current_model_sweep.md",
             )
 
+    current_model_category_runs = [
+        ("gpt-4.1-mini", api_rows),
+        ("gpt-5.4-mini", api_gpt54_mini_rows),
+        ("gpt-5.5", api_gpt55_rows),
+    ]
+    category_stats = {}
+    for model, rows in current_model_category_runs:
+        for category in ("context_resolved", "preference_social", "equivalent_outcome", "referential", "risk_sensitive"):
+            ask_stats = aggregate(
+                [
+                    row
+                    for row in rows
+                    if row["split"] == "test" and row["policy"] == "api_ask_needed" and row["ambiguity_type"] == category
+                ]
+            )
+            ecu_stats = aggregate(
+                [
+                    row
+                    for row in rows
+                    if row["split"] == "test" and row["policy"] == "api_ecu" and row["ambiguity_type"] == category
+                ]
+            )
+            category_stats[(model, category)] = (ask_stats, ecu_stats)
+    gpt54_pref_ask, gpt54_pref_ecu = category_stats[("gpt-5.4-mini", "preference_social")]
+    ok &= check_float(
+        report_rows,
+        "current-model category gpt-5.4-mini preference ECU - Ask-Needed utility delta",
+        float(gpt54_pref_ecu["net_utility"]) - float(gpt54_pref_ask["net_utility"]),
+        0.193,
+        "paper/tables/current_model_category_failure_modes.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "current-model category gpt-5.4-mini preference Ask-Needed missed clarification",
+        float(gpt54_pref_ask["missed_clarification_rate"]),
+        0.375,
+        "paper/tables/current_model_category_failure_modes.md",
+    )
+    gpt55_risk_ask, gpt55_risk_ecu = category_stats[("gpt-5.5", "risk_sensitive")]
+    ok &= check_float(
+        report_rows,
+        "current-model category gpt-5.5 risk ECU - Ask-Needed utility delta",
+        float(gpt55_risk_ecu["net_utility"]) - float(gpt55_risk_ask["net_utility"]),
+        0.767,
+        "paper/tables/current_model_category_failure_modes.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "current-model category gpt-5.5 risk Ask-Needed missed clarification",
+        float(gpt55_risk_ask["missed_clarification_rate"]),
+        0.650,
+        "paper/tables/current_model_category_failure_modes.md",
+    )
+    max_category_ecu_missed = max(float(ecu["missed_clarification_rate"]) for _ask, ecu in category_stats.values())
+    max_category_ecu_unnecessary = max(float(ecu["unnecessary_clarification_rate"]) for _ask, ecu in category_stats.values())
+    ok &= check_float(
+        report_rows,
+        "current-model category maximum ECU missed clarification",
+        max_category_ecu_missed,
+        0.000,
+        "paper/tables/current_model_category_failure_modes.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "current-model category maximum ECU unnecessary clarification",
+        max_category_ecu_unnecessary,
+        0.000,
+        "paper/tables/current_model_category_failure_modes.md",
+    )
+
     scene_format = group_rows(api_gpt54_mini_shuffled_rows, ("split", "policy"))
     scene_format_expectations = [
         ("api_direct_act", "net_utility", 0.420),

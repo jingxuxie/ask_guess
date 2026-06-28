@@ -6,14 +6,14 @@ The companion zip is built deterministically from this file list with fixed arch
 ## Archive
 
 - Default path: `paper/clarify_to_act_supplement.zip`
-- Included files: 185
+- Included files: 188
 - Missing required files: none
 
 ## Groups
 
-- Source: 56 files
+- Source: 57 files
 - Canonical data and cached API evidence: 19 files
-- Paper, tables, figures, and audits: 108 files
+- Paper, tables, figures, and audits: 110 files
 - Top-level summaries: 2 files
 
 ## Exclusion Policy
@@ -86,6 +86,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/figures/api_main_net_utility.svg`
 - `paper/figures/cost_sensitivity_ask_cost.svg`
 - `paper/figures/cost_sensitivity_wrong_cost.svg`
+- `paper/figures/current_model_category_net_utility.svg`
 - `paper/latex/Makefile`
 - `paper/latex/README.md`
 - `paper/latex/colm2026_conference.bst`
@@ -168,6 +169,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/clamber_external_sanity.md`
 - `paper/tables/controller_analysis.md`
 - `paper/tables/cost_sensitivity.md`
+- `paper/tables/current_model_category_failure_modes.md`
 - `paper/tables/current_model_sweep.md`
 - `paper/tables/failure_examples.md`
 - `paper/tables/main_results.md`
@@ -208,6 +210,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `src/complete_audit_packet.py`
 - `src/controller_analysis.py`
 - `src/cost_sensitivity.py`
+- `src/current_model_category_modes.py`
 - `src/current_model_sweep_report.py`
 - `src/failure_taxonomy.py`
 - `src/generate_scenarios.py`

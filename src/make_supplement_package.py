@@ -144,6 +144,8 @@ REQUIRED_FILES = [
     "paper/tables/api_cache_replay_verification.md",
     "paper/tables/api_eval_100_corrected/api_ecu_margin_analysis.md",
     "paper/tables/api_candidate_calibration.md",
+    "paper/tables/current_model_category_failure_modes.md",
+    "paper/figures/current_model_category_net_utility.svg",
     "paper/tables/api_eval_100_corrected/subset_stability.md",
     "paper/tables/api_eval_100_corrected/utility_sensitivity.md",
     "paper/claim_scope.md",
