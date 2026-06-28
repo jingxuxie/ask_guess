@@ -4,6 +4,8 @@ Canonical files:
 
 - `main.tex`
 - `refs.bib`
+- `colm2026_conference.tex`
+- `colm2026_conference.bib`
 - `colm2026_conference.sty`
 - `colm2026_conference.bst`
 - `fancyhdr.sty`
@@ -17,7 +19,7 @@ Build command:
 make
 ```
 
-This package is rebased on `Template-2026.zip` and includes the local COLM 2026 template support files. The checked-in `colm2026_conference.sty`, `colm2026_conference.bst`, `fancyhdr.sty`, `natbib.sty`, `math_commands.tex`, and `colm2026_conference.pdf` files were compared byte-for-byte against the supplied template archive on 2026-06-28. The SVG figures in `../figures/` remain available for later camera-ready polish, but this LaTeX draft is self-contained and compileable without SVG conversion.
+This package is rebased on `Template-2026.zip` and includes the local COLM 2026 template support files. The checked-in `colm2026_conference.tex`, `colm2026_conference.bib`, `colm2026_conference.sty`, `colm2026_conference.bst`, `fancyhdr.sty`, `natbib.sty`, `math_commands.tex`, and `colm2026_conference.pdf` files were copied from or compared byte-for-byte against the supplied template archive on 2026-06-28. The SVG figures in `../figures/` remain available for later camera-ready polish, but this LaTeX draft is self-contained and compileable without SVG conversion.
 
 Verified on 2026-06-28:
 

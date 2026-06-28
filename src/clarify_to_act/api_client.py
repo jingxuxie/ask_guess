@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import socket
 import time
 import urllib.error
 import urllib.request
@@ -177,6 +178,8 @@ class CachedResponsesClient:
                 if exc.code not in {408, 409, 429, 500, 502, 503, 504}:
                     break
             except urllib.error.URLError as exc:
+                last_error = exc
+            except (TimeoutError, socket.timeout) as exc:
                 last_error = exc
             if attempt < self.retries:
                 time.sleep(1.5 * (attempt + 1))

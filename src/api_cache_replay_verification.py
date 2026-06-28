@@ -105,6 +105,16 @@ REPLAY_CONFIGS = [
         policies=("api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"),
     ),
     ReplayConfig(
+        name="full_test_400_gpt54mini",
+        episodes="data/generated/episodes.jsonl",
+        canonical_results="data/runs/api_gpt_5_4_mini_test400_results.jsonl",
+        cache="data/runs/api_gpt_5_4_mini_cache.jsonl",
+        model="gpt-5.4-mini",
+        split="test",
+        limit_per_category=80,
+        policies=("api_ask_needed", "api_ask_needed_cot", "api_ecu"),
+    ),
+    ReplayConfig(
         name="current_100_gpt55",
         episodes="data/generated/episodes.jsonl",
         canonical_results="data/runs/api_gpt_5_5_test100_results.jsonl",
@@ -113,6 +123,16 @@ REPLAY_CONFIGS = [
         split="test",
         limit_per_category=20,
         policies=("api_direct_act", "api_ask_needed", "api_ask_needed_cot", "api_ecu"),
+    ),
+    ReplayConfig(
+        name="full_test_400_gpt55",
+        episodes="data/generated/episodes.jsonl",
+        canonical_results="data/runs/api_gpt_5_5_test400_results.jsonl",
+        cache="data/runs/api_gpt_5_5_cache.jsonl",
+        model="gpt-5.5",
+        split="test",
+        limit_per_category=80,
+        policies=("api_ask_needed", "api_ask_needed_cot", "api_ecu"),
     ),
     ReplayConfig(
         name="shuffled_scene_100_gpt54mini",

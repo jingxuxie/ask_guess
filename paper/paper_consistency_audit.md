@@ -24,6 +24,7 @@ Overall status: **PASS**
 | COLM template shell | paper/latex/main.tex | PASS | The LaTeX source should use the official COLM submission shell conventions. | none |
 | current-model sweep | paper/latex/main.tex | PASS | The manuscript should report the current-model sweep without overstating it as a universal frontier result. | none |
 | current-model category failure modes | paper/latex/main.tex | PASS | The manuscript should localize residual current-model prompting gaps by category without overclaiming. | none |
+| current-model full-test expansion | paper/latex/main.tex | PASS | The manuscript should report the full 400-episode current-model expansions without implying broader model-family coverage. | none |
 | main limitations | paper/latex/main.tex | PASS | Top-tier submission framing needs explicit scope boundaries in the main paper. | none |
 | simulated user audit counts in manuscript | paper/latex/main.tex | PASS | The paper should give exact evidence for the deterministic simulated-user audit. | none |
 | simulated user audit counts in full draft | paper/clarify_to_act_paper_draft.md | PASS | The longer draft should carry exact audit counts and the human-study caveat. | none |

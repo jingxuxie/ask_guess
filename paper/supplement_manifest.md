@@ -6,14 +6,14 @@ The companion zip is built deterministically from this file list with fixed arch
 ## Archive
 
 - Default path: `paper/clarify_to_act_supplement.zip`
-- Included files: 188
+- Included files: 197
 - Missing required files: none
 
 ## Groups
 
-- Source: 57 files
-- Canonical data and cached API evidence: 19 files
-- Paper, tables, figures, and audits: 110 files
+- Source: 58 files
+- Canonical data and cached API evidence: 21 files
+- Paper, tables, figures, and audits: 116 files
 - Top-level summaries: 2 files
 
 ## Exclusion Policy
@@ -63,8 +63,10 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `data/runs/api_gpt_5_4_mini_scene_cache.jsonl`
 - `data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl`
 - `data/runs/api_gpt_5_4_mini_test100_results.jsonl`
+- `data/runs/api_gpt_5_4_mini_test400_results.jsonl`
 - `data/runs/api_gpt_5_5_cache.jsonl`
 - `data/runs/api_gpt_5_5_test100_results.jsonl`
+- `data/runs/api_gpt_5_5_test400_results.jsonl`
 - `data/runs/api_second_model_25_results.jsonl`
 - `data/runs/api_second_model_cache.jsonl`
 - `data/runs/api_style_stress_50_results.jsonl`
@@ -89,9 +91,11 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/figures/current_model_category_net_utility.svg`
 - `paper/latex/Makefile`
 - `paper/latex/README.md`
+- `paper/latex/colm2026_conference.bib`
 - `paper/latex/colm2026_conference.bst`
 - `paper/latex/colm2026_conference.pdf`
 - `paper/latex/colm2026_conference.sty`
+- `paper/latex/colm2026_conference.tex`
 - `paper/latex/fancyhdr.sty`
 - `paper/latex/main.bbl`
 - `paper/latex/main.pdf`
@@ -146,11 +150,13 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/api_gpt_5_4_mini_test100/main_results.md`
 - `paper/tables/api_gpt_5_4_mini_test100/paired_differences.md`
 - `paper/tables/api_gpt_5_4_mini_test100_results.md`
+- `paper/tables/api_gpt_5_4_mini_test400_results.md`
 - `paper/tables/api_gpt_5_5_test100/category_breakdown.md`
 - `paper/tables/api_gpt_5_5_test100/failure_examples.md`
 - `paper/tables/api_gpt_5_5_test100/main_results.md`
 - `paper/tables/api_gpt_5_5_test100/paired_differences.md`
 - `paper/tables/api_gpt_5_5_test100_results.md`
+- `paper/tables/api_gpt_5_5_test400_results.md`
 - `paper/tables/api_second_model_25/category_breakdown.md`
 - `paper/tables/api_second_model_25/failure_examples.md`
 - `paper/tables/api_second_model_25/main_results.md`
@@ -170,8 +176,10 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `paper/tables/controller_analysis.md`
 - `paper/tables/cost_sensitivity.md`
 - `paper/tables/current_model_category_failure_modes.md`
+- `paper/tables/current_model_full_test.md`
 - `paper/tables/current_model_sweep.md`
 - `paper/tables/failure_examples.md`
+- `paper/tables/full_test_expansion_feasibility.md`
 - `paper/tables/main_results.md`
 - `paper/tables/paired_differences.md`
 - `paper/tables/qualitative_examples.md`
@@ -213,6 +221,7 @@ The package excludes API keys, local tool state, Python bytecode, LaTeX build in
 - `src/current_model_category_modes.py`
 - `src/current_model_sweep_report.py`
 - `src/failure_taxonomy.py`
+- `src/full_test_expansion_feasibility.py`
 - `src/generate_scenarios.py`
 - `src/inspect_scenarios.py`
 - `src/make_ambiguity_mix_shift.py`

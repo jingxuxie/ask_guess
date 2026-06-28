@@ -9,6 +9,7 @@ Use these canonical artifacts for the current draft.
 - `dataset_card.md`: generated benchmark schema, split, category, leakage-control, and limitation summary.
 - `latex/main.tex`: COLM-style LaTeX draft.
 - `latex/refs.bib`: BibTeX entries.
+- `latex/colm2026_conference.tex` and `latex/colm2026_conference.bib`: official COLM 2026 template sample files.
 - `latex/colm2026_conference.sty` and `latex/colm2026_conference.bst`: COLM 2026 template style files.
 - `latex/fancyhdr.sty`, `latex/natbib.sty`, `latex/math_commands.tex`, `latex/colm2026_conference.pdf`: support files from `Template-2026.zip`.
 - `latex/main.pdf`: compiled 12-page PDF.

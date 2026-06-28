@@ -22,6 +22,7 @@ def parse_args() -> argparse.Namespace:
         help="Model label and comma-separated result paths, formatted as model=path[,path2].",
     )
     parser.add_argument("--out", default="paper/tables/current_model_sweep.md")
+    parser.add_argument("--title", default="Current-Model Sweep")
     parser.add_argument("--bootstrap-samples", type=int, default=2000)
     parser.add_argument("--seed", type=int, default=0)
     return parser.parse_args()
@@ -145,7 +146,7 @@ def main() -> None:
     args = parse_args()
     runs = [(label, load_rows(paths)) for label, paths in (parse_run_spec(spec) for spec in args.run)]
     body = [
-        "# Current-Model Sweep\n\n",
+        f"# {args.title}\n\n",
         "## Main Comparison\n\n",
         model_table(runs, samples=args.bootstrap_samples, seed=args.seed),
         "\n\n## API Usage\n\n",

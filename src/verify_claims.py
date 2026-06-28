@@ -50,7 +50,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--api-second-model-results", default="data/runs/api_second_model_25_results.jsonl")
     parser.add_argument("--api-second-model-cache", default="data/runs/api_second_model_cache.jsonl")
     parser.add_argument("--api-gpt54-mini-results", default="data/runs/api_gpt_5_4_mini_test100_results.jsonl")
+    parser.add_argument("--api-gpt54-mini-test400-results", default="data/runs/api_gpt_5_4_mini_test400_results.jsonl")
     parser.add_argument("--api-gpt55-results", default="data/runs/api_gpt_5_5_test100_results.jsonl")
+    parser.add_argument("--api-gpt55-test400-results", default="data/runs/api_gpt_5_5_test400_results.jsonl")
     parser.add_argument("--api-gpt54-mini-shuffled-results", default="data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl")
     parser.add_argument(
         "--api-gpt54-mini-natural-language-results",
@@ -205,7 +207,9 @@ def main() -> None:
     api_style_rows = read_jsonl(args.api_style_results)
     api_second_model_rows = read_jsonl(args.api_second_model_results)
     api_gpt54_mini_rows = read_jsonl(args.api_gpt54_mini_results)
+    api_gpt54_mini_test400_rows = read_jsonl(args.api_gpt54_mini_test400_results)
     api_gpt55_rows = read_jsonl(args.api_gpt55_results)
+    api_gpt55_test400_rows = read_jsonl(args.api_gpt55_test400_results)
     api_gpt54_mini_shuffled_rows = read_jsonl(args.api_gpt54_mini_shuffled_results)
     api_gpt54_mini_natural_language_rows = read_jsonl(args.api_gpt54_mini_natural_language_results)
     ambiguity_mix_episodes = read_jsonl(args.ambiguity_mix_episodes)
@@ -548,6 +552,91 @@ def main() -> None:
                 "paper/tables/current_model_sweep.md",
             )
 
+    ok &= check_equal(
+        report_rows,
+        "gpt-5.4-mini full-test rows",
+        len(api_gpt54_mini_test400_rows),
+        1200,
+        args.api_gpt54_mini_test400_results,
+    )
+    gpt54_full = group_rows(api_gpt54_mini_test400_rows, ("split", "policy"))
+    for policy, metric, expected in [
+        ("api_ask_needed", "net_utility", 0.895),
+        ("api_ask_needed", "missed_clarification_rate", 0.075),
+        ("api_ask_needed", "unnecessary_clarification_rate", 0.540),
+        ("api_ask_needed_cot", "net_utility", 0.903),
+        ("api_ecu", "net_utility", 0.963),
+        ("api_ecu", "success", 0.990),
+        ("api_ecu", "ask_rate", 0.500),
+        ("api_ecu", "missed_clarification_rate", 0.000),
+        ("api_ecu", "unnecessary_clarification_rate", 0.000),
+    ]:
+        stats = aggregate(gpt54_full[("test", policy)])
+        ok &= check_float(
+            report_rows,
+            f"gpt-5.4-mini full-test {policy} {metric}",
+            stats[metric],
+            expected,
+            args.api_gpt54_mini_test400_results,
+        )
+    ok &= check_float(
+        report_rows,
+        "paired gpt-5.4-mini full-test api_ecu - api_ask_needed utility delta",
+        paired_delta(api_gpt54_mini_test400_rows, "api_ecu", "api_ask_needed"),
+        0.068,
+        "paper/tables/current_model_full_test.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "paired gpt-5.4-mini full-test api_ecu - api_ask_needed_cot utility delta",
+        paired_delta(api_gpt54_mini_test400_rows, "api_ecu", "api_ask_needed_cot"),
+        0.060,
+        "paper/tables/current_model_full_test.md",
+    )
+    ok &= check_equal(
+        report_rows,
+        "gpt-5.5 full-test rows",
+        len(api_gpt55_test400_rows),
+        1200,
+        args.api_gpt55_test400_results,
+    )
+    gpt55_full = group_rows(api_gpt55_test400_rows, ("split", "policy"))
+    for policy, metric, expected in [
+        ("api_ask_needed", "net_utility", 0.848),
+        ("api_ask_needed", "missed_clarification_rate", 0.225),
+        ("api_ask_needed", "unnecessary_clarification_rate", 0.020),
+        ("api_ask_needed_cot", "net_utility", 0.940),
+        ("api_ask_needed_cot", "missed_clarification_rate", 0.030),
+        ("api_ask_needed_cot", "unnecessary_clarification_rate", 0.000),
+        ("api_ecu", "net_utility", 0.963),
+        ("api_ecu", "success", 0.990),
+        ("api_ecu", "ask_rate", 0.500),
+        ("api_ecu", "missed_clarification_rate", 0.000),
+        ("api_ecu", "unnecessary_clarification_rate", 0.000),
+    ]:
+        stats = aggregate(gpt55_full[("test", policy)])
+        ok &= check_float(
+            report_rows,
+            f"gpt-5.5 full-test {policy} {metric}",
+            stats[metric],
+            expected,
+            args.api_gpt55_test400_results,
+        )
+    ok &= check_float(
+        report_rows,
+        "paired gpt-5.5 full-test api_ecu - api_ask_needed utility delta",
+        paired_delta(api_gpt55_test400_rows, "api_ecu", "api_ask_needed"),
+        0.115,
+        "paper/tables/current_model_full_test.md",
+    )
+    ok &= check_float(
+        report_rows,
+        "paired gpt-5.5 full-test api_ecu - api_ask_needed_cot utility delta",
+        paired_delta(api_gpt55_test400_rows, "api_ecu", "api_ask_needed_cot"),
+        0.023,
+        "paper/tables/current_model_full_test.md",
+    )
+
     current_model_category_runs = [
         ("gpt-4.1-mini", api_rows),
         ("gpt-5.4-mini", api_gpt54_mini_rows),
@@ -833,7 +922,9 @@ def main() -> None:
             "style_50_gpt41mini": {"canonical_rows": 150, "replay_rows": 150, "mismatches": 0},
             "second_model_25_gpt41nano": {"canonical_rows": 75, "replay_rows": 75, "mismatches": 0},
             "current_100_gpt54mini": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
+            "full_test_400_gpt54mini": {"canonical_rows": 1200, "replay_rows": 1200, "mismatches": 0},
             "current_100_gpt55": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
+            "full_test_400_gpt55": {"canonical_rows": 1200, "replay_rows": 1200, "mismatches": 0},
             "shuffled_scene_100_gpt54mini": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
             "natural_language_scene_100_gpt54mini": {"canonical_rows": 400, "replay_rows": 400, "mismatches": 0},
         },

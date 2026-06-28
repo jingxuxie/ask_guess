@@ -1,6 +1,6 @@
 # Reproducibility Report
 
-Generated: 2026-06-28 14:50:31
+Generated: 2026-06-28 16:36:54
 
 This report records the canonical data, result, cache, and paper artifacts used by the current draft.
 
@@ -76,6 +76,24 @@ GPT-5.4-mini on the same 100 stratified test episodes:
 | test | api_ecu | 100 | 0.976 | [0.972, 0.981] | 1.000 | 0.480 | 0.000 | 0.000 |
 
 
+GPT-5.4-mini on the full 400-episode test split:
+
+| Split | Method | N | Net utility | 95% CI | Success | Ask rate | Missed clarif. | Unnecessary clarif. |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| test | api_ask_needed | 400 | 0.895 | [0.857, 0.930] | 0.980 | 0.733 | 0.075 | 0.540 |
+| test | api_ask_needed_cot | 400 | 0.903 | [0.866, 0.931] | 0.985 | 0.757 | 0.050 | 0.565 |
+| test | api_ecu | 400 | 0.963 | [0.951, 0.973] | 0.990 | 0.500 | 0.000 | 0.000 |
+
+
+GPT-5.5 on the full 400-episode test split:
+
+| Split | Method | N | Net utility | 95% CI | Success | Ask rate | Missed clarif. | Unnecessary clarif. |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| test | api_ask_needed | 400 | 0.848 | [0.772, 0.914] | 0.960 | 0.398 | 0.225 | 0.020 |
+| test | api_ask_needed_cot | 400 | 0.940 | [0.909, 0.966] | 0.983 | 0.485 | 0.030 | 0.000 |
+| test | api_ecu | 400 | 0.963 | [0.951, 0.973] | 0.990 | 0.500 | 0.000 | 0.000 |
+
+
 GPT-5.5 on the same 100 stratified test episodes:
 
 | Split | Method | N | Net utility | 95% CI | Success | Ask rate | Missed clarif. | Unnecessary clarif. |
@@ -124,14 +142,14 @@ GPT-5.4-mini cache:
 
 | Cache entries | Models | Input tokens | Output tokens | Total tokens |
 | --- | --- | --- | --- | --- |
-| 667 | gpt-5.4-mini: 667 | 196060 | 34351 | 230411 |
+| 2241 | gpt-5.4-mini: 2241 | 670202 | 122851 | 793053 |
 
 
 GPT-5.5 cache:
 
 | Cache entries | Models | Input tokens | Output tokens | Total tokens |
 | --- | --- | --- | --- | --- |
-| 609 | gpt-5.5: 609 | 181147 | 35581 | 216728 |
+| 2048 | gpt-5.5: 2048 | 621197 | 120721 | 741918 |
 
 
 GPT-5.4-mini shuffled-scene cache:
@@ -161,13 +179,15 @@ GPT-5.4-mini natural-language-scene cache:
 | data/runs/api_style_stress_50_results.jsonl | 340112 | 150 | 7b9df754155d3298711da9f48e735f0d0abeb731eab6b51d6fa2b0977d6e657a |
 | data/runs/api_second_model_25_results.jsonl | 171250 | 75 | bd9841ef740e3fe4092b4fdebea35180b28bbd9bf12e2e84e9fa478c81d06ef8 |
 | data/runs/api_gpt_5_4_mini_test100_results.jsonl | 947779 | 400 | 391691fa33cc2314ea4a1d3ed27322d65e73ba34d73eac1c907ab909254397d9 |
+| data/runs/api_gpt_5_4_mini_test400_results.jsonl | 3360438 | 1200 | a8ca79e71f6d11227caf9bd316db7d01ac9c3525ee90e81102724ce207705ad8 |
 | data/runs/api_gpt_5_5_test100_results.jsonl | 899888 | 400 | 1fd27d3f6305fbb2a2d7bb6ae3c0ccbc32e7256bcd347bfbbc736696086595bd |
+| data/runs/api_gpt_5_5_test400_results.jsonl | 3161292 | 1200 | 3e6be0aba2eac41ad409df5850089a25d7cdf3dddf3d40a02600a718790f5d64 |
 | data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl | 961287 | 400 | 5036ca081e2c2c96539a540fb056e3082603c45a7868ac6e0ce33cfe9f688ae8 |
 | data/runs/api_gpt_5_4_mini_natural_language_test100_results.jsonl | 966044 | 400 | 9fcef128546ac5ac85613d1c266b665016bdddc2ce2d069d2daf88a60e89b354 |
 | data/runs/api_cache.jsonl | 808118 | 914 | 97a3eeed8d4abf4ca16e72975c9d501428f5c98a1964f44177b14bc2462f6ca5 |
 | data/runs/api_second_model_cache.jsonl | 100851 | 109 | 1ee5f89a612d5be0c5f3a1dc1bfa8fd9f2bdc629c5c75d16ead6c8aca3b748c6 |
-| data/runs/api_gpt_5_4_mini_cache.jsonl | 616813 | 667 | 46198424fc3772223b8d36c2f306c5a030ce2f51739b490f268c225912ac48a3 |
-| data/runs/api_gpt_5_5_cache.jsonl | 576365 | 609 | 519231ae5a01edf10d0f6f9a440436d019cba84b6292654a3a2d287a6b3f3dd7 |
+| data/runs/api_gpt_5_4_mini_cache.jsonl | 2141240 | 2241 | 051f9c73e1e35821c5181d55065943ffc3450f904b8e1a1bc0ae21c243f99dde |
+| data/runs/api_gpt_5_5_cache.jsonl | 2010625 | 2048 | 26f80acc6b5f16a641382ea7fa6ba163f16a93db7bf14286995084058db99678 |
 | data/runs/api_gpt_5_4_mini_scene_cache.jsonl | 572844 | 616 | b544d7551fc78179a91c9fe698f5505c0afae72d635db4690fb46d90e245e7b5 |
 | data/runs/api_gpt_5_4_mini_nl_cache.jsonl | 575823 | 616 | 72fc2afb7a9aa12c61cc2a7f38fd3e01cef6e397e4656586990be94410f6aa6b |
 | paper/tables/benchmark_categories.md | 886 | - | cc9e128bc3d7be2da603f027be3370c89b621a38d0e806a9c73f04ac01013e3a |
@@ -182,7 +202,7 @@ GPT-5.4-mini natural-language-scene cache:
 | paper/tables/ambiguity_mix_shift.md | 5041 | - | a65bfffdf3dc1875e3bec760769b3d7a98acb9caafc46b20da9f2135eb2eb9df |
 | paper/tables/clamber_external_sanity.md | 4198 | - | db1c08fa9cc14d00a25502e7899aba267b89a327ddce2660eacf11a9cf7aebe4 |
 | paper/tables/simulated_user_audit.md | 2684 | - | cc0ecb9907a53af4d200e2f77ee0e5fc08870cda82b4ac0293e3a855646e9b4a |
-| paper/tables/api_cache_replay_verification.md | 4140 | - | a3be342a287ce41261a0dfe2552116bd68bb614fd726a60e9a0bea6ae3ad1667 |
+| paper/tables/api_cache_replay_verification.md | 4875 | - | 8684828fe3099d966cf1c73a2548582ca74679825a4c4c1eca3821c4c9e85c89 |
 | paper/tables/api_eval_100_corrected_results.md | 342 | - | e50a942a0016d8f3357f04ff9e73fc36795f39115397a876d7a1e034584eaf02 |
 | paper/tables/api_eval_100_corrected/category_breakdown.md | 1345 | - | 472378c12b78fc42d7b44f72476ac301c2376f674d129d70aa6eac23e3e06768 |
 | paper/tables/api_eval_100_corrected/paired_differences.md | 355 | - | fed2944a74ad625c7eac963940425a47f7c433c715f6d173cacd3ac97b462a2a |
@@ -217,11 +237,15 @@ GPT-5.4-mini natural-language-scene cache:
 | paper/tables/api_gpt_5_4_mini_test100/category_breakdown.md | 1770 | - | d8bff507b224f527ffbb11047c82c3f70f66950bab9159fa9b8b6e18eb321ff3 |
 | paper/tables/api_gpt_5_4_mini_test100/paired_differences.md | 352 | - | 6fc10e31e7456b69bc61b65e6f246e7ea950702051c6f3f496d24fb235e18921 |
 | paper/tables/api_gpt_5_4_mini_test100/failure_examples.md | 7371 | - | 3ae9fd4578305c441c55c2f71f53f329474849cea82b7860e3ce72800a2b5be9 |
+| paper/tables/api_gpt_5_4_mini_test400_results.md | 346 | - | dc68fe26ddfb78ca1cfe9261f1f1ff131cef4bc887c6ce8eb1945811e2759524 |
+| paper/tables/current_model_full_test.md | 685 | - | 59afc4d79cb39a858fd2d6a8b4b8acac061a5ec1d681404fe981c1e3a425b8e0 |
+| paper/tables/full_test_expansion_feasibility.md | 3166 | - | d7ef2480fc1e9eeebcb8b66552f3e40d9ab1abcda209343c111c1abb3e3dc5ab |
 | paper/tables/api_gpt_5_5_test100_results.md | 411 | - | fbedad2cb4891927261ec97891b51b5f12566f65f0eb31654d7058cbaa6c4953 |
 | paper/tables/api_gpt_5_5_test100/main_results.md | 532 | - | 4bee0fdd9c2591e198e5c3cdccfc0f7b0f8090f9ff0a29647c11af0ce2d3086f |
 | paper/tables/api_gpt_5_5_test100/category_breakdown.md | 1770 | - | 377334d2fd0b3e2e763e9d2c53a0eeee1b5465609b33c522867407bd23c7449f |
 | paper/tables/api_gpt_5_5_test100/paired_differences.md | 352 | - | 508ba3755dbfb3837412bff076d9a09e08358046bdfd0a4a95b062865c796c35 |
 | paper/tables/api_gpt_5_5_test100/failure_examples.md | 5621 | - | 6ec50ed97cf0a07e2621efd4a1c9da91ba93733f456c720b8c473779d19aa6ca |
+| paper/tables/api_gpt_5_5_test400_results.md | 346 | - | d1f1eb986aa9ba30f7b63541102f8c80bb465ed2ad91b95a319398dce1cb1142 |
 | paper/tables/api_gpt_5_4_mini_shuffled_test100_results.md | 411 | - | 63839fc56f0fff428de1fcee0d927ee41938e69c82af75a5412cc5309c7fc068 |
 | paper/tables/api_gpt_5_4_mini_shuffled_test100/main_results.md | 531 | - | 2d74258b749b4ede9ec488e640e1a628cdb1835b12160ef2d2f8ba9c6a372803 |
 | paper/tables/api_gpt_5_4_mini_shuffled_test100/category_breakdown.md | 1770 | - | 88f7248eb17194b737d70831417361f885bc2ddb9f0b88a8746c0d88438d485c |
@@ -249,13 +273,13 @@ GPT-5.4-mini natural-language-scene cache:
 | paper/audits/scenario_audit_completed.md | 43622 | - | 68038747914f4e1369f296a1b8f93283dbe9dedb35e6fc647a5fa3cd274d65f4 |
 | paper/audits/question_audit_completed.md | 36771 | - | 7afebf901c9bb3922d4d7aa3ec2afabbe65e5ac9643613ae3a7ad3665c55e224 |
 | paper/dataset_card.md | 5408 | - | d38a344715a5dd59a30e16c12d0b175f797fe5373686418bc2d5a522aaa144b4 |
-| paper/claim_verification.md | 34836 | - | 80848b3d45958841bd7f3e10c7bb3dfb8f1c8f71a4754fbbdb8f208a4c206978 |
-| paper/claim_scope.md | 10174 | - | ebdd758494a454a47d160993cf45b5dad57bcc98bce67331e0ebe987d666e867 |
-| paper/paper_consistency_audit.md | 3853 | - | a3c8bb8b50ef06844326fb39cd0d67c30097f1cc7396995f95116f3e18d13111 |
-| paper/submission_readiness.md | 19339 | - | 5803a455d7e007d15ea536307dcb581649c25efcb05563329d7176ecc6b4f2d2 |
-| paper/supplement_manifest.md | 9654 | - | e0a90a32c19658e26505c19ff5f2f2907556d1fc1f8ff79d13becfc8d4f34c2b |
-| paper/supplement_audit.md | 1406 | - | 7dbf4f68b1b25818ca8b8701c04b7f930f121286bb6294162fdfb97a0aba1538 |
-| src/api_cache_replay_verification.py | 10700 | - | a37f62d36305dc9d99413513ca9e01ba6439c73b2a054a3fbfe9af4cf11842f7 |
+| paper/claim_verification.md | 38487 | - | 5ed2323626bf15bb41c5ae54ac25e826e39da3041c1263d7012403d09ce428c2 |
+| paper/claim_scope.md | 10593 | - | b0a713741fc9e4d954c3453089d5f71c3479d003f75bbd88fc4640d8bf5c74b1 |
+| paper/paper_consistency_audit.md | 4053 | - | b85dafe5176fc55a701b9c79604487841f7acbddd48d5806292121c9e8b22fa7 |
+| paper/submission_readiness.md | 22566 | - | 284d7fa1a9415329898592fc89da197ccd54921e1befb9a2f9c56aad41d3135d |
+| paper/supplement_manifest.md | 9899 | - | c1c86e6f579e10d1b7f4eb5a238d802e2341bc594affd84a694c8fe0287475e2 |
+| paper/supplement_audit.md | 1406 | - | e8482a8daead4215d721dda53a97dd222fa902e5bf5d0babdbe979703badf113 |
+| src/api_cache_replay_verification.py | 11485 | - | 4cc7006f2993f25b27ba7e30e69921a7cd1d4e1c1c1e62c14503465c9980287f |
 | src/api_subset_stability.py | 7647 | - | d229caae694bec11a29392a22d6eb8a4cefcb73583cc50d2c6a740ee2385cb13 |
 | src/audit_supplement_release.py | 7057 | - | 3f1f1102e9ac7f740e2180065b8386ef22d8f7dce3555d610c0610d8a82fd518 |
 | src/api_ecu_margin_analysis.py | 7627 | - | 99c13b3beab8a709db8d0b8bb43d40405a60b1d1a920673c1cb522822ea74cee |
@@ -271,21 +295,24 @@ GPT-5.4-mini natural-language-scene cache:
 | src/ambiguity_mix_shift_analysis.py | 6120 | - | fc1422ef6dfe99391ab614d40c49a8a6f152987a0707f335de4530e989c6c6d9 |
 | src/clamber_external_sanity.py | 7705 | - | e057545e959c9f77865e5c29e10ed7dfa36c612142c66438bc980a2ce604cf6e |
 | src/simulated_user_audit.py | 9661 | - | 8eaf409f9465a3c4a7610b510b400178d482db39630184653e42b993624ae096 |
-| src/current_model_sweep_report.py | 6174 | - | a88bf4683ec2d223230e0c7ea426fa83b3528138a024188932d7bf7c2e874b4a |
+| src/current_model_sweep_report.py | 6234 | - | 20e5f4ef65ea2c673e4533bd89f7d6688a281e971ed586d38462e39f38d31982 |
 | src/current_model_category_modes.py | 12313 | - | e88eb0dfa83fcd9481d9e469e828c17e0f63c04b632da845b84d73765a1e4a74 |
-| src/paper_consistency_audit.py | 13765 | - | ef314fb3b615ba2dccad39f2180a50c93b3a56d988e4acab03f24469269e6ada |
-| src/make_claim_scope_report.py | 17788 | - | 32a740b79ef27a2574a42e0d5bef7e80bbf5d47bd76c929109c79f54cebb298a |
+| src/full_test_expansion_feasibility.py | 20566 | - | 303d431f30d454bc951e2e989638137f6bbcaa944ccba1a7fee51bba6466b213 |
+| src/paper_consistency_audit.py | 14510 | - | 31c1e7c8b99991be3ee0d53d957c9a25126d8d2e7697336d34543921c829c86e |
+| src/make_claim_scope_report.py | 19382 | - | a8bd8f7a32824620e83982003c3b73bb5e2a0819b2c5fd1b53f6d15dd99f4172 |
 | src/run_api_experiment.py | 15153 | - | 98416865583f087e5b16d66abb1eb62893bfb6b7232d426db8cf043dec5bf2d1 |
-| src/verify_claims.py | 61174 | - | cc3651b195daf3c849e07eaeb9d2e9056a0a46e2bf401bc87e1522f884abf223 |
+| src/verify_claims.py | 65100 | - | abc5d686a7f6840e62b49afb12d4a3fa5952f080ad73db898655ad21033f1f2c |
 | tests/test_core_invariants.py | 13359 | - | 4d87cec8b2d44d2f1046286d1d587f99dff05289c6365430ab27cb0ade9f7f84 |
-| paper/latex/main.tex | 39433 | - | dbc51201fbc0c361ab4cb52f70b4faea3ee37a9c68662dc5d0685c4ce1a8766e |
+| paper/latex/main.tex | 39826 | - | 1bbe7eeb8cc51812acda956c6824f493e4dc50b17c2aaade0aad8c261b2683b0 |
 | paper/latex/refs.bib | 8120 | - | 456e6c40e675074b567c64adf6ac16262135c81c8a6d5832ce6c239c30da3abc |
+| paper/latex/colm2026_conference.tex | 13268 | - | a0e12bd90047bfb3f18ae30f339d62c4cbdd6f61958770328dc45bc77a2022be |
+| paper/latex/colm2026_conference.bib | 496 | - | c5fabf46cc7d7a6e527b82860b9a9d658eb07f63abaafa9b7beb631d8abb91bd |
 | paper/latex/colm2026_conference.sty | 7727 | - | 55962ae80c25a50335825c85d23eb5f1cd9015aa8e77f7af32b483b646c7483e |
 | paper/latex/colm2026_conference.bst | 26973 | - | 2d67552db7ed38ccfccb5957b52f95656e25c249724761d3cf5f7922ad1844c5 |
 | paper/latex/fancyhdr.sty | 20521 | - | b56ec4434b9f4607529a4b23dc68ad8d4b94f1f631c8cddaf7da78140d53a5ea |
 | paper/latex/natbib.sty | 45154 | - | 88bc70c0e48461934cab5b2accef06b74a8b3ac45ad03ccd3f2a6b7e0d6d530d |
 | paper/latex/math_commands.tex | 12284 | - | 90473c4d0542070db244cea73ef962d6cddc5b2a746757e6a40ddf5fdfb90ba9 |
-| paper/latex/main.pdf | 178505 | - | 5c2dea82627220ec34bfb52928dd91b7218aeab2c7c52522f38d105a7b49986e |
+| paper/latex/main.pdf | 178906 | - | f9f60c25303344c8e1bf88db078ccbce2dd98115c1f6001d03024cc70e4f96b6 |
 
 ## Reproduction Commands
 
@@ -319,6 +346,8 @@ conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/api_gpt_5_5_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
 conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-4.1-mini=data/runs/api_eval_100_corrected_results.jsonl,data/runs/api_eval_100_cot_results.jsonl --run gpt-5.4-mini=data/runs/api_gpt_5_4_mini_test100_results.jsonl --run gpt-5.5=data/runs/api_gpt_5_5_test100_results.jsonl --out paper/tables/current_model_sweep.md
+conda run -n ask_guess python src/current_model_sweep_report.py --run gpt-5.4-mini-400=data/runs/api_gpt_5_4_mini_test400_results.jsonl --run gpt-5.5-400=data/runs/api_gpt_5_5_test400_results.jsonl --out paper/tables/current_model_full_test.md --title "Current-Model Full-Test Expansion"
+conda run -n ask_guess python src/full_test_expansion_feasibility.py
 conda run -n ask_guess python src/current_model_category_modes.py --out paper/tables/current_model_category_failure_modes.md --figure-out paper/figures/current_model_category_net_utility.svg
 conda run -n ask_guess python src/analyze_results.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out-dir paper/tables/api_gpt_5_4_mini_shuffled_test100
 conda run -n ask_guess python src/paired_differences.py --results data/runs/api_gpt_5_4_mini_shuffled_test100_results.jsonl --out paper/tables/api_gpt_5_4_mini_shuffled_test100/paired_differences.md --splits test --comparisons api_ecu:api_ask_needed,api_ecu:api_ask_needed_cot,api_ecu:api_direct_act
@@ -379,6 +408,18 @@ conda run -n ask_guess python src/run_api_experiment.py --episodes data/generate
 conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_5_test100_results.jsonl --summary-out paper/tables/api_gpt_5_5_test100_results.md --cache data/runs/api_gpt_5_5_cache.jsonl --api-key-path apikey.txt --model gpt-5.5 --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu
 ```
 
+Bounded paid API command for the GPT-5.4-mini full 400-episode expansion. It was run after the no-API feasibility check and is cached in `data/runs/api_gpt_5_4_mini_cache.jsonl`:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_4_mini_test400_results.jsonl --summary-out paper/tables/api_gpt_5_4_mini_test400_results.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --api-key-path apikey.txt --model gpt-5.4-mini --split test --limit-per-category 80 --policies api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
+Bounded paid API command for the GPT-5.5 full 400-episode expansion. It was run after the no-API feasibility check and is cached in `data/runs/api_gpt_5_5_cache.jsonl`:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out data/runs/api_gpt_5_5_test400_results.jsonl --summary-out paper/tables/api_gpt_5_5_test400_results.md --cache data/runs/api_gpt_5_5_cache.jsonl --api-key-path apikey.txt --model gpt-5.5 --split test --limit-per-category 80 --policies api_ask_needed,api_ask_needed_cot,api_ecu
+```
+
 Bounded paid API command for the GPT-5.4-mini shuffled-object-order scene-format robustness check:
 
 ```bash
@@ -420,6 +461,18 @@ Safe cached replay for the current-model 100-episode sweeps:
 ```bash
 conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_test100_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_test100_replay.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
 conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_5_test100_replay.jsonl --summary-out /tmp/api_gpt_5_5_test100_replay.md --cache data/runs/api_gpt_5_5_cache.jsonl --model gpt-5.5 --split test --limit-per-category 20 --policies api_direct_act,api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+```
+
+Safe cached replay for the GPT-5.4-mini full 400-episode expansion:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_4_mini_test400_replay.jsonl --summary-out /tmp/api_gpt_5_4_mini_test400_replay.md --cache data/runs/api_gpt_5_4_mini_cache.jsonl --model gpt-5.4-mini --split test --limit-per-category 80 --policies api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
+```
+
+Safe cached replay for the GPT-5.5 full 400-episode expansion:
+
+```bash
+conda run -n ask_guess python src/run_api_experiment.py --episodes data/generated/episodes.jsonl --out /tmp/api_gpt_5_5_test400_replay.jsonl --summary-out /tmp/api_gpt_5_5_test400_replay.md --cache data/runs/api_gpt_5_5_cache.jsonl --model gpt-5.5 --split test --limit-per-category 80 --policies api_ask_needed,api_ask_needed_cot,api_ecu --cache-only
 ```
 
 Safe cached replay for the shuffled-object-order scene-format robustness check:
