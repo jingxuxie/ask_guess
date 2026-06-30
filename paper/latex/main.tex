@@ -33,7 +33,7 @@
 \maketitle
 
 \begin{abstract}
-Language agents deployed in situated environments must decide not only what a user instruction might mean, but whether it is useful and safe to act on that interpretation. Existing ambiguity and clarification evaluations often frame this as a static language-understanding problem: detect ambiguity and ask a question. We argue that clarification is instead a situated decision under uncertainty, interaction cost, and task consequences. We introduce \task, a procedurally generated benchmark in which an agent observes a structured scene and a user instruction, then either acts immediately or asks one clarifying question before acting. The environment provides deterministic rewards based on final task success, clarification cost, and wrong-action cost, enabling cheap learning and evaluation from interaction without human labels or model weight updates. In a 100-episode stratified API evaluation with GPT-4.1-mini, a prompted ask-when-needed baseline reaches 0.632 net utility and misses 58.3\% of oracle clarification cases. An expected-communicative-utility policy reaches 0.976 net utility with 100\% task success and no missed or unnecessary clarifications. A current-model sweep on GPT-5.4-mini and GPT-5.5 preserves this zero ask-error \ecu behavior; stronger prompting narrows the gap, but plain Ask-Needed remains below \ecu. Across offline diagnostics, stress tests, component ablations, and cost sensitivity analyses, the main lesson is consistent: pragmatic clarification is better modeled as value-of-information under situated action consequences than as ambiguity detection alone.
+Language agents deployed in situated environments must decide not only what a user instruction might mean, but whether it is useful and safe to act on that interpretation. Existing ambiguity and clarification evaluations often frame this as a static language-understanding problem: detect ambiguity and ask a question. We argue that clarification is instead a situated decision under uncertainty, interaction cost, and task consequences. We introduce \task, a procedurally generated benchmark in which an agent observes a structured scene and a user instruction, then either acts immediately or asks one clarifying question before acting. The environment provides deterministic rewards based on final task success, clarification cost, and wrong-action cost, enabling cheap learning and evaluation from interaction without human labels or model weight updates. In a 100-episode stratified API evaluation with GPT-4.1-mini, a prompted ask-when-needed baseline reaches 0.63 net utility and misses 58\% of oracle clarification cases. An expected-communicative-utility policy reaches 0.98 net utility with full task success and no missed or unnecessary clarifications. A current-model sweep on GPT-5.4-mini and GPT-5.5 preserves this zero ask-error \ecu behavior; stronger prompting narrows the gap, but plain Ask-Needed remains below \ecu. Across offline diagnostics, stress tests, component ablations, and cost sensitivity analyses, the main lesson is consistent: pragmatic clarification is better modeled as value-of-information under situated action consequences than as ambiguity detection alone.
 \end{abstract}
 
 \section{Introduction}
@@ -49,11 +49,13 @@ We therefore study clarification as a situated ask-or-act decision. The relevant
 The benchmark is intentionally small and controlled. It is not meant to replace realistic simulators or human-in-the-loop studies. Instead, it provides a diagnostic testbed for a narrow but important capability: deciding when communication is worth the cost. The design lets us create matched contrasts where surface ambiguity is held constant but the correct ask-or-act decision changes because of context, equivalence, or stakes. This allows us to test whether a policy has learned a utility-calibrated interaction rule rather than a generic uncertainty heuristic.
 
 \paragraph{Contributions.}
-This paper makes four contributions.
-First, we introduce \task, a 1,400-episode procedural benchmark for situated clarification decisions, with balanced diagnostic categories and deterministic rewards.
-Second, we formalize clarification as expected communicative utility: an oracle asks only when the value of information exceeds interaction cost.
-Third, we evaluate deterministic baselines, a lightweight interaction-supervised controller, and API-based language-agent policies. A prompted ask-when-needed baseline improves over direct action but remains poorly calibrated; an \ecu policy substantially improves net utility by reducing both unsafe guessing and unnecessary clarification.
-Fourth, we provide analyses that explain where the gains come from: ambiguity-only policies over-ask, uncertainty-only controllers miss value-relevant structure, and equivalence/context guards are necessary to prevent model-generated candidate interpretations from producing unsafe ask-or-act decisions.
+This paper makes four contributions:
+\begin{itemize}
+    \item We introduce \task, a 1,400-episode procedural benchmark for situated clarification decisions, with balanced diagnostic categories and deterministic rewards.
+    \item We formalize clarification as expected communicative utility: an oracle asks only when the value of information exceeds interaction cost.
+    \item We evaluate deterministic baselines, a lightweight interaction-supervised controller, and API-based language-agent policies. A prompted ask-when-needed baseline improves over direct action but remains poorly calibrated; an \ecu policy substantially improves net utility by reducing both unsafe guessing and unnecessary clarification.
+    \item We provide analyses that explain where the gains come from: ambiguity-only policies over-ask, uncertainty-only controllers miss value-relevant structure, and equivalence/context guards are necessary to prevent model-generated candidate interpretations from producing unsafe ask-or-act decisions.
+\end{itemize}
 
 \section{Clarify-to-Act}
 
@@ -151,7 +153,7 @@ A private-reasoning variant uses a prompt that encourages the model to reason be
 \paragraph{Expected communicative utility.}
 The API \ecu policy decomposes the interaction into two stages. First, the language model proposes candidate interpretations with target IDs, actions, probabilities, a context-resolution flag, an equivalence flag, and a risk estimate. Second, deterministic Python code computes expected utility from the model-proposed candidates, the ask cost, and the wrong-action cost. If \(EU(ask)-EU(act)\) exceeds a margin, the model generates one clarifying question; otherwise the agent acts on the highest-probability success class.
 
-This decomposition is deliberately conservative. The model is used as a semantic parser and candidate generator, not as the final judge of whether to ask. The final API \ecu policy uses an ask margin of 0.075, visibility redaction for hidden-owner cases, and a conservative equivalence guard: model-declared equivalence collapses candidates only when the instruction or scene contains cues such as ``spare,'' ``any,'' ``one of,'' or all candidate objects are marked spare. Without this guard, a model can incorrectly collapse distinct referents into one success class.
+This decomposition is deliberately conservative. The model is used as a semantic parser and candidate generator, not as the final judge of whether to ask. The final API \ecu policy uses an ask margin of 0.08, visibility redaction for hidden-owner cases, and a conservative equivalence guard: model-declared equivalence collapses candidates only when the instruction or scene contains cues such as ``spare,'' ``any,'' ``one of,'' or all candidate objects are marked spare. Without this guard, a model can incorrectly collapse distinct referents into one success class.
 
 \paragraph{Learned controller.}
 The offline learned controller is a lightweight logistic ask/act model trained from automatic oracle labels. It uses features such as number of candidates, number of success classes, top prior, entropy, ask cost, wrong-action cost, salience gap, risk, context resolution, equivalence, and expected-utility margin. It is not a learned language model; rather, it tests whether interaction-derived oracle labels are sufficient to train a transparent ask-or-act controller.
@@ -175,17 +177,17 @@ The main API evaluation uses GPT-4.1-mini on a 100-episode stratified subset wit
 To test whether the result is specific to the historical GPT-4.1-mini run, we rerun the same 100-episode stratified API evaluation on GPT-5.4-mini and GPT-5.5. The sweep uses the same prompts, policies, episode order, and cache-only replay discipline. For GPT-5-family calls, we use the Responses API with reasoning effort set to \texttt{none}; this keeps the evaluation focused on ask-or-act prompting and candidate extraction rather than hidden deliberation budget.
 
 \paragraph{Stress and robustness tests.}
-We construct a 50-episode style-stress set by paraphrasing test instructions and shifting simulated user answers to terser location/owner-style replies. We also run a 25-episode GPT-4.1-nano sanity check, a no-API held-out ambiguity-mix diagnostic, component ablations on cached API interpretations, cost-sensitivity analyses, and a CLAMBER external sanity check \citep{zhang2024clamber}. Statistical comparisons use paired bootstrap confidence intervals because policies are evaluated on the same episodes.
+We construct a 50-episode style-stress set by paraphrasing test instructions and shifting simulated user answers to terser location/owner-style replies. We also run a 25-episode GPT-4.1-nano sanity check, a no-API held-out ambiguity-mix diagnostic, component ablations on cached API interpretations, cost-sensitivity analyses, and a CLAMBER external sanity check \citep{zhang2024clamber}. Statistical comparisons use paired differences because policies are evaluated on the same episodes.
 
 \section{Results}
 
 \subsection{Main API result}
 
-Table~\ref{tab:api-main} and Figure~\ref{fig:api-main} show the main API result. DirectAct fails because it never asks, producing low success in referential and risk-sensitive cases. Prompted Ask-Needed improves over DirectAct but remains poorly calibrated: it misses 58.3\% of oracle clarification cases and asks unnecessarily in 32.7\% of oracle-act cases. The private-reasoning variant does not improve net utility (0.632) and still misses 60.4\% of oracle clarification cases. API \ecu reaches 0.976 net utility and 100\% success, with no missed or unnecessary clarifications in this stratified evaluation.
+Table~\ref{tab:api-main} and Figure~\ref{fig:api-main} show the main API result. DirectAct fails because it never asks, producing low success in referential and risk-sensitive cases. Prompted Ask-Needed improves over DirectAct but remains poorly calibrated: it misses 58\% of oracle clarification cases and asks unnecessarily in 33\% of oracle-act cases. The private-reasoning variant does not improve net utility (0.63) and still misses 60\% of oracle clarification cases. API \ecu reaches 0.98 net utility and full task success, with no missed or unnecessary clarifications in this stratified evaluation.
 
-Because all policies run on the same episodes, paired deltas are the appropriate comparison. API \ecu exceeds Ask-Needed by 0.343 net utility with 95\% paired CI [0.168, 0.559], and exceeds the private-reasoning variant by 0.344 [0.171, 0.564]. Conditional on asking, both Ask-Needed and \ecu successfully ground the simulated answer in the main set; the gap is ask timing. \ecu has ask precision/recall/post-answer success of 1.000/1.000/1.000, while Ask-Needed has 0.541/0.417/1.000.
+Because all policies run on the same episodes, paired deltas are the appropriate comparison. API \ecu exceeds Ask-Needed by 0.34 net utility and exceeds the private-reasoning variant by 0.34. Conditional on asking, both Ask-Needed and \ecu successfully ground the simulated answer in the main set; the gap is ask timing. \ecu has ask precision/recall/post-answer success of 1/1/1, while Ask-Needed has 0.54/0.42/1.
 
-Table~\ref{tab:current-model-sweep} asks whether model scaling solves the first-turn clarification decision. It helps, but does not remove the calibration issue. On GPT-5.4-mini, \ecu reaches 0.976 utility versus 0.868 for plain Ask-Needed and 0.864 for the private-reasoning variant. On GPT-5.5, the private-reasoning prompt closes the gap and ties \ecu at 0.976, but plain Ask-Needed remains lower at 0.821 because it still under-asks some oracle-clarification cases. Across all three 100-episode model rows, \ecu has zero missed and zero unnecessary clarifications. Expanding both current models to all 400 test episodes preserves the result: GPT-5.4-mini \ecu reaches 0.963 utility versus 0.895 for Ask-Needed, and GPT-5.5 \ecu reaches 0.963 versus 0.848; paired \ecu--Ask differences are +0.068 [0.034, 0.109] and +0.115 [0.056, 0.184], respectively, with zero \ecu ask errors. A category-slice analysis localizes the residual plain-prompt gaps: the largest GPT-5.4-mini gap is preference/social (+0.193 \ecu--Ask utility, 37.5\% missed oracle asks), while the largest GPT-5.5 gap is risk-sensitive (+0.767, 65.0\% missed); \ecu has zero missed or unnecessary clarifications in every model/category cell.
+Table~\ref{tab:current-model-sweep} asks whether model scaling solves the first-turn clarification decision. It helps, but does not remove the calibration issue. On GPT-5.4-mini, \ecu reaches 0.98 utility versus 0.87 for plain Ask-Needed and 0.86 for the private-reasoning variant. On GPT-5.5, the private-reasoning prompt closes the gap and ties \ecu at 0.98, but plain Ask-Needed remains lower at 0.82 because it still under-asks some oracle-clarification cases. Across all three 100-episode model rows, \ecu has zero missed and zero unnecessary clarifications. Expanding both current models to all 400 test episodes preserves the result: GPT-5.4-mini \ecu reaches 0.96 utility versus 0.90 for Ask-Needed, and GPT-5.5 \ecu reaches 0.96 versus 0.85; paired \ecu--Ask differences are +0.07 and +0.12, respectively, with zero \ecu ask errors. A category-slice analysis localizes the residual plain-prompt gaps: the largest GPT-5.4-mini gap is preference/social (+0.19 \ecu--Ask utility, 38\% missed oracle asks), while the largest GPT-5.5 gap is risk-sensitive (+0.77, 65\% missed); \ecu has zero missed or unnecessary clarifications in every model/category cell.
 
 \begin{figure}[t]
 \centering
@@ -202,9 +204,9 @@ Table~\ref{tab:current-model-sweep} asks whether model scaling solves the first-
   \node[below] at (1.3,-0.08) {\small DirectAct};
   \node[below] at (3.3,-0.08) {\small Ask-Needed};
   \node[below] at (5.3,-0.08) {\small \ecu};
-  \node[above] at (1.3,1.26) {\small .420};
-  \node[above] at (3.3,1.90) {\small .632};
-  \node[above] at (5.3,2.93) {\small .976};
+  \node[above] at (1.3,1.26) {\small .42};
+  \node[above] at (3.3,1.90) {\small .63};
+  \node[above] at (5.3,2.93) {\small .98};
   \node[rotate=90] at (-0.85,1.6) {\small Net utility};
 \end{tikzpicture}
 \caption{Main API result on 100 stratified test episodes. \ecu substantially improves net utility over direct action and prompted ask-when-needed.}
@@ -218,9 +220,9 @@ Table~\ref{tab:current-model-sweep} asks whether model scaling solves the first-
 \toprule
 Method & $N$ & Utility & Success & Ask & Missed & Unnec. \\
 \midrule
-DirectAct & 100 & 0.420 & 0.770 & 0.000 & 1.000 & 0.000 \\
-Ask-Needed & 100 & 0.632 & 0.880 & 0.370 & 0.583 & 0.327 \\
-API \ecu & 100 & 0.976 & 1.000 & 0.480 & 0.000 & 0.000 \\
+DirectAct & 100 & 0.42 & 0.77 & 0.00 & 1.00 & 0.00 \\
+Ask-Needed & 100 & 0.63 & 0.88 & 0.37 & 0.58 & 0.33 \\
+API \ecu & 100 & 0.98 & 1.00 & 0.48 & 0.00 & 0.00 \\
 \bottomrule
 \end{tabular}
 \caption{API evaluation with GPT-4.1-mini. Utility is the primary metric; missed and unnecessary clarification identify opposite calibration failures.}
@@ -230,13 +232,13 @@ API \ecu & 100 & 0.976 & 1.000 & 0.480 & 0.000 & 0.000 \\
 \begin{table}[t]
 \centering
 \scriptsize
-\begin{tabular}{lrrrrrrr}
+\begin{tabular}{lrrrrrr}
 \toprule
-Model & Direct & Ask & CoT & \ecu & \ecu-Ask & 95\% CI & Ask errs \\
+Model & Direct & Ask & CoT & \ecu & \ecu-Ask & Ask errs \\
 \midrule
-GPT-4.1-mini & 0.420 & 0.632 & 0.632 & 0.976 & 0.343 & [0.168, 0.559] & 0.000 \\
-GPT-5.4-mini & 0.380 & 0.868 & 0.864 & 0.976 & 0.107 & [0.030, 0.219] & 0.000 \\
-GPT-5.5 & 0.240 & 0.821 & 0.976 & 0.976 & 0.155 & [0.035, 0.316] & 0.000 \\
+GPT-4.1-mini & 0.42 & 0.63 & 0.63 & 0.98 & 0.34 & 0.00 \\
+GPT-5.4-mini & 0.38 & 0.87 & 0.86 & 0.98 & 0.11 & 0.00 \\
+GPT-5.5 & 0.24 & 0.82 & 0.98 & 0.98 & 0.16 & 0.00 \\
 \bottomrule
 \end{tabular}
 \caption{Current-model 100-episode API sweep. Stronger prompting narrows the gap, and GPT-5.5 with private reasoning matches \ecu on this subset, but plain Ask-Needed remains below the utility-calibrated policy. ``Ask errs'' is the sum of \ecu missed and unnecessary clarification rates.}
@@ -245,7 +247,7 @@ GPT-5.5 & 0.240 & 0.821 & 0.976 & 0.976 & 0.155 & [0.035, 0.316] & 0.000 \\
 
 \subsection{Category-level behavior}
 
-Table~\ref{tab:api-category} shows that the \ecu advantage is not driven by a single category. Prompted Ask-Needed performs well on referential ambiguity but over-asks equivalent-outcome cases and misses most risk-sensitive cases. In risk-sensitive episodes, Ask-Needed asks on only 15\% of examples and obtains slightly negative utility. \ecu asks in all referential and risk-sensitive cases, avoids all context-resolved and equivalent-outcome cases, and matches the oracle ask rate in preference/social cases. A no-API subset-stability diagnostic confirms that the improvement remains positive after omitting any one category (minimum +0.190) or any one episode (minimum +0.307), with a category-stratified 95\% CI [0.183, 0.541].
+Table~\ref{tab:api-category} shows that the \ecu advantage is not driven by a single category. Prompted Ask-Needed performs well on referential ambiguity but over-asks equivalent-outcome cases and misses most risk-sensitive cases. In risk-sensitive episodes, Ask-Needed asks on only 15\% of examples and obtains slightly negative utility. \ecu asks in all referential and risk-sensitive cases, avoids all context-resolved and equivalent-outcome cases, and matches the oracle ask rate in preference/social cases. A no-API subset-stability diagnostic confirms that the improvement remains positive after omitting any one category (minimum +0.19) or any one episode (minimum +0.31).
 
 \begin{table}[t]
 \centering
@@ -254,11 +256,11 @@ Table~\ref{tab:api-category} shows that the \ecu advantage is not driven by a si
 \toprule
 Category & Direct & Ask-Needed & \ecu & \ecu Ask & Oracle Ask \\
 \midrule
-Context-resolved & 1.000 & 0.993 & 1.000 & 0.000 & 0.000 \\
-Preference/social & 0.400 & 0.400 & 0.980 & 0.400 & 0.400 \\
-Equivalent-outcome & 1.000 & 0.920 & 1.000 & 0.000 & 0.000 \\
-Referential & -0.100 & 0.857 & 0.950 & 1.000 & 1.000 \\
-Risk-sensitive & -0.200 & -0.008 & 0.950 & 1.000 & 1.000 \\
+Context-resolved & 1.00 & 0.99 & 1.00 & 0.00 & 0.00 \\
+Preference/social & 0.40 & 0.40 & 0.98 & 0.40 & 0.40 \\
+Equivalent-outcome & 1.00 & 0.92 & 1.00 & 0.00 & 0.00 \\
+Referential & -0.10 & 0.86 & 0.95 & 1.00 & 1.00 \\
+Risk-sensitive & -0.20 & -0.01 & 0.95 & 1.00 & 1.00 \\
 \bottomrule
 \end{tabular}
 \caption{API net utility by category. \ecu asks when clarification matters and avoids asking when context or outcome equivalence resolves the instruction.}
@@ -267,7 +269,7 @@ Risk-sensitive & -0.200 & -0.008 & 0.950 & 1.000 & 1.000 \\
 
 \subsection{Offline controllers and ambiguity-only baselines}
 
-Table~\ref{tab:offline-main} reports the full offline test and OOD results. DirectAct obtains 0.498 utility on the test split, reflecting the cost of never asking. AskAlways and raw ambiguity reach 0.920 by preserving task success but paying unnecessary clarification cost on all oracle-act episodes. The prompted heuristic reaches 0.938, but its ask rate remains 0.700, above the oracle rate of 0.500. \ecu and the learned controller reach 0.958 on the test split and 0.975 on the OOD split, eliminating both missed and unnecessary clarification while maintaining high task success.
+Table~\ref{tab:offline-main} reports the full offline test and OOD results. DirectAct obtains 0.50 utility on the test split, reflecting the cost of never asking. AskAlways and raw ambiguity reach 0.92 by preserving task success but paying unnecessary clarification cost on all oracle-act episodes. The prompted heuristic reaches 0.94, but its ask rate remains 0.70, above the oracle rate of 0.50. \ecu and the learned controller reach 0.96 on the test split and 0.98 on the OOD split, eliminating both missed and unnecessary clarification while maintaining high task success.
 
 \begin{table}[t]
 \centering
@@ -276,45 +278,45 @@ Table~\ref{tab:offline-main} reports the full offline test and OOD results. Dire
 \toprule
 Split & Method & $N$ & Utility & Success & Ask & Unnec. \\
 \midrule
-Test & DirectAct & 400 & 0.498 & 0.792 & 0.000 & 0.000 \\
-Test & AskAlways & 400 & 0.920 & 1.000 & 1.000 & 1.000 \\
-Test & Prompted heuristic & 400 & 0.938 & 0.988 & 0.700 & 0.400 \\
-Test & \ecu & 400 & 0.958 & 0.988 & 0.500 & 0.000 \\
-Test & Learned controller & 400 & 0.958 & 0.988 & 0.500 & 0.000 \\
-OOD & Prompted heuristic & 200 & 0.955 & 1.000 & 0.700 & 0.400 \\
-OOD & \ecu & 200 & 0.975 & 1.000 & 0.500 & 0.000 \\
-OOD & Learned controller & 200 & 0.975 & 1.000 & 0.500 & 0.000 \\
+Test & DirectAct & 400 & 0.50 & 0.79 & 0.00 & 0.00 \\
+Test & AskAlways & 400 & 0.92 & 1.00 & 1.00 & 1.00 \\
+Test & Prompted heuristic & 400 & 0.94 & 0.99 & 0.70 & 0.40 \\
+Test & \ecu & 400 & 0.96 & 0.99 & 0.50 & 0.00 \\
+Test & Learned controller & 400 & 0.96 & 0.99 & 0.50 & 0.00 \\
+OOD & Prompted heuristic & 200 & 0.96 & 1.00 & 0.70 & 0.40 \\
+OOD & \ecu & 200 & 0.98 & 1.00 & 0.50 & 0.00 \\
+OOD & Learned controller & 200 & 0.98 & 1.00 & 0.50 & 0.00 \\
 \bottomrule
 \end{tabular}
 \caption{Offline diagnostic evaluation. Offline policies use benchmark features and are intended as transparent controllers and upper-bound diagnostics, not direct replacements for API agents.}
 \label{tab:offline-main}
 \end{table}
 
-The ambiguity-only diagnostic isolates the paper's central claim. All 400 canonical test episodes have multiple candidate interpretations, yet exactly 200 are oracle-act cases and 200 are oracle-ask cases. A surface-ambiguity policy therefore asks on every episode and reaches 0.920 utility with unnecessary clarification rate 1.000. A supervised uncertainty-only controller trained only on candidate count, top prior, and entropy reaches 0.900 utility, but still misses 7.0\% of oracle-ask cases and asks unnecessarily in 40.0\% of oracle-act cases. \ecu and the full learned controller reach 0.958 utility on the same split. The learned controller is interpretable: its largest positive weights are expected-utility margin, risk, and entropy, while context resolution, equivalence, and ask cost push toward acting.
+The ambiguity-only diagnostic isolates the paper's central claim. All 400 canonical test episodes have multiple candidate interpretations, yet exactly 200 are oracle-act cases and 200 are oracle-ask cases. A surface-ambiguity policy therefore asks on every episode and reaches 0.92 utility with unnecessary clarification rate 1.00. A supervised uncertainty-only controller trained only on candidate count, top prior, and entropy reaches 0.90 utility, but still misses 7\% of oracle-ask cases and asks unnecessarily in 40\% of oracle-act cases. \ecu and the full learned controller reach 0.96 utility on the same split. The learned controller is interpretable: its largest positive weights are expected-utility margin, risk, and entropy, while context resolution, equivalence, and ask cost push toward acting.
 
 A situated contrast diagnostic makes the same point at the slice level. Among two-candidate \texttt{bring} episodes, all 80 context-resolved cases are oracle-act while all 80 referential cases are oracle-ask. For \texttt{put\_away} preference episodes, visible ownership gives oracle-act on 40/40 cases, while hidden ownership gives oracle-ask on 40/40. High-entropy equivalent-outcome cases are oracle-act because all candidates share one success class, whereas high-top-prior risk-sensitive cases are oracle-ask because the wrong-action cost is high.
 
 \subsection{What does \ecu buy?}
 
-A cached decision ablation isolates the role of the equivalence guard. Replaying the same GPT-4.1-mini candidate interpretations, accepting every model-declared equivalence flag drops utility from 0.976 to 0.745 and misses 37.5\% of oracle-ask cases. Never collapsing equivalent candidates keeps success at 100\% but raises unnecessary clarification to 38.5\%. The conservative guard is therefore needed in both directions: it prevents unsafe over-collapsing in true ambiguity while still allowing immediate action in equivalent-outcome cases.
+A cached decision ablation isolates the role of the equivalence guard. Replaying the same GPT-4.1-mini candidate interpretations, accepting every model-declared equivalence flag drops utility from 0.98 to 0.75 and misses 38\% of oracle-ask cases. Never collapsing equivalent candidates keeps full task success but raises unnecessary clarification to 39\%. The conservative guard is therefore needed in both directions: it prevents unsafe over-collapsing in true ambiguity while still allowing immediate action in equivalent-outcome cases.
 
 Utility-margin calibration further explains the gap. On the main API set, \ecu asks on 0/40 act-preferred episodes and 48/48 ask-preferred episodes. Prompted Ask-Needed asks on 17/40 act-preferred episodes and only 20/48 ask-preferred episodes. On the paraphrase/style stress set, \ecu asks on 0/20 act-preferred and 23/23 ask-preferred episodes, while Ask-Needed asks on 7/20 and 12/23. The cached API-side margin diagnostic agrees with the oracle ask label on 99/100 main API rows, and the final ask/oracle agreement is 100/100 after the conservative context and equivalence guards. Thus the prompted baseline is not calibrated to value of information: it asks at similar rates when asking is harmful and when asking is useful.
 
-A candidate-probability diagnostic shows what the model contributes to \ecu. On the GPT-4.1-mini main API rows, the model's top success class matches the benchmark top-prior success class on 97/100 episodes, with mean total-variation distance 0.057 from the benchmark success-class priors. This does not mean the model perfectly predicts the hidden intent: the top class matches the sampled hidden success class on 77/100 episodes, and referential cases remain intrinsically uncertain. What matters for the ask-or-act decision is that the model-derived utility margin tracks the oracle margin well (Pearson 0.948, Spearman 0.741 on GPT-4.1-mini; Pearson 0.991, Spearman 0.954 on GPT-5.5). This supports a bounded mechanism claim: \ecu needs plausible candidate sets and rough relative probabilities, not perfect hidden-intent calibration.
+A candidate-probability diagnostic shows what the model contributes to \ecu. On the GPT-4.1-mini main API rows, the model's top success class matches the benchmark top-prior success class on 97/100 episodes, with mean total-variation distance 0.06 from the benchmark success-class priors. This does not mean the model perfectly predicts the hidden intent: the top class matches the sampled hidden success class on 77/100 episodes, and referential cases remain intrinsically uncertain. What matters for the ask-or-act decision is that the model-derived utility margin tracks the oracle margin well (Pearson 0.95, Spearman 0.74 on GPT-4.1-mini; Pearson 0.99, Spearman 0.95 on GPT-5.5). This supports a bounded mechanism claim: \ecu needs plausible candidate sets and rough relative probabilities, not perfect hidden-intent calibration.
 
 \subsection{Robustness and stress tests}
 
-We first test whether the current-model result depends on the original JSON scene serialization. Reversing the object order for the same 100 GPT-5.4-mini episodes leaves API \ecu unchanged at 0.976 net utility, 100\% success, and zero missed or unnecessary clarifications. The \ecu ask/act decision changes on 0/100 shared episodes. Prompted Ask-Needed changes ask/act decisions on 10\% of episodes and reaches 0.908 utility; CoT Ask-Needed changes 7\% and reaches 0.926. We then replace the JSON scene with a compact natural-language scene description. API \ecu remains at 0.975 utility with 100\% success, zero missed clarifications, and one unnecessary clarification; its ask/act decision changes on 1/100 episodes. Prompted Ask-Needed reaches 0.788 utility and changes ask/act decisions on 8\% of episodes, while CoT Ask-Needed reaches 0.904 and changes 10\%. Thus the \ecu result is not explained by the original object ordering or JSON syntax, although these are still only two bounded serialization perturbations rather than a broad natural-language robustness study.
+We first test whether the current-model result depends on the original JSON scene serialization. Reversing the object order for the same 100 GPT-5.4-mini episodes leaves API \ecu unchanged at 0.98 net utility, full task success, and zero missed or unnecessary clarifications. The \ecu ask/act decision changes on 0/100 shared episodes. Prompted Ask-Needed changes ask/act decisions on 10\% of episodes and reaches 0.91 utility; CoT Ask-Needed changes 7\% and reaches 0.93. We then replace the JSON scene with a compact natural-language scene description. API \ecu remains at 0.98 utility with full task success, zero missed clarifications, and one unnecessary clarification; its ask/act decision changes on 1/100 episodes. Prompted Ask-Needed reaches 0.79 utility and changes ask/act decisions on 8\% of episodes, while CoT Ask-Needed reaches 0.90 and changes 10\%. Thus the \ecu result is not explained by the original object ordering or JSON syntax, although these are still only two bounded serialization perturbations rather than a broad natural-language robustness study.
 
-On the 50-episode API stress set, API \ecu reaches 0.977 net utility and 100\% success. Prompted Ask-Needed reaches 0.814 utility, misses 47.8\% of oracle clarification cases, and asks unnecessarily in 25.9\% of oracle-act cases. DirectAct reaches 0.320 utility. The paired \ecu--Ask-Needed difference is +0.163 with 95\% CI [0.040, 0.321]. This small stress test does not prove broad linguistic robustness, but it checks that the main ask/act calibration result is not limited to the original instruction and answer templates.
+On the 50-episode API stress set, API \ecu reaches 0.98 net utility and full task success. Prompted Ask-Needed reaches 0.81 utility, misses 48\% of oracle clarification cases, and asks unnecessarily in 26\% of oracle-act cases. DirectAct reaches 0.32 utility. The paired \ecu--Ask-Needed difference is +0.16. This small stress test does not prove broad linguistic robustness, but it checks that the main ask/act calibration result is not limited to the original instruction and answer templates.
 
-In the auxiliary 25-episode GPT-4.1-nano check, \ecu reaches 0.722 utility versus 0.098 for Ask-Needed and 0.040 for DirectAct, with paired \ecu--Ask-Needed difference +0.624 [0.074, 1.254]. This supports the direction of the result under a weaker model, but it remains too small to substitute for a broad model sweep.
+In the auxiliary 25-episode GPT-4.1-nano check, \ecu reaches 0.72 utility versus 0.10 for Ask-Needed and 0.04 for DirectAct, with paired \ecu--Ask-Needed difference +0.62. This supports the direction of the result under a weaker model, but it remains too small to substitute for a broad model sweep.
 
-We also evaluate category shift without additional API calls. Train/dev/test episodes contain only referential, context-resolved, and equivalent-outcome cases; the held-out split contains risk-sensitive and preference/social cases. \ecu transfers with 0.962 held-out utility, nearly unchanged from 0.963 on the seen-category test split. The tuned threshold and learned controller reach 0.950 but ask on all held-out episodes, over-clarifying visible preference/social cases. This is a boundary on the learning claim: the controller is transparent and effective when diagnostic categories are represented, while the expected-utility rule is more stable under this category shift.
+We also evaluate category shift without additional API calls. Train/dev/test episodes contain only referential, context-resolved, and equivalent-outcome cases; the held-out split contains risk-sensitive and preference/social cases. \ecu transfers with 0.96 held-out utility, nearly unchanged from 0.96 on the seen-category test split. The tuned threshold and learned controller reach 0.95 but ask on all held-out episodes, over-clarifying visible preference/social cases. This is a boundary on the learning claim: the controller is transparent and effective when diagnostic categories are represented, while the expected-utility rule is more stable under this category shift.
 
-The CLAMBER external sanity check is weaker and is used only as a motivation check: a direct ambiguity detector has 0.284 recall and 0.716 missed-clarification rate under our utility labels, but CLAMBER is not a situated task-utility result.
+The CLAMBER external sanity check is weaker and is used only as a motivation check: a direct ambiguity detector has 0.28 recall and 0.72 missed-clarification rate under our utility labels, but CLAMBER is not a situated task-utility result.
 
-Finally, re-scoring fixed cached API outputs under alternate costs shows that the main result is not tied to one narrow reward parameterization. When ask cost varies from 0.01 to 0.35, \ecu retains a positive paired utility delta over Ask-Needed from +0.201 to +0.239. When wrong-action cost varies from 0.2 to 3.0, the delta ranges from +0.138 to +0.475, with all paired bootstrap lower bounds above zero and minimum +0.070. This fixed-output analysis does not test adaptive retuning under new costs.
+Finally, re-scoring fixed cached API outputs under alternate costs shows that the main result is not tied to one narrow reward parameterization. When ask cost varies from 0.01 to 0.35, \ecu retains a positive paired utility delta over Ask-Needed from +0.20 to +0.24. When wrong-action cost varies from 0.2 to 3.0, the delta ranges from +0.14 to +0.48, with a positive delta in every tested setting. This fixed-output analysis does not test adaptive retuning under new costs.
 
 \section{Qualitative Analysis}
 
