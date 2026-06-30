@@ -1,27 +1,9 @@
-\begin{thebibliography}{19}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[Ahn et~al.(2022)Ahn, Brohan, Brown, Chebotar, Cortes, David, Finn, Fu,
-  Gopalakrishnan, Hausman, Herzog, Ho, Hsu, Ibarz, Ichter, Irpan, Jang, Ruano,
-  Jeffrey, Jesmonth, Joshi, Julian, Kalashnikov, Kuang, Lee, Levine, Lu, Luu,
-  Parada, Pastor, Quiambao, Rao, Rettinghouse, Reyes, Sermanet, Sievers, Tan,
-  Toshev, Vanhoucke, Xia, Xiao, Xu, Xu, and Yan]{ahn2022saycan}
-Michael Ahn, Anthony Brohan, Noah Brown, Yevgen Chebotar, Omar Cortes, Byron
-  David, Chelsea Finn, Chuyuan Fu, Keerthana Gopalakrishnan, Karol Hausman,
-  Alexander Herzog, Daniel Ho, Jasmine Hsu, Julian Ibarz, Brian Ichter, Alex
-  Irpan, Eric Jang, Rosario~Jauregui Ruano, Kyle Jeffrey, Sally Jesmonth,
-  Nikhil~J. Joshi, Ryan Julian, Dmitry Kalashnikov, Yuheng Kuang, Kuang-Huei
-  Lee, Sergey Levine, Yao Lu, Linda Luu, Carolina Parada, Peter Pastor, Jodilyn
-  Quiambao, Kanishka Rao, Jarek Rettinghouse, Diego Reyes, Pierre Sermanet,
-  Nicolas Sievers, Clayton Tan, Alexander Toshev, Vincent Vanhoucke, Fei Xia,
-  Ted Xiao, Peng Xu, Sichun Xu, and Mengyuan Yan.
-\newblock Do as i can, not as i say: Grounding language in robotic affordances.
-\newblock \emph{arXiv preprint arXiv:2204.01691}, 2022.
-\newblock URL \url{https://arxiv.org/abs/2204.01691}.
 
 \bibitem[Aliannejadi et~al.(2019)Aliannejadi, Zamani, Crestani, and
   Croft]{aliannejadi2019asking}
@@ -42,6 +24,11 @@ Yonatan Bisk, Ari Holtzman, Jesse Thomason, Jacob Andreas, Yoshua Bengio, Joyce
   Natural Language Processing}, pp.\  8718--8735, 2020.
 \newblock \doi{10.18653/v1/2020.emnlp-main.703}.
 
+\bibitem[Clark(1996)]{clark1996using}
+Herbert~H. Clark.
+\newblock \emph{Using Language}.
+\newblock Cambridge University Press, 1996.
+
 \bibitem[Clark \& Wilkes-Gibbs(1986)Clark and Wilkes-Gibbs]{clark1986referring}
 Herbert~H. Clark and Deanna Wilkes-Gibbs.
 \newblock Referring as a collaborative process.
@@ -52,7 +39,7 @@ Herbert~H. Clark and Deanna Wilkes-Gibbs.
   and Courville]{devries2017guesswhat}
 Harm de~Vries, Florian Strub, Sarath Chandar, Olivier Pietquin, Hugo
   Larochelle, and Aaron Courville.
-\newblock Guesswhat?! visual object discovery through multi-modal dialogue.
+\newblock {GuessWhat?!} visual object discovery through multi-modal dialogue.
 \newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
   Pattern Recognition}, pp.\  5503--5512, 2017.
 
@@ -62,17 +49,60 @@ Michael~C. Frank and Noah~D. Goodman.
 \newblock \emph{Science}, 336\penalty0 (6084):\penalty0 998, 2012.
 \newblock \doi{10.1126/science.1218633}.
 
+\bibitem[Golland et~al.(2010)Golland, Liang, and Klein]{golland2010game}
+Dave Golland, Percy Liang, and Dan Klein.
+\newblock A game-theoretic approach to generating spatial descriptions.
+\newblock In \emph{Proceedings of the 2010 Conference on Empirical Methods in
+  Natural Language Processing}, pp.\  410--419, 2010.
+\newblock URL \url{https://aclanthology.org/D10-1040/}.
+
+\bibitem[Goodman \& Frank(2016)Goodman and Frank]{goodman2016pragmatic}
+Noah~D. Goodman and Michael~C. Frank.
+\newblock Pragmatic language interpretation as probabilistic inference.
+\newblock \emph{Trends in Cognitive Sciences}, 20\penalty0 (11):\penalty0
+  818--829, 2016.
+\newblock \doi{10.1016/j.tics.2016.08.005}.
+
 \bibitem[Grice(1975)]{grice1975logic}
 H.~Paul Grice.
 \newblock Logic and conversation.
 \newblock In Peter Cole and Jerry~L. Morgan (eds.), \emph{Syntax and Semantics,
   Volume 3: Speech Acts}, pp.\  41--58. Academic Press, 1975.
 
-\bibitem[Kim et~al.(2019)Kim, Kitaev, Chen, Rohrbach, Tian, Batra, and
+\bibitem[Horvitz(1999)]{horvitz1999principles}
+Eric Horvitz.
+\newblock Principles of mixed-initiative user interfaces.
+\newblock In \emph{Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems}, pp.\  159--166, 1999.
+\newblock \doi{10.1145/302979.303030}.
+
+\bibitem[Ichter et~al.(2023)Ichter, Brohan, Chebotar, Finn, Hausman, Herzog,
+  Ho, Ibarz, Irpan, Jang, Julian, Kalashnikov, Levine, Lu, Parada, Rao,
+  Sermanet, Toshev, Vanhoucke, Xia, Xiao, Xu, Yan, Brown, Ahn, Cortes, Sievers,
+  Tan, Xu, Reyes, Rettinghouse, Quiambao, Pastor, Luu, Lee, Kuang, Jesmonth,
+  Joshi, Jeffrey, Ruano, Hsu, Gopalakrishnan, David, Zeng, and
+  Fu]{ahn2022saycan}
+Brian Ichter, Anthony Brohan, Yevgen Chebotar, Chelsea Finn, Karol Hausman,
+  Alexander Herzog, Daniel Ho, Julian Ibarz, Alex Irpan, Eric Jang, Ryan
+  Julian, Dmitry Kalashnikov, Sergey Levine, Yao Lu, Carolina Parada, Kanishka
+  Rao, Pierre Sermanet, Alexander~T. Toshev, Vincent Vanhoucke, Fei Xia, Ted
+  Xiao, Peng Xu, Mengyuan Yan, Noah Brown, Michael Ahn, Omar Cortes, Nicolas
+  Sievers, Clayton Tan, Sichun Xu, Diego Reyes, Jarek Rettinghouse, Jornell
+  Quiambao, Peter Pastor, Linda Luu, Kuang-Huei Lee, Yuheng Kuang, Sally
+  Jesmonth, Nikhil~J. Joshi, Kyle Jeffrey, Rosario~Jauregui Ruano, Jasmine Hsu,
+  Keerthana Gopalakrishnan, Byron David, Andy Zeng, and Chuyuan~Kelly Fu.
+\newblock {Do As I Can, Not As I Say}: Grounding language in robotic
+  affordances.
+\newblock In \emph{Proceedings of The 6th Conference on Robot Learning}, volume
+  205 of \emph{Proceedings of Machine Learning Research}, pp.\  287--318. PMLR,
+  2023.
+\newblock URL \url{https://proceedings.mlr.press/v205/ichter23a.html}.
+
+\bibitem[Kim et~al.(2019)Kim, Kitaev, Chen, Rohrbach, Zhang, Tian, Batra, and
   Parikh]{kim2019codraw}
-Jin-Hwa Kim, Nikita Kitaev, Xinlei Chen, Marcus Rohrbach, Yuandong Tian, Dhruv
-  Batra, and Devi Parikh.
-\newblock Codraw: Collaborative drawing as a testbed for grounded goal-driven
+Jin-Hwa Kim, Nikita Kitaev, Xinlei Chen, Marcus Rohrbach, Byoung-Tak Zhang,
+  Yuandong Tian, Dhruv Batra, and Devi Parikh.
+\newblock {CoDraw}: Collaborative drawing as a testbed for grounded goal-driven
   communication.
 \newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
   for Computational Linguistics}, pp.\  6495--6513, 2019.
@@ -89,7 +119,7 @@ Lorenz Kuhn, Yarin Gal, and Sebastian Farquhar.
 \bibitem[Lazaridou et~al.(2017)Lazaridou, Peysakhovich, and
   Baroni]{lazaridou2017multi}
 Angeliki Lazaridou, Alexander Peysakhovich, and Marco Baroni.
-\newblock Multi-agent cooperation and the emergence of natural language.
+\newblock Multi-agent cooperation and the emergence of (natural) language.
 \newblock In \emph{International Conference on Learning Representations}, 2017.
 \newblock URL \url{https://arxiv.org/abs/1612.07182}.
 
@@ -115,9 +145,8 @@ Sewon Min, Julian Michael, Hannaneh Hajishirzi, and Luke Zettlemoyer.
 So~Yeon Min, Xavi Puig, Devendra~Singh Chaplot, Tsung-Yen Yang, Akshara Rai,
   Priyam Parashar, Ruslan Salakhutdinov, Yonatan Bisk, and Roozbeh Mottaghi.
 \newblock Situated instruction following.
-\newblock \emph{arXiv preprint arXiv:2407.12061}, 2024.
-\newblock \doi{10.48550/arXiv.2407.12061}.
-\newblock URL \url{https://arxiv.org/abs/2407.12061}.
+\newblock In \emph{Computer Vision -- ECCV 2024}, pp.\  202--228, 2024.
+\newblock \doi{10.1007/978-3-031-73030-6_12}.
 
 \bibitem[Monroe et~al.(2017)Monroe, Hawkins, Goodman, and
   Potts]{monroe2017colors}
@@ -136,23 +165,51 @@ Aishwarya Padmakumar, Jesse Thomason, Ayush Shrivastava, Patrick Lange, Anjali
 \newblock {TEACh}: Task-driven embodied agents that chat.
 \newblock In \emph{Proceedings of the AAAI Conference on Artificial
   Intelligence}, volume~36, pp.\  2017--2025, 2022.
-
-\bibitem[Qian et~al.(2024)Qian, He, Zhuang, Deng, Qin, Cong, Zhang, Zhou, Lin,
-  Liu, and Sun]{qian2024tell}
-Cheng Qian, Bingxiang He, Zhong Zhuang, Jia Deng, Yujia Qin, Xin Cong, Zhong
-  Zhang, Jie Zhou, Yankai Lin, Zhiyuan Liu, and Maosong Sun.
-\newblock Tell me more! towards implicit user intention understanding of
-  language model driven agents.
-\newblock \emph{arXiv preprint arXiv:2402.09205}, 2024.
-\newblock \doi{10.48550/arXiv.2402.09205}.
-\newblock URL \url{https://arxiv.org/abs/2402.09205}.
+\newblock \doi{10.1609/aaai.v36i2.20097}.
 
 \bibitem[Rao \& Daum{\'e}(2018)Rao and Daum{\'e}]{rao2018learning}
 Sudha Rao and Hal Daum{\'e}, III.
 \newblock Learning to ask good questions: Ranking clarification questions using
   neural expected value of perfect information.
-\newblock \emph{arXiv preprint arXiv:1805.04655}, 2018.
-\newblock URL \url{https://arxiv.org/abs/1805.04655}.
+\newblock In \emph{Proceedings of the 56th Annual Meeting of the Association
+  for Computational Linguistics (Volume 1: Long Papers)}, pp.\  2737--2746,
+  2018.
+\newblock \doi{10.18653/v1/P18-1255}.
+\newblock URL \url{https://aclanthology.org/P18-1255/}.
+
+\bibitem[Shridhar et~al.(2020)Shridhar, Thomason, Gordon, Bisk, Han, Mottaghi,
+  Zettlemoyer, and Fox]{shridhar2020alfred}
+Mohit Shridhar, Jesse Thomason, Daniel Gordon, Yonatan Bisk, Winson Han,
+  Roozbeh Mottaghi, Luke Zettlemoyer, and Dieter Fox.
+\newblock {ALFRED}: A benchmark for interpreting grounded instructions for
+  everyday tasks.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition}, pp.\  10740--10749, 2020.
+
+\bibitem[Sperber \& Wilson(1986)Sperber and Wilson]{sperber1986relevance}
+Dan Sperber and Deirdre Wilson.
+\newblock \emph{Relevance: Communication and Cognition}.
+\newblock Harvard University Press, 1986.
+
+\bibitem[Tellex et~al.(2011)Tellex, Kollar, Dickerson, Walter, Banerjee,
+  Teller, and Roy]{tellex2011understanding}
+Stefanie Tellex, Thomas Kollar, Steven Dickerson, Matthew~R. Walter,
+  Ashis~Gopal Banerjee, Seth Teller, and Nicholas Roy.
+\newblock Understanding natural language commands for robotic navigation and
+  mobile manipulation.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, volume~25, pp.\  1507--1514, 2011.
+\newblock \doi{10.1609/aaai.v25i1.7979}.
+
+\bibitem[Thomason et~al.(2019)Thomason, Padmakumar, Sinapov, Walker, Jiang,
+  Yedidsion, Hart, Stone, and Mooney]{thomason2019improving}
+Jesse Thomason, Aishwarya Padmakumar, Jivko Sinapov, Nick Walker, Yuqian Jiang,
+  Harel Yedidsion, Justin Hart, Peter Stone, and Raymond~J. Mooney.
+\newblock Improving grounded natural language understanding through human-robot
+  dialog.
+\newblock In \emph{Proceedings of the 2019 International Conference on Robotics
+  and Automation}, pp.\  6934--6941, 2019.
+\newblock \doi{10.1109/ICRA.2019.8794287}.
 
 \bibitem[Zhang et~al.(2024)Zhang, Qin, Deng, Huang, Lei, Liu, Jin, Liang, and
   Chua]{zhang2024clamber}
@@ -172,7 +229,7 @@ Xuhui Zhou, Hao Zhu, Leena Mathur, Ruohong Zhang, Haofei Yu, Zhengyang Qi,
   Maarten Sap.
 \newblock {SOTOPIA}: Interactive evaluation for social intelligence in language
   agents.
-\newblock \emph{arXiv preprint arXiv:2310.11667}, 2024.
-\newblock URL \url{https://arxiv.org/abs/2310.11667}.
+\newblock In \emph{International Conference on Learning Representations}, 2024.
+\newblock URL \url{https://openreview.net/forum?id=mM7VurbA4r}.
 
 \end{thebibliography}

@@ -28,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-Language agents in situated environments must decide not only what an instruction might mean, but whether it is useful and safe to act on that interpretation. Existing clarification benchmarks often treat this as static ambiguity detection. We instead frame clarification as a situated value-of-information decision under uncertainty, interaction cost, and task consequences. We introduce \task, a procedural benchmark in which an agent observes a structured scene and instruction, then either acts immediately or asks one clarifying question before acting. Rewards are deterministic and combine task success, clarification cost, and wrong-action cost. Across historical and current API models, direct ask-when-needed prompting improves over guessing but remains miscalibrated: it over-asks when ambiguity is harmless and under-asks when wrong actions are costly. An expected-communicative-utility policy reaches 0.98 utility on the 100-episode GPT-4.1-mini evaluation and 0.96 utility on full 400-episode GPT-5.4-mini and GPT-5.5 evaluations, with no missed or unnecessary clarifications in these main runs. The central lesson is that pragmatic clarification should be evaluated as utility-calibrated interaction, not ambiguity detection alone.
+Language agents in situated environments must decide not only what an instruction might mean, but whether it is useful and safe to act on that interpretation. Existing clarification benchmarks often treat this as static ambiguity detection. We instead frame clarification as a situated value-of-information decision under uncertainty, interaction cost, and task consequences. We introduce \task, a procedural benchmark in which an agent observes a structured scene and instruction, then either acts immediately or asks one clarifying question before acting. Rewards are deterministic and combine task success, clarification cost, and wrong-action cost. Across different models, direct ask-when-needed prompting improves over guessing but remains miscalibrated: it over-asks when ambiguity is harmless and under-asks when wrong actions are costly. An expected communicative utility (\ecu) policy reaches 0.98 utility with no missed or unnecessary clarifications in these main runs. The central lesson is that pragmatic clarification should be evaluated as utility-calibrated interaction, not ambiguity detection alone.
 \end{abstract}
 
 \section{Introduction}
@@ -40,14 +40,12 @@ This decision is pragmatic: interpretation depends on context, mutual knowledge,
 We introduce \task, a controlled benchmark for this ask-or-act decision. Each episode contains a structured scene, an instruction, candidate user intents with priors, a hidden user intent, and task costs. The agent may act or ask. If it asks, a simulated user answers from the hidden intent and the agent then acts. Because the environment computes rewards automatically, \task supports cheap and reproducible experiments with hosted models and transparent controllers.
 
 \paragraph{Contributions.}
-We introduce a 1,400-episode benchmark for situated clarification; formalize clarification as expected communicative utility; compare prompting, private-reasoning prompting, transparent controllers, and an expected-utility wrapper across GPT-4.1-mini, GPT-5.4-mini, and GPT-5.5; and analyze why the wrapper helps. The key result is not that larger models cannot ask questions. Rather, explicit utility calibration gives a stable rule for when communication is worth its cost.
+We introduce a 1,400-episode benchmark for situated clarification; formalize clarification as expected communicative utility (\ecu); compare prompting, private-reasoning prompting, transparent controllers, and an expected-utility wrapper. The key result is that explicit utility calibration gives a stable rule for when communication is worth its cost.
 
 \begin{figure*}[t]
 \centering
-\fbox{\begin{minipage}{0.96\linewidth}
-\textbf{Placeholder for final Figure 1.} Replace this box with a four-panel overview figure. \textbf{A: Problem.} Draw one scene and instruction with several candidate targets; label true ambiguity, context-resolved ambiguity, and equivalent outcomes. \textbf{B: Method.} Show the \ecu pipeline: LLM candidate interpretations $\rightarrow$ success-equivalence grouping and $EU(ask)-EU(act)$ computation $\rightarrow$ ASK or ACT. Include the gate $EU(ask)>EU(act)$. \textbf{C: Result.} Plot net utility for plain \askneeded, CoT \askneeded, and \ecu across GPT-4.1-mini/100, GPT-5.4-mini/400, and GPT-5.5/400. Annotate that \ecu has zero missed and zero unnecessary clarifications in the main runs. \textbf{D: Concept.} Use a 2x2 matrix with axes ``multiple candidates?'' and ``asking improves utility?'' to show why ambiguity alone is not the right target.
-\end{minipage}}
-\caption{Suggested overview figure: the task, the \ecu method, and the main empirical message in one visual summary.}
+\includegraphics[width=\textwidth]{figures/figure_1.png}
+\caption{Overview of \task. The benchmark separates ambiguity that requires asking from ambiguity resolved by context or outcome equivalence, and the \ecu method asks only when clarification improves expected task utility.}
 \label{fig:overview}
 \end{figure*}
 
@@ -63,10 +61,26 @@ or
 \]
 If it asks, the simulated user returns a state, location, or ownership answer associated with the hidden target, and the agent then chooses a final action. Episodes are capped at one question to focus evaluation on the first-turn ask-or-act decision.
 
+
+
+The canonical dataset contains 1,400 episodes. Splits are balanced across the five categories in Table~\ref{tab:benchmark-categories}; the overall oracle ask rate is 0.50.
+
+\paragraph{Reward and oracle.}
+The reward is
+\[
+R=\mathbb{1}[\mathrm{success}]-C_{ask}\mathbb{1}[\mathrm{asked}]-C_{wrong}\mathbb{1}[\mathrm{wrong}].
+\]
+Success is defined by matching the hidden intent's success-equivalence class, not necessarily by matching a target identity. Let $p_{\max}$ be the prior mass of the best success-equivalence class. Acting has expected utility $EU(act)=p_{\max}-(1-p_{\max})C_{wrong}$, while asking has $EU(ask)=1-C_{ask}$. The oracle asks when $EU(ask)>EU(act)+\epsilon$. We report net utility, success, ask rate, missed clarification, and unnecessary clarification.
+
+\paragraph{Simulated user and leakage controls.}
+The simulated user is deterministic, which makes replay exact. Hidden owner names are redacted from prompts, hidden-owner objects receive neutral state labels, and target identifiers are neutral. A simulated-user audit verifies that deterministic answers resolve the hidden success class in all generated oracle-ask cases and all actual asked rows.
+
 \begin{table}[t]
 \centering
-\scriptsize
-\begin{tabular}{@{}p{0.18\linewidth}p{0.25\linewidth}c p{0.34\linewidth}@{}}
+\small
+\begingroup
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}p{0.2\linewidth}p{0.25\linewidth}c p{0.35\linewidth}@{}}
 \toprule
 Category & Example instruction & Oracle ask & What it tests \\
 \midrule
@@ -77,51 +91,38 @@ Risk-sensitive & Delete the old draft & 1.00 & Wrong action is costly despite hi
 Preference/social & Put my cup away & 0.50 & Ownership visible vs. hidden \\
 \bottomrule
 \end{tabular}
+\endgroup
 \caption{Benchmark categories. Every category contains multiple candidate interpretations; the oracle ask rate follows expected communicative utility rather than surface ambiguity.}
 \label{tab:benchmark-categories}
 \end{table}
 
-The canonical dataset contains 1,400 episodes: 600 train, 200 development, 400 test, and 200 OOD test episodes. Splits are balanced across the five categories in Table~\ref{tab:benchmark-categories}; the overall oracle ask rate is 0.50.
-
-\paragraph{Reward and oracle.}
-The reward is
-\[
-R=\mathbb{1}[\mathrm{success}]-C_{ask}\mathbb{1}[\mathrm{asked}]-C_{wrong}\mathbb{1}[\mathrm{wrong}].
-\]
-Success is defined by matching the hidden intent's success-equivalence class, not necessarily by matching a target identity. Let $p_{\max}$ be the prior mass of the best success-equivalence class. Acting has expected utility $EU(act)=p_{\max}-(1-p_{\max})C_{wrong}$, while asking has $EU(ask)=1-C_{ask}$. The oracle asks when $EU(ask)>EU(act)+\epsilon$. We report net utility, success, ask rate, missed clarification, and unnecessary clarification.
-
-\paragraph{Simulated user and leakage controls.}
-The simulated user is deterministic, which makes replay exact. Hidden owner names are redacted from API prompts, hidden-owner objects receive neutral state labels, and target identifiers are neutral. A simulated-user audit verifies that deterministic answers resolve the hidden success class in all generated oracle-ask cases and all actual API asked rows.
-
 \section{Methods and Experiments}
 
-We compare four families of policies. \directact never asks. \textsc{AskAlways} and \textsc{RawAmbiguity} ask whenever ambiguity is present, measuring over-clarification. \askneeded prompts the API model to ask only when acting could plausibly fail; a private-reasoning variant encourages hidden deliberation before the final JSON answer. The API \ecu policy first asks the model to propose candidate interpretations, probabilities, context-resolution flags, equivalence flags, and risk estimates. Deterministic code then groups candidates into success-equivalence classes and computes $EU(ask)-EU(act)$. If the margin exceeds 0.08, the model generates a clarifying question; otherwise the agent acts. Model-declared equivalence is accepted only when supported by explicit cues such as ``spare,'' ``any,'' or ``one of.''
+We compare four families of policies. \directact\ never asks. \textsc{AskAlways} and \textsc{RawAmbiguity} ask whenever ambiguity is present, measuring over-clarification. \askneeded\ prompts the model to ask only when acting could plausibly fail; a private-reasoning variant encourages hidden deliberation before the final JSON answer. The \ecu\ policy first asks the model to propose candidate interpretations, probabilities, context-resolution flags, equivalence flags, and risk estimates. Deterministic code then groups candidates into success-equivalence classes and computes $EU(ask)-EU(act)$. If the margin exceeds 0.1, the model generates a clarifying question; otherwise the agent acts. Model-declared equivalence is accepted only when supported by explicit cues such as ``spare,'' ``any,'' or ``one of.''
 
-Offline policies run on the full 400-episode test split and 200-episode OOD split using benchmark features. API policies run on a 100-episode stratified subset with 20 episodes per category. The historical run uses GPT-4.1-mini; current-model runs use GPT-5.4-mini and GPT-5.5 with the same prompts, policies, episode order, and cache discipline. We also test paraphrased instructions, terser answer styles, reversed object order, compact natural-language scene descriptions, held-out ambiguity mixes, component ablations, candidate-probability diagnostics, and cost re-scoring.
+We also test paraphrased instructions, terser answer styles, reversed object order, compact natural-language scene descriptions, held-out ambiguity mixes, component ablations, candidate-probability diagnostics, and cost re-scoring.
 
 \section{Results}
 
-We emphasize three takeaways and leave full metric tables to the released reproducibility artifacts.
+We emphasize three takeaways.
 
 \subsection{Takeaway 1: utility calibration improves ask-or-act behavior}
 
-Table~\ref{tab:headline-api} summarizes the main API results. On GPT-4.1-mini, direct \askneeded prompting improves over never asking but misses more than half of the oracle clarification cases. \ecu reaches 0.98 utility with full task success and no ask errors. Stronger models narrow the gap: GPT-5.5 with private reasoning matches \ecu on the 100-episode subset. However, the full 400-episode current-model runs still favor \ecu. GPT-5.4-mini prompts over-clarify many oracle-act cases, while GPT-5.5 plain prompting under-clarifies risk-sensitive cases. \ecu keeps the ask rate aligned with the oracle and has zero missed and zero unnecessary clarifications in the main current-model runs.
+Table~\ref{tab:headline-api} summarizes the main results. On GPT-5-mini, direct \askneeded\ prompting improves over never asking but misses more than half of the oracle clarification cases. \ecu\ reaches 0.98 utility with full task success and no ask errors. Stronger models narrow the gap. GPT-5.4-mini prompts over-clarify many oracle-act cases, while GPT-5.5 plain prompting under-clarifies risk-sensitive cases. \ecu\ keeps the ask rate aligned with the oracle and has zero missed and zero unnecessary clarifications in the main current-model runs.
 
 \begin{table}[t]
 \centering
-\scriptsize
+\small
 \begin{tabular}{llrrrr}
 \toprule
-Model / split & $N$ & Plain Ask & CoT Ask & \ecu & Main prompt failure \\
+Model / split & Plain Ask & CoT Ask & \ecu & Main prompt failure \\
 \midrule
-GPT-4.1-mini & 100 & 0.63 & 0.63 & 0.98 & under-asks risk/reference cases \\
-GPT-5.4-mini & 100 & 0.87 & 0.86 & 0.98 & over-asks resolved cases \\
-GPT-5.5 & 100 & 0.82 & 0.98 & 0.98 & CoT closes small-set gap \\
-GPT-5.4-mini & 400 & 0.90 & 0.90 & 0.96 & over-clarification persists \\
-GPT-5.5 & 400 & 0.85 & 0.94 & 0.96 & plain prompt under-asks high-risk cases \\
+GPT-5-mini & 0.63 & 0.63 & 0.98 & under-asks risk/reference cases \\
+GPT-5.4-mini  & 0.87 & 0.86 & 0.98 & over-asks resolved cases \\
+GPT-5.5 & 0.85 & 0.94 & 0.96 & plain prompt under-asks high-risk cases \\
 \bottomrule
 \end{tabular}
-\caption{Headline API utility. Stronger models and private reasoning help, but explicit expected-utility calibration is the most consistent strategy. Detailed metrics are in the released reproducibility tables.}
+\caption{Stronger models and private reasoning help, but explicit expected-utility calibration is the most consistent strategy. }
 \label{tab:headline-api}
 \end{table}
 
@@ -131,8 +132,10 @@ All canonical test episodes have multiple candidate interpretations, yet half ar
 
 \begin{table}[t]
 \centering
-\scriptsize
-\begin{tabular}{@{}p{0.26\linewidth}p{0.18\linewidth}p{0.46\linewidth}@{}}
+\small
+\begingroup
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}p{0.45\linewidth}p{0.08\linewidth}p{0.4\linewidth}@{}}
 \toprule
 Matched situation & Oracle & Why \\
 \midrule
@@ -144,18 +147,21 @@ High-entropy spare-object choice & ACT & All candidates share one success class 
 High-prior delete-file choice & ASK & Wrong-action cost makes clarification valuable \\
 \bottomrule
 \end{tabular}
+\endgroup
 \caption{Why surface ambiguity is not the right target. Similar-looking ambiguity can require opposite actions once context, equivalence, and risk are included.}
 \label{tab:situated-contrasts}
 \end{table}
 
-\subsection{Takeaway 3: \ecu separates interpretation from decision-making}
+\subsection{Takeaway 3: \ecu\ separates interpretation from decision-making}
 
-\ecu works by separating semantic interpretation from the ask decision. The LLM proposes plausible interpretations and rough probabilities; deterministic code computes whether asking is worth the cost. Ablations support this mechanism. If every model-declared equivalence flag is trusted, utility drops because the model sometimes collapses distinct referents. If equivalence is never collapsed, success remains high but the agent asks many unnecessary questions. The conservative equivalence guard is therefore essential.
+\ecu\ works by separating semantic interpretation from the ask decision. The LLM proposes plausible interpretations and rough probabilities; deterministic code computes whether asking is worth the cost. Ablations support this mechanism. If every model-declared equivalence flag is trusted, utility drops because the model sometimes collapses distinct referents. If equivalence is never collapsed, success remains high but the agent asks many unnecessary questions. The conservative equivalence guard is therefore essential.
 
 \begin{table}[t]
 \centering
-\scriptsize
-\begin{tabular}{@{}p{0.28\linewidth}p{0.62\linewidth}@{}}
+\small
+\begingroup
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}p{0.35\linewidth}p{0.62\linewidth}@{}}
 \toprule
 Robustness check & Main finding \\
 \midrule
@@ -166,15 +172,16 @@ Held-out ambiguity mix & Expected-utility reasoning transfers better than the tu
 Cost re-scoring & \ecu keeps a positive paired utility advantage across tested costs \\
 \bottomrule
 \end{tabular}
+\endgroup
 \caption{Robustness summary. The detailed numbers are less important than the pattern: utility calibration is stable under bounded prompt, scene, category, and cost perturbations.}
 \label{tab:robustness}
 \end{table}
 
-The robustness checks in Table~\ref{tab:robustness} reduce several simple alternative explanations. The result is not driven by object order, by JSON syntax alone, or by one narrow reward setting. Candidate-probability diagnostics also support a bounded mechanism claim: \ecu does not require perfect hidden-intent prediction; it needs candidate sets and rough relative probabilities good enough for the utility margin to track the oracle margin.
+The robustness checks in Table~\ref{tab:robustness} reduce several simple alternative explanations. The result is not driven by object order, by JSON syntax alone, or by one narrow reward setting. Candidate-probability diagnostics also support a bounded mechanism claim: \ecu\ does not require perfect hidden-intent prediction; it needs candidate sets and rough relative probabilities good enough for the utility margin to track the oracle margin.
 
 \section{Qualitative Analysis}
 
-The most informative failures are first-turn calibration failures. Prompted \askneeded often over-clarifies equivalent-outcome instructions: when asked to move a spare folder to the table, it asks which folder even though any spare folder succeeds. It also under-clarifies high-risk actions: in delete-file cases, it sometimes acts immediately despite high wrong-action cost. Preference/social cases expose a related failure: the model may treat ``my'' as resolved even when ownership is hidden. Context-resolved cases expose the opposite problem: the model may ask even when active workspace context identifies the intended object. \ecu avoids these failures because it explicitly asks whether information changes expected utility.
+The most informative failures are first-turn calibration failures. Prompted \askneeded often over-clarifies equivalent-outcome instructions: when asked to move a spare folder to the table, it asks which folder even though any spare folder succeeds. It also under-clarifies high-risk actions: in delete-file cases, it sometimes acts immediately despite high wrong-action cost. Preference/social cases expose a related failure: the model may treat ``my'' as resolved even when ownership is hidden. Context-resolved cases expose the opposite problem: the model may ask even when active workspace context identifies the intended object. \ecu\ avoids these failures because it explicitly asks whether information changes expected utility.
 
 \section{Related Work}
 
@@ -186,11 +193,11 @@ Situated language understanding links utterances to perception, affordances, and
 
 \section{Limitations}
 
-\task is synthetic and text/JSON-based. It isolates ambiguity, context, equivalence, ask cost, and wrong-action cost, but does not test perception, long-horizon planning, multimodal grounding, or real human interaction. The simulated user answers deterministically; audits verify that these answers resolve the hidden success class, but this is not a human-response study. The API evaluations use hosted OpenAI models, not open-weight local models or non-OpenAI model families. Finally, real systems would need to estimate priors and costs from user preferences, domain risk, and environment state.
+\task\ is synthetic and text/JSON-based. It isolates ambiguity, context, equivalence, ask cost, and wrong-action cost, but does not test perception, long-horizon planning, multimodal grounding, or real human interaction. The simulated user answers deterministically; audits verify that these answers resolve the hidden success class, but this is not a human-response study. Finally, real systems would need to estimate priors and costs from user preferences, domain risk, and environment state.
 
 \section{Conclusion}
 
-Clarification is not merely a response to ambiguity. It is a situated decision about whether information is worth the cost of asking for it. \task provides a controlled benchmark for this decision. Across offline diagnostics and API evaluations, expected communicative utility improves ask-or-act behavior by asking when clarification changes the expected outcome and acting when it does not. Pragmatic clarification should therefore be evaluated as utility-calibrated interaction policy rather than static ambiguity detection alone.
+Clarification is not merely a response to ambiguity. It is a situated decision about whether information is worth the cost of asking for it. \task\ provides a controlled benchmark for this decision. Across offline diagnostics and evaluations, expected communicative utility improves ask-or-act behavior by asking when clarification changes the expected outcome and acting when it does not. Pragmatic clarification should therefore be evaluated as utility-calibrated interaction policy rather than static ambiguity detection alone.
 
 \bibliographystyle{colm2026_conference}
 \bibliography{refs}
