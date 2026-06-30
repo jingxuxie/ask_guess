@@ -33,14 +33,18 @@ Language agents in situated environments must decide not only what an instructio
 
 \section{Introduction}
 
-A situated language agent often receives instructions that are easy to parse but underspecified for action. A household assistant asked to ``bring the red mug'' may see two red mugs. A file agent asked to ``delete the old draft'' may see two plausible drafts with very different consequences. A robot asked to ``move a spare chair'' may see several chairs, any of which would satisfy the request. The agent must decide whether to act now or spend an interaction turn asking what the user means.
+A situated language agent often receives instructions that are easy to parse but underspecified for action. A household assistant asked to ``bring the red mug'' may see two red mugs. A file agent asked to ``delete the old draft'' may see two plausible drafts with very different consequences. A robot asked to ``move a spare chair'' may see several chairs, any of which would satisfy the request. In all three cases, the linguistic form of the instruction is ordinary; the difficulty appears only when language is grounded in a particular scene, action space, and set of consequences.
 
-This decision is pragmatic: interpretation depends on context, mutual knowledge, informativeness, and consequences \citep{grice1975logic,sperber1986relevance,clark1986referring,clark1996using,frank2012predicting,goodman2016pragmatic}. It is also situated: the same string can require different behavior depending on scene state, affordances, and stakes \citep{bisk2020experience,min2024situated}. Ambiguity is sometimes harmless, as when all candidate objects are interchangeable. Context can make an ambiguous request safe to execute. Conversely, a likely interpretation can still require clarification if the wrong action is costly. Clarification therefore resembles a value-of-information problem \citep{rao2018learning,horvitz1999principles}: asking is useful only when the expected benefit of information exceeds the cost of interruption.
+This makes clarification different from ordinary question answering. The agent is not merely deciding whether a sentence has multiple interpretations. It is deciding whether an additional conversational turn is worth its cost. Asking can save the agent from irreversible errors, but it can also waste time, increase user burden, and make an otherwise competent assistant feel brittle. Acting can be efficient, but it can also hide unsafe guessing behind lucky outcomes. A useful situated agent therefore needs a policy for when to ask, not only a detector for whether a query sounds ambiguous.
 
-We introduce \task, a controlled benchmark for this ask-or-act decision. Each episode contains a structured scene, an instruction, candidate user intents with priors, a hidden user intent, and task costs. The agent may act or ask. If it asks, a simulated user answers from the hidden intent and the agent then acts. Because the environment computes rewards automatically, \task supports cheap and reproducible experiments with hosted models and transparent controllers.
+Our motivating observation is that ambiguity and clarification utility come apart. Ambiguity is sometimes harmless: if any spare folder can be moved, asking which spare folder the user means only pays an unnecessary interaction cost. Ambiguity can also be resolved by context: if one folder is in the user's active workspace and another is stored away, the best action may be clear. Conversely, a high-probability interpretation can still call for clarification if a wrong action is expensive, as in deleting a file or handling a personal object. These cases require the agent to reason jointly about language, scene evidence, outcome equivalence, and risk.
+
+This decision is pragmatic because interpretation depends on context, mutual knowledge, informativeness, and consequences \citep{grice1975logic,sperber1986relevance,clark1986referring,clark1996using,frank2012predicting,goodman2016pragmatic}. It is also situated: the same utterance can require different behavior depending on scene state, affordances, and task stakes \citep{bisk2020experience,min2024situated}. From the decision-making side, clarification resembles a value-of-information problem \citep{rao2018learning,horvitz1999principles}: asking is useful only when the expected improvement in action quality exceeds the cost of interruption. The challenge is to make this idea concrete enough to evaluate modern language agents cheaply and reproducibly.
+
+We introduce \task, a controlled benchmark for this ask-or-act decision. Each episode contains a structured scene, an instruction, candidate user intents with priors, a hidden user intent, and task costs. The agent may act or ask. If it asks, a simulated user answers from the hidden intent and the agent then acts. Because the environment computes rewards automatically, \task supports cheap and reproducible experiments with hosted models and transparent controllers. The benchmark is intentionally narrow: it abstracts away perception and long-horizon planning so that we can isolate the first-turn pragmatic decision of whether communication is worth its cost.
 
 \paragraph{Contributions.}
-We introduce a 1,400-episode benchmark for situated clarification; formalize clarification as expected communicative utility (\ecu); compare prompting, private-reasoning prompting, transparent controllers, and an expected-utility wrapper. The key result is that explicit utility calibration gives a stable rule for when communication is worth its cost.
+We introduce a 1,400-episode benchmark for situated clarification; formalize clarification as expected communicative utility (\ecu); compare prompting, private-reasoning prompting, transparent controllers, and an expected-utility wrapper; and analyze why utility calibration helps. The key result is not that language models cannot ask questions. Rather, explicit utility calibration gives a stable rule for when communication is worth its cost, while direct prompting remains sensitive to whether the ambiguity looks like uncertainty, risk, or harmless underspecification.
 
 \begin{figure*}[t]
 \centering
@@ -60,8 +64,6 @@ or
 \{\texttt{type}:\texttt{ASK},\ \texttt{question}:q\}.
 \]
 If it asks, the simulated user returns a state, location, or ownership answer associated with the hidden target, and the agent then chooses a final action. Episodes are capped at one question to focus evaluation on the first-turn ask-or-act decision.
-
-
 
 The canonical dataset contains 1,400 episodes. Splits are balanced across the five categories in Table~\ref{tab:benchmark-categories}; the overall oracle ask rate is 0.50.
 
@@ -122,7 +124,7 @@ GPT-5.4-mini  & 0.87 & 0.86 & 0.98 & over-asks resolved cases \\
 GPT-5.5 & 0.85 & 0.94 & 0.96 & plain prompt under-asks high-risk cases \\
 \bottomrule
 \end{tabular}
-\caption{Stronger models and private reasoning help, but explicit expected-utility calibration is the most consistent strategy. }
+\caption{Stronger models and private reasoning help, but explicit expected-utility calibration is the most consistent strategy.}
 \label{tab:headline-api}
 \end{table}
 
@@ -165,7 +167,7 @@ High-prior delete-file choice & ASK & Wrong-action cost makes clarification valu
 \toprule
 Robustness check & Main finding \\
 \midrule
-Paraphrase/style stress & \ecu remains near 0.98 utility; plain \askneeded still misses many oracle-ask cases \\
+Paraphrase/style stress & \ecu remains near 0.98 utility; plain \askneeded\ still misses many oracle-ask cases \\
 Reversed object order & \ecu's ask/act decisions are unchanged on the shared GPT-5.4-mini subset \\
 Natural-language scene format & \ecu keeps full task success with only one unnecessary clarification \\
 Held-out ambiguity mix & Expected-utility reasoning transfers better than the tuned controller under category shift \\
@@ -181,15 +183,53 @@ The robustness checks in Table~\ref{tab:robustness} reduce several simple altern
 
 \section{Qualitative Analysis}
 
-The most informative failures are first-turn calibration failures. Prompted \askneeded often over-clarifies equivalent-outcome instructions: when asked to move a spare folder to the table, it asks which folder even though any spare folder succeeds. It also under-clarifies high-risk actions: in delete-file cases, it sometimes acts immediately despite high wrong-action cost. Preference/social cases expose a related failure: the model may treat ``my'' as resolved even when ownership is hidden. Context-resolved cases expose the opposite problem: the model may ask even when active workspace context identifies the intended object. \ecu\ avoids these failures because it explicitly asks whether information changes expected utility.
+The most informative failures are first-turn calibration failures: cases where the model either acts when information would have high value, or asks when the scene already makes action safe. These errors are qualitatively different from second-turn grounding errors. In our main runs, when a baseline asks an appropriate question, it usually uses the simulated answer successfully. The hard part is deciding whether to ask in the first place.
+
+\begin{table}[t]
+\centering
+\small
+\begingroup
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{0.22\linewidth}p{0.35\linewidth}p{0.34\linewidth}@{}}
+\toprule
+Failure mode & Prompted behavior & Why \ecu avoids it \\
+\midrule
+Referential guessing & The model chooses one of two matching objects, sometimes producing a lucky success and sometimes a wrong target. & Candidate success classes differ, so asking has high value even if both candidates look plausible. \\
+Risk blindness & The model acts on the most likely old draft/file despite the high cost of deleting the wrong one. & $C_{wrong}$ enters the utility calculation, so small residual uncertainty can justify asking. \\
+Equivalence blindness & The model asks which spare folder to move even though all spare folders satisfy the instruction. & Candidates are grouped by success class, so target-level ambiguity is ignored when outcomes are equivalent. \\
+Context over-asking & The model asks about a folder or cup even when active workspace context identifies the intended object. & Context-resolution features raise the best action's expected utility and make asking dominated. \\
+Preference blindness & The model treats ``my'' as resolved in hidden-owner cases, or fails to use visible ownership in resolved cases. & Visibility controls separate social/indexical ambiguity from cases where user identity is available. \\
+\bottomrule
+\end{tabular}
+\endgroup
+\caption{Representative qualitative failure modes. The same surface pattern---multiple candidates---can imply asking or acting depending on success classes, context, and cost.}
+\label{tab:qualitative-failures}
+\end{table}
+
+Two patterns recur across the baseline failures. First, direct prompting often behaves as if uncertainty alone were the relevant signal. It asks for clarification in equivalent-outcome cases because there are several candidate objects, even though all candidates lead to the same reward. This is a pragmatic failure rather than a semantic one: the model recognizes that the referent is underspecified, but does not recognize that the underspecification is harmless. Second, direct prompting can be too willing to act in high-stakes cases. In risk-sensitive delete-file episodes, one interpretation often has a high prior, but the remaining uncertainty is still worth resolving because the wrong-action cost is large.
+
+The preference/social category exposes a more subtle issue. Instructions such as ``put my mug away'' require the agent to know whether ownership is visible in the scene. If ownership is visible and matches the current user, asking is unnecessary. If ownership is hidden, acting requires guessing which object is the user's. This category is important because it connects clarification to social and indexical reasoning: the agent must not only parse the word ``my,'' but also decide whether the scene provides enough evidence to ground it.
+
+The qualitative examples also clarify what \ecu\ is not doing. It is not simply asking more often: its ask rate is close to the oracle and lower than ambiguity-only policies. It is not solving the task by making the simulated user easier: the same deterministic answer mechanism is available to all policies once they ask. The improvement comes from separating the interpretation step from the decision step. The model proposes possible meanings; the utility rule decides whether information changes the optimal action.
+
+This separation is useful even when the model is strong. Larger models and private reasoning reduce some obvious failures, but the remaining errors are still structured: over-asking when ambiguity is harmless, under-asking when risk is high, and misusing context in preference/social cases. These are exactly the cases targeted by success-equivalence grouping, wrong-action costs, and conservative context/equivalence guards. The qualitative evidence therefore supports the paper's main claim: clarification should be evaluated as a calibrated interaction policy, not as a generic willingness to ask questions.
 
 \section{Related Work}
 
-\paragraph{Clarification and mixed initiative.}
-CLAM, AmbigQA, and CLAMBER study selective clarification and ambiguous information needs \citep{kuhn2022clam,min2020ambigqa,zhang2024clamber}. Conversational search and value-of-information work ask clarifying questions to resolve underspecified needs \citep{aliannejadi2019asking,rao2018learning}, while mixed-initiative interfaces emphasize interrupting only when intervention is valuable \citep{horvitz1999principles}. Human-robot dialogue work shows that clarification can improve grounded language understanding \citep{thomason2019improving}, and recent work compares human and LLM behavior under referential ambiguity \citep{madge2025referential}.
+\paragraph{Clarification and ambiguity.}
+Clarification has been studied in question answering, conversational search, task-oriented dialogue, and language-agent settings. AmbigQA, CLAM, and CLAMBER focus on ambiguous information needs and whether systems should ask questions before answering \citep{min2020ambigqa,kuhn2022clam,zhang2024clamber}. Recent language-agent work similarly studies whether agents can identify missing user intent and elicit additional information before acting \citep{qian2024tell}. These benchmarks motivate the need for clarification, but they often evaluate ambiguity at the query level. \task instead grounds the decision in a scene and reward function: the same ambiguous instruction may be oracle-act or oracle-ask depending on context, equivalence, and risk.
 
-\paragraph{Situated and pragmatic language.}
-Situated language understanding links utterances to perception, affordances, and actions \citep{bisk2020experience,min2024situated}. Embodied benchmarks evaluate navigation, household tasks, affordance grounding, multi-modal dialogue, and collaborative drawing \citep{tellex2011understanding,shridhar2020alfred,padmakumar2022teach,ahn2022saycan,devries2017guesswhat,kim2019codraw}. Classic pragmatics and Rational Speech Act models treat meaning as context-sensitive inference over speakers, listeners, and utilities \citep{grice1975logic,sperber1986relevance,clark1986referring,clark1996using,frank2012predicting,goodman2016pragmatic,monroe2017colors,golland2010game}. Emergent-communication and social-agent work similarly study communication as goal-directed interaction \citep{lazaridou2017multi,zhou2024sotopia}. \task is narrower but more controlled: the environment computes success and clarification utility directly.
+\paragraph{Value of information and mixed initiative.}
+Our formulation is closest in spirit to value-of-information views of clarification. Rao and Daum{\'e} rank questions by expected value of perfect information, while mixed-initiative systems study when a system should interrupt or take initiative \citep{rao2018learning,horvitz1999principles}. Work on grounded human-robot dialogue and interactive word learning likewise shows that asking questions can improve learning or task execution, but that interaction imposes cost on the human partner \citep{thomason2019improving,yu2017learning}. We adopt this perspective but make the ask-or-act decision deterministic and automatically scorable, which lets us separate the utility of asking from the language quality of the question.
+
+\paragraph{Situated and embodied instruction following.}
+Situated language understanding has a long history, from blocks-world command following to modern household and robotic environments \citep{winograd1972understanding,tellex2011understanding,shridhar2020alfred,padmakumar2022teach,ahn2022saycan}. Recent situated-instruction work emphasizes that natural instructions are often incomplete because speakers rely on shared context, ongoing activity, and visible affordances \citep{bisk2020experience,min2024situated}. \task complements these environments by removing perception and long-horizon planning in order to isolate one pragmatic decision: whether the agent should request information before acting.
+
+\paragraph{Pragmatics, reference, and communicative utility.}
+Classic pragmatics treats communication as cooperative, context-sensitive action rather than literal decoding \citep{grice1975logic,sperber1986relevance,clark1986referring,clark1996using}. Work on referring expression generation and Rational Speech Act models formalizes similar ideas as inference about speakers, listeners, distractors, and utilities \citep{dale1995computational,frank2012predicting,goodman2016pragmatic,monroe2017colors,golland2010game}. Our benchmark adapts this view to the agent side of the interaction: the agent must decide whether the user's utterance is informative enough for action, given the expected cost of acting incorrectly.
+
+\paragraph{Interactive and social language agents.}
+Emergent-communication, visual-dialogue, collaborative drawing, and social-agent benchmarks study communication as goal-directed interaction rather than isolated text prediction \citep{lazaridou2017multi,devries2017guesswhat,kim2019codraw,zhou2024sotopia}. These settings are broader and more realistic, but often require complex simulation or evaluator judgments. \task is narrower but more controlled: the environment computes success and clarification utility directly. This makes it useful as a low-cost diagnostic for whether multi-turn language agents know when communication itself is useful.
 
 \section{Limitations}
 
